@@ -1,0 +1,24 @@
+# Local development and self-hosting.
+# 1. Start the Supabase stack:  npx supabase start   (Postgres, Auth, Storage, Realtime)
+# 2. Put the printed keys in .env.local
+# 3. docker compose up --build
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY:-}
+    env_file: [.env.local]
+    environment:
+      # inside the container, reach the host's Supabase ports
+      NEXT_PUBLIC_SUPABASE_URL: ${DOCKER_SUPABASE_URL:-http://host.docker.internal:54321}
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    ports: ["3000:3000"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health/ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped

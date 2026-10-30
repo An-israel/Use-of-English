@@ -1,0 +1,291 @@
+@import "tailwindcss";
+
+/*
+ * JHTS design tokens.
+ * Raw palette values live on :root; semantic tokens (bg, fg, surface…) are what
+ * components use, so dark mode only has to redefine the semantic layer.
+ */
+:root {
+  /* Palette (section 3.2 of the brief) */
+  --jhts-ink: #15130f;
+  --jhts-ivory: #f6f1e7;
+  --jhts-paper: #fffdf8;
+  --jhts-forest: #0f3b2e;
+  --jhts-forest-700: #145240;
+  --jhts-terracotta: #b4472b;
+  --jhts-ochre: #c8962e;
+  --jhts-indigo-dye: #2d3561;
+  --jhts-stone: #6f675c;
+  --jhts-line: #e4dccd;
+
+  /* Category thread colours: muted, each ≥ 4.5:1 on ivory and paper. */
+  --thread-language: #2d3561; /* indigo dye */
+  --thread-literature: #7a3b2a; /* burnt sienna */
+  --thread-culture: #0f5a46; /* deep teal-forest */
+  --thread-communication: #7a5a12; /* dark ochre */
+  --thread-translation: #5b3a63; /* aubergine */
+  --thread-philosophy: #5a4a36; /* umber */
+  --thread-education: #2f5563; /* slate blue */
+  --thread-other: #6b4a3d; /* clay */
+
+  /* Semantic tokens — light */
+  --bg: var(--jhts-ivory);
+  --surface: var(--jhts-paper);
+  --fg: var(--jhts-ink);
+  --fg-muted: var(--jhts-stone);
+  --rule: var(--jhts-line);
+  --brand: var(--jhts-forest);
+  --brand-hover: var(--jhts-forest-700);
+  --brand-fg: var(--jhts-paper);
+  --accent: var(--jhts-terracotta);
+  --thread: var(--jhts-ochre);
+  --info: var(--jhts-indigo-dye);
+  --focus: var(--jhts-ochre);
+  --inverse-bg: var(--jhts-ink);
+  --inverse-fg: #efe8da;
+  --inverse-muted: #b3aa9b;
+
+  color-scheme: light;
+}
+
+/* Dark mode is a re-tuned palette, not an inversion: warm charcoal ground,
+   paper-toned text, forest lifted so it still reads as the brand colour. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12110e;
+    --surface: #1b1915;
+    --fg: #ece5d6;
+    --fg-muted: #a89f90;
+    --rule: #34302a;
+    --brand: #6fb595;
+    --brand-hover: #8cc8ab;
+    --brand-fg: #0c1a14;
+    --accent: #e08466;
+    --thread: #d9ab4c;
+    --info: #9aa6dd;
+    --focus: #d9ab4c;
+    --inverse-bg: #0b0a08;
+    --inverse-fg: #ece5d6;
+    --inverse-muted: #a89f90;
+
+    --thread-language: #9aa6dd;
+    --thread-literature: #e0997f;
+    --thread-culture: #6fb595;
+    --thread-communication: #d9ab4c;
+    --thread-translation: #c39ccc;
+    --thread-philosophy: #c9b392;
+    --thread-education: #8fbccc;
+    --thread-other: #d1a491;
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #12110e;
+  --surface: #1b1915;
+  --fg: #ece5d6;
+  --fg-muted: #a89f90;
+  --rule: #34302a;
+  --brand: #6fb595;
+  --brand-hover: #8cc8ab;
+  --brand-fg: #0c1a14;
+  --accent: #e08466;
+  --thread: #d9ab4c;
+  --info: #9aa6dd;
+  --focus: #d9ab4c;
+  --inverse-bg: #0b0a08;
+  --inverse-fg: #ece5d6;
+  --inverse-muted: #a89f90;
+
+  --thread-language: #9aa6dd;
+  --thread-literature: #e0997f;
+  --thread-culture: #6fb595;
+  --thread-communication: #d9ab4c;
+  --thread-translation: #c39ccc;
+  --thread-philosophy: #c9b392;
+  --thread-education: #8fbccc;
+  --thread-other: #d1a491;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  /* Fixed palette (for covers and print) */
+  --color-ink: var(--jhts-ink);
+  --color-ivory: var(--jhts-ivory);
+  --color-paper: var(--jhts-paper);
+  --color-forest: var(--jhts-forest);
+  --color-forest-700: var(--jhts-forest-700);
+  --color-terracotta: var(--jhts-terracotta);
+  --color-ochre: var(--jhts-ochre);
+  --color-indigo-dye: var(--jhts-indigo-dye);
+  --color-stone: var(--jhts-stone);
+  --color-line: var(--jhts-line);
+
+  /* Semantic (theme-aware) */
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-rule: var(--rule);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-fg: var(--brand-fg);
+  --color-accent: var(--accent);
+  --color-thread: var(--thread);
+  --color-info: var(--info);
+  --color-inverse: var(--inverse-bg);
+  --color-inverse-fg: var(--inverse-fg);
+  --color-inverse-muted: var(--inverse-muted);
+
+  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-reading: var(--font-literata), Georgia, serif;
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+
+  /* Modular type scale, ratio 1.25 from 16px */
+  --text-2xs: 0.64rem;
+  --text-xs: 0.8rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.25rem;
+  --text-lg: 1.5625rem;
+  --text-xl: 1.953rem;
+  --text-2xl: 2.441rem;
+  --text-3xl: 3.052rem;
+  --text-4xl: 3.815rem;
+  --text-5xl: 4.768rem;
+  --text-6xl: 5.5rem;
+
+  --container-reading: 42.5rem; /* 680px */
+  --container-page: 80rem; /* 1280px */
+
+  --ease-weave: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-feature-settings: "kern", "liga";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--thread) 35%, transparent);
+    color: var(--fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    text-wrap: balance;
+    letter-spacing: -0.015em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer utilities {
+  /* Small caps for running metadata: "VOLUME 1 · ISSUE 2 · JUNE 2027" */
+  .smallcaps {
+    font-family: var(--font-sans);
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.08em;
+    font-feature-settings: "smcp", "c2sc", "tnum";
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  .reading {
+    font-family: var(--font-reading);
+    font-size: clamp(1.125rem, 1.05rem + 0.25vw, 1.1875rem);
+    line-height: 1.7;
+    max-width: 68ch;
+  }
+
+  /* High-contrast display setting for huge headings */
+  .display-tight {
+    font-variation-settings:
+      "opsz" 144,
+      "SOFT" 0,
+      "WONK" 0;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+  }
+
+  .rule-thread {
+    background-image: linear-gradient(var(--thread), var(--thread));
+    background-size: 0 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 320ms var(--ease-weave);
+  }
+  .rule-thread:hover,
+  .rule-thread:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* View transitions between pages where supported */
+@view-transition {
+  navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  @view-transition {
+    navigation: none;
+  }
+}
+
+@keyframes weave-draw {
+  from {
+    stroke-dashoffset: var(--len, 1200);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.weave-draw {
+  animation: weave-draw 700ms var(--ease-weave) forwards;
+}
+
+.weave-fade-in {
+  opacity: 0;
+  animation: weave-fade 600ms ease-out 1000ms forwards;
+}
+
+@keyframes weave-fade {
+  to {
+    opacity: 1;
+  }
+}
