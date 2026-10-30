@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { pageRange } from "@/lib/issues";
+import { issueLabelShort, issuePath, pageRange } from "@/lib/issues";
 import { formatDate } from "@/lib/format";
 import type { ArticleSummary, Category } from "@/lib/types";
 import { AuthorNames } from "./AuthorList";
@@ -14,15 +14,26 @@ export function ArticleRow({
   article,
   category,
   showOnlineDate = false,
+  showIssue = false,
 }: {
   article: ArticleSummary;
   category?: Category;
   showOnlineDate?: boolean;
+  /** For lists that mix issues (subjects, search) */
+  showIssue?: boolean;
 }) {
   const pages = pageRange(article.firstPage, article.lastPage);
   return (
     <article className="group border-rule grid grid-cols-12 gap-x-6 gap-y-3 border-t py-7 first:border-t-0 md:py-8">
       <div className="col-span-12 flex flex-wrap items-center gap-2 md:col-span-2 md:flex-col md:items-start md:gap-3">
+        {showIssue && article.issue && (
+          <Link
+            href={issuePath(article.issue)}
+            className="tabular text-fg hover:decoration-thread text-[0.9rem] hover:underline hover:underline-offset-4"
+          >
+            {issueLabelShort(article.issue)}
+          </Link>
+        )}
         {pages && <span className="tabular text-muted text-[0.9rem]">{pages}</span>}
         {showOnlineDate && article.onlineAt && (
           <span className="tabular text-muted text-[0.85rem]">Online {formatDate(article.onlineAt)}</span>

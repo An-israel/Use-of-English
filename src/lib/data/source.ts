@@ -13,6 +13,22 @@ import type {
 
 export type IssueWithArticles = Issue & { articles: ArticleSummary[] };
 
+export type SearchParams = {
+  q?: string;
+  year?: number;
+  volume?: number;
+  issue?: number;
+  category?: string;
+  type?: ArticleSummary["type"];
+  author?: string;
+  page?: number;
+};
+
+export type SearchHit = { article: ArticleSummary; titleHtml: string; snippetHtml: string };
+export type SearchResult = { total: number; hits: SearchHit[]; fuzzy?: boolean };
+
+export const SEARCH_PAGE_SIZE = 10;
+
 /** Read-only public content. Implemented by Supabase and by demo (seed) data. */
 export interface ContentSource {
   settings(): Promise<SiteSettings>;
@@ -30,4 +46,5 @@ export interface ContentSource {
   /** Published and in-press articles, newest first */
   articles(): Promise<ArticleSummary[]>;
   slugRedirect(entity: "article" | "category" | "page", slug: string): Promise<string | null>;
+  search(params: SearchParams): Promise<SearchResult>;
 }

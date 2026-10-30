@@ -502,3 +502,21 @@
   color: var(--fg);
   padding-inline: 1rem;
 }
+
+.search-hit mark {
+  background: color-mix(in oklab, var(--thread) 28%, transparent);
+  color: inherit;
+  padding: 0 0.1em;
+  border-radius: 2px;
+}
+
+mark.to-confirm-inline {
+  display: inline-block;
+  margin-top: 0.25rem;
+  background: color-mix(in oklab, var(--accent) 12%, transparent);
+  color: var(--accent);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  padding: 0.1em 0.35em;
+  border-radius: 2px;
+}

@@ -3,7 +3,7 @@ import { cacheLife, cacheTag } from "next/cache";
 import { isDemoMode } from "@/lib/env";
 import { demoSource } from "./demo";
 import { supabaseSource } from "./supabase";
-import type { ContentSource } from "./source";
+import type { ContentSource, SearchParams } from "./source";
 
 /**
  * Cached public content. Every read is tagged so publishing can invalidate
@@ -154,4 +154,11 @@ export async function getCategoryCounts() {
   for (const a of await source.articles())
     if (a.categorySlug) counts[a.categorySlug] = (counts[a.categorySlug] ?? 0) + 1;
   return counts;
+}
+
+export async function searchArticles(params: SearchParams) {
+  "use cache";
+  cacheTag(TAGS.articles);
+  cacheLife("minutes");
+  return source.search(params);
 }

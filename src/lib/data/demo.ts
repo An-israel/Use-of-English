@@ -4,7 +4,7 @@ import { pages, policies } from "@/content/pages";
 import { sampleInPress, sampleIssues, type SampleArticle, type SampleIssue } from "@/content/samples";
 import { stableUuid } from "@/lib/ids";
 import type { Article, ArticleSummary, BoardMember, IssueSummary } from "@/lib/types";
-import type { ContentSource, IssueWithArticles } from "./source";
+import { SEARCH_PAGE_SIZE, type ContentSource, type IssueWithArticles, type SearchHit } from "./source";
 
 /** Content source backed by the seed files: used when Supabase is not configured. */
 
@@ -152,5 +152,57 @@ export const demoSource: ContentSource = {
   },
   async slugRedirect() {
     return null;
+  },
+  async search(p) {
+    const norm = (x: string) =>
+      x
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+    const terms = norm(p.q ?? "")
+      .split(/\s+/)
+      .filter((t) => t.length > 1)
+      .map((t) => t.replace(/s$/, ""));
+    const esc = (x: string) => x.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+    const mark = (text: string) =>
+      terms.length
+        ? esc(text).replace(
+            new RegExp(`(${terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})\\w*`, "gi"),
+            "<mark>$&</mark>",
+          )
+        : esc(text);
+    const scored = allArticles
+      .filter((a) => {
+        const year = a.issue?.year ?? Number((a.onlineAt ?? "").slice(0, 4));
+        return (
+          (!p.year || year === p.year) &&
+          (!p.volume || a.issue?.volume === p.volume) &&
+          (!p.issue || a.issue?.number === p.issue) &&
+          (!p.category || a.categorySlug === p.category) &&
+          (!p.type || a.type === p.type) &&
+          (!p.author || a.authors.some((x) => norm(x.name).includes(norm(p.author!))))
+        );
+      })
+      .map((a) => {
+        const title = norm(a.title);
+        const meta = norm(`${a.keywords.join(" ")} ${a.authors.map((x) => x.name).join(" ")}`);
+        const abs = norm(a.abstract);
+        let score = 0;
+        for (const t of terms) {
+          const s = (title.includes(t) ? 4 : 0) + (meta.includes(t) ? 2 : 0) + (abs.includes(t) ? 1 : 0);
+          if (!s) return { a, score: -1 };
+          score += s;
+        }
+        return { a, score };
+      })
+      .filter((r) => r.score >= 0)
+      .sort((x, y) => y.score - x.score || (y.a.onlineAt ?? "").localeCompare(x.a.onlineAt ?? ""));
+    const page = Math.max(1, p.page ?? 1);
+    const hits: SearchHit[] = scored.slice((page - 1) * SEARCH_PAGE_SIZE, page * SEARCH_PAGE_SIZE).map(({ a }) => ({
+      article: summary(a),
+      titleHtml: mark(a.title),
+      snippetHtml: mark(a.abstract.length > 260 ? `${a.abstract.slice(0, 260)}…` : a.abstract),
+    }));
+    return { total: scored.length, hits };
   },
 };

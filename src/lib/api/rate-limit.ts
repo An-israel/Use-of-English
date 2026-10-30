@@ -1,5 +1,4 @@
 import "server-only";
-import type { NextRequest } from "next/server";
 import { createHash } from "node:crypto";
 import { isDemoMode } from "@/lib/env";
 import { adminClient } from "@/lib/supabase/clients";
@@ -23,7 +22,7 @@ export const RATE_LIMITS = {
   publicApi: { name: "public-api", max: 300, windowSeconds: 300 },
 } satisfies Record<string, RateLimitRule>;
 
-export function clientKey(req: Pick<NextRequest, "headers">): string {
+export function clientKey(req: { headers: Headers }): string {
   const ip = req.headers.get("x-real-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   return createHash("sha256")
     .update(`${process.env.METRICS_SALT ?? "jhts"}:${ip}`)
@@ -32,7 +31,7 @@ export function clientKey(req: Pick<NextRequest, "headers">): string {
 }
 
 export async function rateLimit(
-  req: Pick<NextRequest, "headers">,
+  req: { headers: Headers },
   rule: RateLimitRule,
   subject?: string,
 ): Promise<{ allowed: boolean; remaining: number; retryAfter: number }> {

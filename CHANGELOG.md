@@ -2,6 +2,15 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - Milestone 3: Public site
+
+- All Issues archive grouped by year and volume, with a year and subject filter and a sticky year index.
+- Articles in Press, Book Reviews, Browse by Subject and subject pages (filter by type and year).
+- Search page and Postgres search function: weighted full-text search, highlighted matches, typo tolerance, filters by year, issue, subject, type and author, pagination.
+- About, Aims and Scope, The Use of English Unit, Call for Papers (with countdown), Author Guidelines, Fees and Payment, Policies index and pages.
+- Contact form saved to the database, with validation, honeypot, Cloudflare Turnstile and rate limiting.
+- End-to-end tests for every public page, search and the contact form.
+
 ## [0.2.0] - Milestone 2: Design checkpoint
 
 - Full home page: current issue feature, Articles in Press rail, subject tiles, most read, book reviews, why publish, Call for Papers countdown, editorial board strip.

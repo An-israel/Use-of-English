@@ -12,7 +12,8 @@ import type {
   Page,
   SiteSettings,
 } from "@/lib/types";
-import type { ContentSource } from "./source";
+import { SEARCH_PAGE_SIZE, type ContentSource } from "./source";
+import { sanitize } from "@/lib/sanitize";
 
 /**
  * Content source backed by Supabase (anonymous client, RLS applies).
@@ -288,6 +289,45 @@ export const supabaseSource: ContentSource = {
       await publicClient().from("articles").select(ARTICLE_SUMMARY_COLUMNS).order("online_at", { ascending: false }),
     );
     return (rows as Row[]).map(mapSummary);
+  },
+
+  async search(p) {
+    const page = Math.max(1, p.page ?? 1);
+    const rows: { id: string; title_html: string; snippet_html: string; total: number }[] = must(
+      await publicClient().rpc("search_articles", {
+        p_query: p.q ?? "",
+        p_year: p.year ?? null,
+        p_volume: p.volume ?? null,
+        p_issue: p.issue ?? null,
+        p_category: p.category ?? null,
+        p_type: p.type ?? null,
+        p_author: p.author ?? null,
+        p_limit: SEARCH_PAGE_SIZE,
+        p_offset: (page - 1) * SEARCH_PAGE_SIZE,
+      }),
+    );
+    if (rows.length === 0) return { total: 0, hits: [] };
+    const full: Row[] = must(
+      await publicClient()
+        .from("articles")
+        .select(ARTICLE_SUMMARY_COLUMNS)
+        .in(
+          "id",
+          rows.map((r) => r.id),
+        ),
+    );
+    const byId = new Map(full.map((r) => [r.id as string, mapSummary(r)]));
+    return {
+      total: Number(rows[0].total),
+      hits: rows
+        .filter((r) => byId.has(r.id))
+        .map((r) => ({
+          article: byId.get(r.id)!,
+          // ts_headline only adds <mark>; sanitise anyway since titles are editor input
+          titleHtml: sanitize(r.title_html),
+          snippetHtml: sanitize(r.snippet_html),
+        })),
+    };
   },
 
   async slugRedirect(entity, slug) {

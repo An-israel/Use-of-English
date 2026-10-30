@@ -26,3 +26,28 @@ Brief section 3.6. Screenshots at 390, 1024 and 1440 px in light and dark themes
 - The embedded PDF reader and download counting arrive with the download routes (Milestone 8). Sample articles have no PDFs, so their PDF and Word buttons are hidden, as the brief requires for missing formats.
 - "Most read this month" uses lifetime views until monthly metrics exist (Milestone 8).
 - All issues, articles and authors shown are SAMPLE content.
+
+# Milestone 3: public site
+
+Every page reviewed at 390, 1024 and 1440 px.
+
+| Page                                       | Hierarchy | Typography | Spacing rhythm | Colour restraint | Originality | Mobile |
+| ------------------------------------------ | --------- | ---------- | -------------- | ---------------- | ----------- | ------ |
+| All Issues                                 | 9         | 9          | 8              | 9                | 8           | 8      |
+| Articles in Press                          | 8         | 9          | 8              | 9                | 8           | 8      |
+| Book Reviews                               | 9         | 9          | 8              | 9                | 8           | 8      |
+| Subjects and subject pages                 | 9         | 9          | 8              | 9                | 9           | 8      |
+| Search                                     | 8         | 9          | 8              | 9                | 8           | 8      |
+| About, Aims and Scope, Use of English Unit | 8         | 9          | 8              | 9                | 8           | 8      |
+| Call for Papers, Author Guidelines, Fees   | 9         | 9          | 8              | 9                | 8           | 8      |
+| Policies and policy pages                  | 8         | 9          | 8              | 9                | 8           | 8      |
+| Contact                                    | 8         | 9          | 8              | 9                | 8           | 8      |
+
+## Fixed during review
+
+| Issue found                                                                | Score before  | Fix                                                                                  |
+| -------------------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------ |
+| Pages without a contents list left an empty column and looked off-centre   | Spacing 7     | Reading column leans left (asymmetric) when there is no contents list.               |
+| Subject lists mixed issues but showed only page numbers                    | Hierarchy 7   | Rows in mixed lists show their issue label above the pages.                          |
+| Search filters filled the first screen on phones                           | Mobile 7      | Filters fold behind a "Filters" control on small screens (works without JavaScript). |
+| The archive's year index and year filter shared a label for screen readers | Accessibility | Index renamed "Jump to year".                                                        |
