@@ -43,7 +43,11 @@ export function AssetUpload({
       if (!ticket.ok) return setError(ticket.message);
       const { error: up } = await browserClient()
         .storage.from(ticket.bucket)
-        .uploadToSignedUrl(ticket.path, ticket.token, file, { contentType: file.type });
+        .uploadToSignedUrl(ticket.path, ticket.token, file, {
+          contentType: file.type,
+          // File names are versioned, so a stored file never changes: cache it for a year (item 49).
+          cacheControl: "31536000",
+        });
       if (up) return setError("The upload was interrupted. Please try again.");
       const r = await commitAsset(slot, id, ticket.path);
       if (!r.ok) return setError(r.message);

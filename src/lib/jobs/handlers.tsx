@@ -4,6 +4,7 @@ import {
   PaymentReceipt,
   ReconciliationFlags,
   ReviewInvitation,
+  ReviewReminder,
   ReviewSubmitted,
   StatusChanged,
   SubmissionReceived,
@@ -300,6 +301,36 @@ async function reconciliationEmail(payload: Record<string, unknown>) {
   }
 }
 
+async function reviewReminder(payload: Record<string, unknown>) {
+  const { data: r, error } = await adminClient()
+    .from("review_assignments")
+    .select(
+      "id, status, due_at, reviewer:profiles!review_assignments_reviewer_id_fkey ( full_name, email ), submission:submissions ( title )",
+    )
+    .eq("id", payload.assignment_id)
+    .single();
+  if (error || !r) throw new Error(`review lookup failed: ${error?.message ?? "not found"}`);
+  if (!["invited", "accepted"].includes(r.status)) return; // answered since the reminder was queued
+  const reviewer = r.reviewer as unknown as { full_name: string; email: string };
+  const sub = r.submission as unknown as { title: string };
+  await sendEmail({
+    to: reviewer.email,
+    subject: Date.parse(r.due_at) < Date.now() ? "Your JHTS review is overdue" : "Reminder: your JHTS review",
+    template: "review_reminder",
+    relatedId: r.id,
+    dedupeKey: `review-reminder:${r.id}:${new Date().toISOString().slice(0, 10)}`,
+    element: (
+      <ReviewReminder
+        name={reviewer.full_name || "colleague"}
+        title={sub.title}
+        due={formatDate(r.due_at)}
+        overdue={Date.parse(r.due_at) < Date.now()}
+        url={`${siteUrl}/review/${r.id}`}
+      />
+    ),
+  });
+}
+
 export const HANDLERS: Record<string, (payload: Record<string, unknown>) => Promise<void>> = {
   dispatch_event: dispatchEvent,
   payment_receipt: paymentReceipt,
@@ -309,4 +340,5 @@ export const HANDLERS: Record<string, (payload: Record<string, unknown>) => Prom
   email_review_invitation: (p) => reviewEmail(p, "invitation"),
   email_review_submitted: (p) => reviewEmail(p, "submitted"),
   email_reconciliation: reconciliationEmail,
+  email_review_reminder: reviewReminder,
 };

@@ -191,6 +191,19 @@ test("reconciliation flags every kind of mismatch and can be resolved", async ({
   await expect(page.getByText("Test row inserted by hand; no money involved.")).toBeVisible();
 });
 
+test("a payment whose webhook was missed is confirmed with Paystack from the admin", async ({ page }) => {
+  await signIn(page, "finance");
+  await page.goto(`/admin/payments/${ids[ref("MISSED")]}`);
+  await page.getByRole("button", { name: "Check with Paystack" }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Check with Paystack" }).click();
+  await expect(page.getByText("Confirmed with Paystack and recorded as paid.", { exact: false })).toBeVisible({
+    timeout: 15_000,
+  });
+  const { data } = await sb().from("payments").select("status, receipt_number").eq("id", ids[ref("MISSED")]).single();
+  expect(data?.status).toBe("success");
+  expect(data?.receipt_number).toMatch(/^JHTS-R-/);
+});
+
 test("editors view finance but cannot export or refund; authors are kept out", async ({ page }) => {
   await signIn(page, "editor");
   await page.goto("/admin/payments");

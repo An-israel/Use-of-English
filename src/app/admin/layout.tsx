@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Suspense, type ReactNode } from "react";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { Toaster } from "@/components/ui/Toaster";
-import { requireRole } from "@/lib/auth";
+import { AdminUnavailable } from "@/components/admin/AdminUnavailable";
+import { requireRole, ServiceUnavailableError } from "@/lib/auth";
 import { isPaymentTestMode } from "@/lib/payments/paystack";
 import { STAFF_ROLES } from "@/lib/workflow";
 
@@ -28,7 +29,19 @@ function testMode(): boolean {
 }
 
 async function Guarded({ children }: { children: ReactNode }) {
-  const viewer = await requireRole(STAFF_ROLES, "/admin");
+  let viewer;
+  try {
+    viewer = await requireRole(STAFF_ROLES, "/admin");
+  } catch (e) {
+    // The layout sits outside admin/error.tsx, so an outage while checking the role is handled here.
+    if (!(e instanceof ServiceUnavailableError)) throw e;
+    console.error(e);
+    return (
+      <main id="main" className="bg-bg min-h-screen">
+        <AdminUnavailable />
+      </main>
+    );
+  }
   const banner = testMode() ? (
     <p
       role="note"

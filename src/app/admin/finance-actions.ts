@@ -85,3 +85,48 @@ export async function reconcileNow(form: FormData): Promise<ActionResult> {
       : `${r.date}: everything matches (${r.checked.paystack} Paystack transactions checked).`,
   };
 }
+
+/**
+ * A payment Paystack took but whose webhook never arrived: verify it with
+ * Paystack now and apply it exactly as the webhook would (idempotent).
+ */
+export async function recheckPayment(paymentId: string): Promise<ActionResult> {
+  const s = await staff([...FINANCE]);
+  if (!s) return notFinance;
+  const { data: p } = await s.db.from("payments").select("reference, status").eq("id", paymentId).maybeSingle();
+  if (!p) return { ok: false, message: "Payment not found." };
+  if (p.status === "success" || p.status === "refunded")
+    return { ok: true, message: "This payment is already recorded as paid." };
+  const { paystack } = await import("@/lib/payments/paystack");
+  const { adminClient } = await import("@/lib/supabase/clients");
+  const { withDbRetry } = await import("@/lib/resilience");
+  let v;
+  try {
+    v = await paystack().verify(p.reference);
+  } catch {
+    return { ok: false, message: "Paystack couldn’t be reached. Try again in a few minutes." };
+  }
+  if (v.status !== "success")
+    return { ok: true, message: `Paystack reports this payment as “${v.status}”. Nothing was changed.` };
+  const { data: outcome, error } = await withDbRetry(() =>
+    adminClient().rpc("apply_payment_success", {
+      p_reference: v.reference,
+      p_amount_kobo: v.amountKobo,
+      p_currency: v.currency,
+      p_paystack_id: v.paystackId,
+      p_channel: v.channel,
+      p_paid_at: v.paidAt,
+      p_raw: v.raw as object,
+    }),
+  );
+  if (error) return { ok: false, message: dbMessage(error, "The payment couldn’t be applied.") };
+  kickJobs();
+  revalidatePath(`/admin/payments/${paymentId}`);
+  return {
+    ok: true,
+    message:
+      outcome === "amount_mismatch"
+        ? "Paystack received a different amount; it has been flagged under Reconciliation instead."
+        : "Confirmed with Paystack and recorded as paid. The author’s receipt is on its way.",
+  };
+}

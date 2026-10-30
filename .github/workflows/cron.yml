@@ -2,7 +2,8 @@ name: Scheduled jobs
 
 # Vercel's free plan runs cron only once a day, so this free schedule calls the
 # job worker every 10 minutes. Actions also nudge the worker immediately.
-# Once a day (01:43 Lagos time) it also reconciles yesterday's payments.
+# Once a day (01:43 Lagos time) it also runs daily maintenance and reconciles
+# yesterday's payments.
 on:
   schedule:
     - cron: "*/10 * * * *"
@@ -19,6 +20,12 @@ jobs:
           curl --fail --silent --show-error --max-time 60 \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             "${{ vars.SITE_URL }}/api/cron/jobs"
+      - name: Daily maintenance (reminders, clean-up, alerts)
+        if: ${{ github.event.schedule == '43 0 * * *' }}
+        run: |
+          curl --fail --silent --show-error --max-time 120 \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ vars.SITE_URL }}/api/cron/daily"
       - name: Reconcile yesterday's payments with Paystack
         if: ${{ github.event.schedule == '43 0 * * *' }}
         run: |

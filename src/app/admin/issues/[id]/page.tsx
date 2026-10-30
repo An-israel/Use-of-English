@@ -12,6 +12,7 @@ import { userClient } from "@/lib/supabase/clients";
 import { ARTICLE_TYPE_LABEL, type ArticleType } from "@/lib/types";
 import { getSettings } from "@/lib/data";
 import { assignDois, deleteIssue, publishIssue, unpublishIssue, unscheduleIssue } from "../actions";
+import { BulkPdfUpload } from "./BulkPdfUpload";
 import { IssueArticles, IssueDetailsForm, ScheduleForm } from "./Editors";
 
 export const metadata = { title: "Issue" };
@@ -32,7 +33,7 @@ export default async function IssuePage({ params }: { params: Promise<{ id: stri
   const [{ data: articles }, { data: candidates }, { data: versions }] = await Promise.all([
     db
       .from("articles")
-      .select("id, title, status, type, first_page, last_page, doi")
+      .select("id, title, slug, status, type, first_page, last_page, doi, pdf_path")
       .eq("issue_id", id)
       .is("deleted_at", null)
       .order("sort_order"),
@@ -134,6 +135,25 @@ export default async function IssuePage({ params }: { params: Promise<{ id: stri
               candidates={candidates ?? []}
             />
           </section>
+          {!!articles?.length && (
+            <section className="admin-box" aria-labelledby="bulk">
+              <h2 id="bulk" className="font-display mb-1 text-[1.15rem]">
+                Article PDFs
+              </h2>
+              <p className="text-muted mb-4 text-[0.86rem]">
+                {articles.filter((a) => a.pdf_path).length} of {articles.length} articles have a PDF. Upload several at
+                once; replaced files are kept.
+              </p>
+              <BulkPdfUpload
+                articles={articles.map((a) => ({
+                  id: a.id,
+                  slug: a.slug,
+                  title: a.title,
+                  hasPdf: Boolean(a.pdf_path),
+                }))}
+              />
+            </section>
+          )}
           <section className="admin-box" aria-labelledby="details">
             <h2 id="details" className="font-display mb-4 text-[1.15rem]">
               Details and editorial

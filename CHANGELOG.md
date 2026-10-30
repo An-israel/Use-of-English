@@ -2,6 +2,22 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.9.0] - Milestone 9: Reliability and operations
+
+- System screen (Super Admin): database and storage health, queue size, failed jobs with retry and discard, scheduled jobs and their last result, off-site backups, email failures and suppressions, schema version. Audit log screen with filters.
+- Notifications: a bell in the admin for new submissions, payments, failed payments, reviews, contact messages and reconciliation flags, shown to the roles that need them. Live through Supabase Realtime, with polling every minute as a fallback.
+- Daily maintenance (`/api/cron/daily`): reminders to reviewers two days before a review is due and when overdue (once each), removal of uploads abandoned for over a day, expiry of untouched drafts, and alerts to the Super Admin about failed jobs, missing backups and the certificate's expiry date.
+- Email: a signed Resend webhook records bounces and complaints and stops sending to those addresses.
+- Backups: a weekly GitHub Actions workflow dumps the database and the file list, encrypts them and copies them to Google Drive and Supabase Storage, then reports to the System screen. Restore and rollback drills (`npm run db:restore-drill`, `npm run db:rollback-test`); every migration's rollback is tested in CI.
+- Public read-only API at `/api/v1` (issues, categories, articles with filters and pages, one article by slug), CORS-open and versioned.
+- Tracing with OpenTelemetry (Sentry when `SENTRY_DSN` is set), Vercel Analytics and Speed Insights on Vercel, retries for database deadlocks, and an admin screen that says plainly when the database can't be reached.
+- Bulk PDF upload on the issue editor: drop several PDFs, each is matched to an article by name, three upload at a time.
+- Finance: "Check with Paystack" re-verifies a pending payment on demand.
+- Docs: `docs/ENGINEERING.md` (all 111 items, SLOs, measurements, costs), `docs/RUNBOOK.md` and `docs/POSTMORTEM_TEMPLATE.md`.
+- Migration 1800: staff notifications, email suppressions, backup runs and the failed-payment event.
+- Fixes: when the database was unreachable, the admin sent staff to the login page as if they were signed out.
+- Tests: operations end-to-end tests, chaos tests for provider outages, webhook signature and concurrency unit tests, a query-count check, and 38 database checks.
+
 ## [0.8.0] - Milestone 8: Downloads, analytics and indexing
 
 - Downloads: `/api/download/article/[id]` and `/api/download/issue/[id]` (PDF or Word) count the download, then redirect to the CDN under a clean name such as `JHTS_Vol1_No1_2027_Okafor.pdf`. Missing formats return 404 and their buttons stay hidden.

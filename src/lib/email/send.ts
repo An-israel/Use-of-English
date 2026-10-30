@@ -25,7 +25,7 @@ export type SendInput = {
  * RESEND_API_KEY (development, tests) the message is logged instead of sent.
  * Throws on provider failure so the job queue retries with backoff.
  */
-export async function sendEmail(input: SendInput): Promise<"sent" | "logged" | "duplicate"> {
+export async function sendEmail(input: SendInput): Promise<"sent" | "logged" | "duplicate" | "suppressed"> {
   const db = adminClient();
   if (input.dedupeKey) {
     const { data: existing } = await db
@@ -34,6 +34,25 @@ export async function sendEmail(input: SendInput): Promise<"sent" | "logged" | "
       .eq("dedupe_key", input.dedupeKey)
       .maybeSingle();
     if (existing && existing.status !== "failed" && existing.status !== "queued") return "duplicate";
+  }
+
+  // Addresses that bounced or complained are not mailed again (item 101).
+  const { data: suppressed } = await db.from("email_suppressions").select("reason").eq("email", input.to).maybeSingle();
+  if (suppressed) {
+    await db.from("email_outbox").upsert(
+      {
+        to_email: input.to,
+        subject: input.subject,
+        template: input.template,
+        related_id: input.relatedId ?? null,
+        dedupe_key: input.dedupeKey ?? null,
+        status: "suppressed",
+        error: `address suppressed (${suppressed.reason})`,
+      },
+      { onConflict: "dedupe_key" },
+    );
+    logger.warn({ template: input.template, reason: suppressed.reason }, "email not sent: address suppressed");
+    return "suppressed";
   }
 
   const html = await render(input.element);

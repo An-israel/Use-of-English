@@ -49,6 +49,8 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin/pages", label: "Pages and policies", short: "Pg", group: "Journal", roles: EDITORS },
   { href: "/admin/board", label: "Editorial board", short: "Brd", group: "Journal", roles: EDITORS },
   { href: "/admin/users", label: "Users and roles", short: "Usr", group: "Office", roles: CONTENT },
+  { href: "/admin/system", label: "System", short: "Sys", group: "Office", roles: ["super_admin"] },
+  { href: "/admin/audit", label: "Audit log", short: "Aud", group: "Office", roles: ["super_admin"] },
   { href: "/admin/settings", label: "Settings", short: "Set", group: "Office", roles: ["super_admin"] },
 ];
 

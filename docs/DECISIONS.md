@@ -92,3 +92,12 @@ Answers given before Milestone 1, plus changes to the brief's data model and why
 - **Crossref is export-only** until JHTS is a member: DOIs follow `prefix/jhts.YEAR.VOL.ISSUE.NN` in contents order; "Assign DOIs" writes them to articles that lack one.
 - **OAI-PMH** offers `oai_dc` only, no sets, day granularity and resumption tokens of 100 records; it returns 404 while the flag is off.
 - **Open Graph images** use the OFL-licensed Fraunces and Instrument Sans files in `assets/fonts` (licences included), read from disk as the Next.js documentation shows.
+
+## Milestone 9: reliability and operations
+
+- **One queue, one place to look.** Failed background work lands in the dead-letter table after six attempts and shows on the System screen with retry and discard, rather than in a separate tool.
+- **Notifications are rows, not pushes.** A trigger turns domain events into `staff_notifications` that RLS limits to the right roles. Realtime delivers them live; the bell falls back to polling every minute, so nothing depends on a websocket.
+- **Backups are ours as well as Supabase's.** Supabase's daily backups don't cover Storage files and are lost if the project is deleted, so a weekly encrypted dump goes to Google Drive and a second location, and a restore drill proves it can be read back.
+- **An outage is not "signed out".** If the profile can't be read, the admin shows "The editorial office can't reach the database" instead of redirecting to the login page.
+- **Production costs about $45 a month** (Vercel Pro and Supabase Pro), because Vercel's free plan is for non-commercial use and Supabase's free projects pause and have no backups. The free tiers are fine until launch. Details in `docs/ENGINEERING.md`.
+- **The public API is read-only and versioned** (`/api/v1`, `X-API-Version: 1`), returns only published content and is open to any origin.

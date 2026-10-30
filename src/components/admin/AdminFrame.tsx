@@ -5,6 +5,7 @@ import { useSyncExternalStore, type ReactNode } from "react";
 import clsx from "clsx";
 import { ThemeToggle } from "@/components/site/ThemeToggle";
 import { OPEN_ADMIN_COMMAND } from "./AdminCommand";
+import { NotificationBell } from "./NotificationBell";
 
 const KEY = "jhts-admin-sidebar";
 const listeners = new Set<() => void>();
@@ -75,6 +76,7 @@ export function AdminFrame({
             >
               <kbd className="border-rule rounded-[2px] border px-1.5 py-0.5 font-sans">⌘K</kbd>
             </button>
+            <NotificationBell />
             <ThemeToggle />
             <button
               type="button"

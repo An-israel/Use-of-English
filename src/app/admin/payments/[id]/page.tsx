@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ActionButton } from "@/components/admin/ActionButton";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { requireRole } from "@/lib/auth";
 import { FEE_LABEL, LEDGER_COLUMNS, type LedgerRow } from "@/lib/finance";
 import { formatDate, formatNaira, isoDateFromNow } from "@/lib/format";
 import { userClient } from "@/lib/supabase/clients";
 import { StatusBadge } from "../StatusBadge";
+import { recheckPayment } from "../../finance-actions";
 import { RefundForm } from "./RefundForm";
 
 export const metadata = { title: "Payment" };
@@ -59,7 +61,19 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
           </span>
         }
         actions={
-          p.receipt_number ? (
+          canRefund && ["pending", "failed", "abandoned"].includes(p.status) ? (
+            <ActionButton
+              run={recheckPayment.bind(null, p.id)}
+              confirm={{
+                title: "Check this payment with Paystack?",
+                description:
+                  "If Paystack confirms the money was received, the payment is recorded as paid exactly as if its webhook had arrived, and the author gets a receipt.",
+                confirmLabel: "Check with Paystack",
+              }}
+            >
+              Check with Paystack
+            </ActionButton>
+          ) : p.receipt_number ? (
             <a href={`/api/receipts/${p.id}`} className="btn-line">
               Download receipt
             </a>

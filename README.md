@@ -73,18 +73,27 @@ Reviewers find their requests on `/account` and review at `/review/<id>`.
 - OAI-PMH: switch on the `oai_pmh` flag in Settings; the base URL is `/api/oai`.
 - Views and downloads appear under Admin → Analytics. Set `METRICS_SALT` (16+ random characters) in production.
 
+## Operations
+
+- `docs/ENGINEERING.md`: how each of the 111 engineering items is met, SLOs and measurements. `docs/RUNBOOK.md`: setup, backups, incidents and recovery. `docs/POSTMORTEM_TEMPLATE.md`: for incidents.
+- Scheduled jobs: `/api/cron/jobs` (queue), `/api/cron/reconcile` and `/api/cron/daily` (reminders, clean-up, alerts), called by Vercel Cron or `.github/workflows/cron.yml` with `CRON_SECRET`. Weekly backups run in `.github/workflows/backup.yml`.
+- Secrets added in this milestone: `RESEND_WEBHOOK_SECRET` (bounce webhook at `/api/webhooks/email`), `ALERT_EMAIL` (optional, defaults to the Super Admin), and for backups in GitHub: `SUPABASE_DB_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `BACKUP_PASSPHRASE`, `RCLONE_CONFIG` and `CRON_SECRET` (listed at the top of the workflow).
+- Admin → System shows health, failed jobs, scheduled jobs and backups; Admin → Audit log shows every change. The public API is documented at `/api/v1`.
+
 ## Scripts
 
-| Command                                 | What it does                                        |
-| --------------------------------------- | --------------------------------------------------- |
-| `npm run dev` / `build` / `start`       | Develop, build, serve                               |
-| `npm run lint` · `typecheck` · `format` | ESLint, TypeScript, Prettier                        |
-| `npm test`                              | Unit tests (Vitest)                                 |
-| `npm run test:e2e`                      | Playwright end-to-end tests                         |
-| `npm run seed:generate`                 | Rebuild `supabase/seed.sql` from `src/content`      |
-| `npm run samples:delete`                | Remove all SAMPLE issues and articles before launch |
-| `npm run db:test`                       | Row Level Security tests against `DATABASE_URL`     |
-| `npm run screenshots -- <url> <dir>`    | Design review screenshots at 390, 1024 and 1440 px  |
+| Command                                 | What it does                                                   |
+| --------------------------------------- | -------------------------------------------------------------- |
+| `npm run dev` / `build` / `start`       | Develop, build, serve                                          |
+| `npm run lint` · `typecheck` · `format` | ESLint, TypeScript, Prettier                                   |
+| `npm test`                              | Unit tests (Vitest)                                            |
+| `npm run test:e2e`                      | Playwright end-to-end tests                                    |
+| `npm run seed:generate`                 | Rebuild `supabase/seed.sql` from `src/content`                 |
+| `npm run samples:delete`                | Remove all SAMPLE issues and articles before launch            |
+| `npm run db:test`                       | Row Level Security tests against `DATABASE_URL`                |
+| `npm run db:rollback-test`              | Apply every rollback, then every migration, in one transaction |
+| `npm run db:restore-drill`              | Restore the latest backup into a scratch database              |
+| `npm run screenshots -- <url> <dir>`    | Design review screenshots at 390, 1024 and 1440 px             |
 
 ## Layout
 

@@ -217,3 +217,43 @@ export function ReconciliationFlags({ date, flags, url }: { date: string; flags:
     </Layout>
   );
 }
+
+export function ReviewReminder({
+  name,
+  title,
+  due,
+  overdue,
+  url,
+}: {
+  name: string;
+  title: string;
+  due: string;
+  overdue: boolean;
+  url: string;
+}) {
+  return (
+    <Layout
+      preview={overdue ? `Your review is overdue: ${title}` : `Your review is due ${due}`}
+      title={overdue ? "Your review is overdue" : "A gentle reminder"}
+    >
+      <P>Dear {name},</P>
+      <P>
+        {overdue
+          ? `Your review of “${title}” was due on ${due}. If you need more time, reply to this email and the editors will adjust the date.`
+          : `Your review of “${title}” is due on ${due}. Thank you for making time for it.`}
+      </P>
+      <Button href={url}>Open the review</Button>
+    </Layout>
+  );
+}
+
+export function OpsAlert({ subject, lines, url }: { subject: string; lines: string[]; url: string }) {
+  return (
+    <Layout preview={subject} title={subject}>
+      {lines.map((l) => (
+        <P key={l}>{l}</P>
+      ))}
+      <Button href={url}>Open the System screen</Button>
+    </Layout>
+  );
+}

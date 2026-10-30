@@ -210,4 +210,21 @@ select pg_temp.check((select status from public.payments where id = '44444444-00
 select pg_temp.check((select net_kobo from public.payment_ledger where reference = 'JHTS-RF-TEST-1') = 0, 'the ledger nets refunds');
 reset role;
 
+-- Live notifications (milestone 9)
+select set_config('request.jwt.claims', '', true), set_config('request.jwt.claim.sub', '', true);
+insert into public.contact_messages (name, email, subject, message) values ('N', 'n@example.test', 'RLS notify', 'Hello editors.');
+update public.payments set status = 'failed' where id = '44444444-0000-4000-a000-000000000001';
+select pg_temp.as_user('00000000-0000-4000-a000-00000000000d');
+select pg_temp.check(exists (select 1 from public.staff_notifications where body = 'RLS notify'), 'editors are notified of contact messages');
+select pg_temp.check(not exists (select 1 from public.staff_notifications where kind = 'payment' and body = 'JHTS-RF-TEST-1'),
+  'editors do not get payment notifications');
+reset role;
+select pg_temp.as_user('00000000-0000-4000-a000-000000000010');
+select pg_temp.check(exists (select 1 from public.staff_notifications where kind = 'payment' and body = 'JHTS-RF-TEST-1'),
+  'a failed payment notifies the finance officer');
+reset role;
+select pg_temp.as_user('00000000-0000-4000-a000-00000000000a');
+select pg_temp.check((select count(*) from public.staff_notifications) = 0, 'authors see no staff notifications');
+reset role;
+
 rollback;

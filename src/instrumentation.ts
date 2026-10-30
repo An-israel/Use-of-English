@@ -1,12 +1,20 @@
 import type { Instrumentation } from "next";
 
 /**
- * Error tracking and tracing (items 60–61). Sentry is enabled only when
- * SENTRY_DSN is set (free tier is enough for JHTS). Every unhandled server
- * error is also written to the structured log with its request id.
+ * Error tracking and tracing (items 60–61). With SENTRY_DSN set, Sentry
+ * traces requests, database calls (fetch) and queue jobs; it brings its own
+ * OpenTelemetry setup. Without it, @vercel/otel registers OpenTelemetry so
+ * Vercel's tracing (or any OTLP collector) receives the same spans. Every
+ * unhandled server error is also written to the structured log with its
+ * request id.
  */
 export async function register() {
-  if (process.env.NEXT_RUNTIME === "nodejs" && process.env.SENTRY_DSN) {
+  if (!process.env.SENTRY_DSN) {
+    const { registerOTel } = await import("@vercel/otel");
+    registerOTel({ serviceName: "jhts" });
+    return;
+  }
+  if (process.env.NEXT_RUNTIME === "nodejs") {
     const Sentry = await import("@sentry/nextjs");
     Sentry.init({
       dsn: process.env.SENTRY_DSN,

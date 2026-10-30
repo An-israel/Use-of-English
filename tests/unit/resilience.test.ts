@@ -44,3 +44,33 @@ describe("resilience", () => {
     await expect(cb.call(async () => "ok")).resolves.toBe("ok");
   });
 });
+
+describe("withDbRetry", () => {
+  it("retries deadlocks and serialization failures, then succeeds", async () => {
+    const { withDbRetry } = await import("@/lib/resilience");
+    let calls = 0;
+    const res = await withDbRetry(
+      async () =>
+        ++calls < 3
+          ? { data: null, error: { code: calls === 1 ? "40P01" : "40001", message: "deadlock" } }
+          : { data: 1, error: null },
+      { sleep: async () => {} },
+    );
+    expect(res).toEqual({ data: 1, error: null });
+    expect(calls).toBe(3);
+  });
+  it("returns other errors at once, and the last transient error after the attempts", async () => {
+    const { withDbRetry } = await import("@/lib/resilience");
+    let calls = 0;
+    const other = await withDbRetry(async () => (calls++, { data: null, error: { code: "23505", message: "dup" } }), {
+      sleep: async () => {},
+    });
+    expect(other.error?.code).toBe("23505");
+    expect(calls).toBe(1);
+    const stuck = await withDbRetry(async () => ({ data: null, error: { code: "40P01", message: "deadlock" } }), {
+      attempts: 2,
+      sleep: async () => {},
+    });
+    expect(stuck.error?.code).toBe("40P01");
+  });
+});

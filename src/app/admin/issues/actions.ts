@@ -12,6 +12,7 @@ import {
   type ActionResult,
 } from "@/lib/admin/server";
 import { TAGS } from "@/lib/data";
+import { withDbRetry } from "@/lib/resilience";
 import { sanitize } from "@/lib/sanitize";
 
 /**
@@ -66,7 +67,7 @@ export async function saveIssue(form: FormData): Promise<ActionResult> {
 export async function publishIssue(id: string): Promise<ActionResult> {
   const s = await staff(EDITORS);
   if (!s) return denied;
-  const { error } = await s.db.rpc("publish_issue", { p_issue: id });
+  const { error } = await withDbRetry(() => s.db.rpc("publish_issue", { p_issue: id }));
   if (error) return { ok: false, message: dbMessage(error, "Couldn’t publish the issue.") };
   return done("Issue published. Its articles are live.");
 }

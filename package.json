@@ -1,6 +1,6 @@
 {
   "name": "jhts",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -18,9 +18,12 @@
     "screenshots": "node scripts/screenshots.mjs",
     "admin:create": "tsx scripts/create-super-admin.ts",
     "predev": "node scripts/copy-pdf-worker.mjs",
-    "prebuild": "node scripts/copy-pdf-worker.mjs"
+    "prebuild": "node scripts/copy-pdf-worker.mjs",
+    "db:rollback-test": "scripts/test-rollbacks.sh",
+    "db:restore-drill": "scripts/restore-test.sh"
   },
   "dependencies": {
+    "@opentelemetry/api": "^1.9.1",
     "@radix-ui/react-dialog": "^1.3.1",
     "@react-email/render": "^2.2.0",
     "@react-pdf/renderer": "^4.9.0",
@@ -31,6 +34,9 @@
     "@tiptap/pm": "^3.32.2",
     "@tiptap/react": "^3.32.2",
     "@tiptap/starter-kit": "^3.32.2",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/otel": "^2.2.0",
+    "@vercel/speed-insights": "^2.0.0",
     "clsx": "^2.1.1",
     "motion": "^14.8.0",
     "next": "16.4.3",

@@ -114,3 +114,20 @@ The admin uses the same fonts and tokens in a denser, calmer working layout. Scr
 | The reader rendered only its first two pages                     | Broken       | Page observers are attached after the pages mount. |
 | "1 views" in the most-read list                                  | Typography 7 | Singular and plural, "downloads" spelled out.      |
 | Most-read figures took a fixed width and squeezed bars on phones | Mobile 7     | Figures size to their content.                     |
+
+# Design self-review: Milestone 9 (reliability and operations)
+
+| Screen                      | Hierarchy | Typography | Spacing rhythm | Colour restraint | Originality | Mobile |
+| --------------------------- | --------- | ---------- | -------------- | ---------------- | ----------- | ------ |
+| System                      | 9         | 8          | 8              | 9                | 8           | 8      |
+| Audit log                   | 8         | 8          | 8              | 9                | 8           | 8      |
+| Notifications panel         | 9         | 9          | 8              | 9                | 8           | 8      |
+| Bulk PDF upload             | 9         | 8          | 8              | 9                | 8           | 8      |
+| Service unavailable (admin) | 9         | 9          | 8              | 9                | 8           | 8      |
+
+## Fixed during review
+
+| Issue found                                                                 | Score before | Fix                                                                            |
+| --------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------ |
+| With the database down, the admin redirected to the login page              | Broken       | A failed profile read is reported as an outage; the admin shows a clear panel. |
+| A new failed payment or contact message broke event recording (trigger bug) | Broken       | The notification trigger was rewritten and can no longer block an event.       |

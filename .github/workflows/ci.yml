@@ -55,9 +55,20 @@ jobs:
         run: npm run db:test
         env:
           DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
-      - name: End-to-end tests
+      - name: Every migration reverses and re-applies (item 55)
+        run: npm run db:rollback-test
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+      - name: Query-count (N+1) and end-to-end tests
+        env:
+          # Local-only values for the test run; production secrets never reach CI.
+          PAYSTACK_MODE: mock
+          CRON_SECRET: ci-cron-secret-0123456789abcdef
+          METRICS_SALT: ci-metrics-salt-0123456789
+          RESEND_WEBHOOK_SECRET: whsec_Y2ktd2ViaG9vay1zZWNyZXQtMDEyMzQ1Njc4OWFiY2RlZg==
         run: |
           eval "$(supabase status -o env | sed 's/^/export /')"
           export NEXT_PUBLIC_SUPABASE_URL="$API_URL" NEXT_PUBLIC_SUPABASE_ANON_KEY="$ANON_KEY" SUPABASE_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY"
+          npx vitest run tests/unit/n-plus-one.test.ts
           npx playwright install --with-deps chromium
           npm run build && npm run test:e2e
