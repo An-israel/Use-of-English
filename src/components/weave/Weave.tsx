@@ -52,10 +52,9 @@ export function Weave({
     seed,
   });
   const fadeId = `wf-${uid}`;
-  const drawId = `wd-${uid}`;
   const total = geo.lines.length;
 
-  const mask = fade !== "none" || animate;
+  const mask = fade !== "none";
 
   return (
     <svg
@@ -68,44 +67,39 @@ export function Weave({
     >
       {mask && (
         <defs>
-          {fade !== "none" && <FadeGradient id={`${fadeId}-g`} fade={fade} />}
+          <FadeGradient id={`${fadeId}-g`} fade={fade} />
           <mask id={fadeId} maskUnits="userSpaceOnUse" x="0" y="0" width={width} height={height}>
-            <rect width={width} height={height} fill={fade !== "none" ? `url(#${fadeId}-g)` : "#fff"} />
+            <rect width={width} height={height} fill={`url(#${fadeId}-g)`} />
           </mask>
-          {animate && (
-            <mask id={drawId} maskUnits="userSpaceOnUse" x="0" y="0" width={width} height={height}>
-              {geo.lines.map((l, i) => (
-                <path
-                  key={i}
-                  d={l.d}
-                  stroke="#fff"
-                  strokeWidth={strokeWidth * 4}
-                  fill="none"
-                  className="weave-draw"
-                  style={
-                    {
-                      "--len": l.length,
-                      strokeDasharray: l.length,
-                      strokeDashoffset: l.length,
-                      animationDelay: `${Math.round((i / total) * 500)}ms`,
-                    } as CSSProperties
-                  }
-                />
-              ))}
-              {geo.lozenges.length > 0 && <rect width={width} height={height} fill="#fff" className="weave-fade-in" />}
-            </mask>
-          )}
         </defs>
       )}
       <g mask={fade !== "none" ? `url(#${fadeId})` : undefined}>
-        <g mask={animate ? `url(#${drawId})` : undefined}>
+        <g>
           {colours.map((colour, ci) => (
             <g key={ci} stroke={colour} strokeWidth={strokeWidth} fill="none" strokeLinecap="butt">
               {geo.lines
-                .filter((l) => l.colour === ci)
-                .map((l, i) => (
-                  <path key={i} d={l.d} strokeDasharray={l.dash} />
-                ))}
+                .map((l, i) => ({ l, i }))
+                .filter(({ l }) => l.colour === ci)
+                .map(({ l, i }) =>
+                  animate ? (
+                    // Draws as a solid thread, then settles into its over/under rhythm.
+                    <path
+                      key={i}
+                      d={l.d}
+                      strokeDasharray={l.dash}
+                      className="weave-thread"
+                      style={
+                        {
+                          "--len": l.length,
+                          "--dash": l.dash,
+                          animationDelay: `${Math.round((i / total) * 500)}ms`,
+                        } as CSSProperties
+                      }
+                    />
+                  ) : (
+                    <path key={i} d={l.d} strokeDasharray={l.dash} />
+                  ),
+                )}
             </g>
           ))}
         </g>

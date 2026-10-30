@@ -36,3 +36,13 @@ Answers given before Milestone 1, plus changes to the brief's data model and why
 - **Demo mode**: with no Supabase keys, the public site renders from `src/content`, the same files that generate `supabase/seed.sql`. This lets the committee review the design from any preview link.
 - **Content Security Policy**: public pages are statically generated, so per-request nonces are unavailable and inline scripts are allowed. XSS is handled by sanitising all rich text on save and on render; every other source is locked to named origins.
 - **`/privacy`** permanently redirects to `/policies/privacy`, so the privacy text exists in one place.
+
+## Milestone 4: accounts and roles
+
+- **One role per person.** A Reviewer keeps everything an Author can do: they can submit their own work (migration 0900). Finance Officers still cannot submit, as the roles table in section 6 says.
+- **Who invites whom.** Super Admins invite any role. Editors and Book Review Editors invite Reviewers only, and may turn an existing Author into a Reviewer. They cannot change any other role.
+- **Roles live in two places, kept in step.** `profiles.role` drives RLS. The same role is stored in the auth user's `app_metadata.jhts_role`, which only the service role can write. A trigger (migration 1000) copies changes across, because Supabase writes custom app_metadata after the user row is created.
+- **Email links go to `/auth/confirm`.** Branded templates in `supabase/templates` send a one-time token hash, which the server verifies and turns into a session cookie. This keeps sessions server-side (`@supabase/ssr`) and avoids tokens in URL fragments.
+- **No account enumeration.** Sign-up and password reset show the same message whether or not an address is registered; sign-in failures never say which part was wrong.
+- **Deactivation** sets `profiles.is_active = false` and bans the auth user, so existing sessions end at their next refresh. The database still refuses to remove the last active Super Admin.
+- **The header** is statically generated, so it shows "My account" instead of "Sign in" by checking for the Supabase session cookie in the browser (no request).

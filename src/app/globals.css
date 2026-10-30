@@ -275,17 +275,24 @@
   }
 }
 
-@keyframes weave-draw {
-  from {
-    stroke-dashoffset: var(--len, 1200);
+/* Threads draw as solid lines, then switch to the interlaced dash pattern.
+   Animating the paths directly (not through a mask) keeps Chrome repainting. */
+.weave-thread {
+  animation: weave-thread 700ms var(--ease-weave) both;
+}
+@keyframes weave-thread {
+  0% {
+    stroke-dasharray: var(--len) var(--len);
+    stroke-dashoffset: var(--len);
   }
-  to {
+  99% {
+    stroke-dasharray: var(--len) var(--len);
     stroke-dashoffset: 0;
   }
-}
-
-.weave-draw {
-  animation: weave-draw 700ms var(--ease-weave) forwards;
+  100% {
+    stroke-dasharray: var(--dash);
+    stroke-dashoffset: 0;
+  }
 }
 
 .weave-fade-in {

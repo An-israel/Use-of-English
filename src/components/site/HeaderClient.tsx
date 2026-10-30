@@ -6,6 +6,7 @@ import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 
 import clsx from "clsx";
 import type { NavGroup } from "@/lib/nav";
 import { ArrowRightIcon, ChevronDownIcon, CloseIcon, MenuIcon, SearchIcon } from "@/components/ui/icons";
+import { AccountLink } from "./AccountLink";
 import { ThemeToggle } from "./ThemeToggle";
 import { openCommandPalette } from "./command-palette-events";
 
@@ -185,12 +186,7 @@ export function HeaderClient({ nav, features, journalName, shortName, submission
             </kbd>
           </button>
           <ThemeToggle className="hidden sm:flex" />
-          <Link
-            href="/login"
-            className="text-muted hover:text-fg hidden px-2 py-2 text-[0.95rem] whitespace-nowrap transition-colors xl:block"
-          >
-            Sign in
-          </Link>
+          <AccountLink className="text-muted hover:text-fg hidden px-2 py-2 text-[0.95rem] whitespace-nowrap transition-colors xl:block" />
           {submissionsOpen && (
             <Link
               href="/submit"
@@ -299,9 +295,7 @@ export function HeaderClient({ nav, features, journalName, shortName, submission
             <Link href="/contact" className="font-display text-fg block py-2 text-[1.75rem]">
               Contact
             </Link>
-            <Link href="/login" className="font-display text-fg block py-2 text-[1.75rem]">
-              Sign in
-            </Link>
+            <AccountLink className="font-display text-fg block py-2 text-[1.75rem]" />
           </section>
           <div className="border-rule flex items-center justify-between gap-4 border-t pt-6">
             {submissionsOpen && (

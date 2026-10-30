@@ -27,6 +27,17 @@ npm run db:test        # RLS tests (DATABASE_URL=postgresql://postgres:postgres@
 npm run admin:create   # first Super Admin from SUPER_ADMIN_EMAIL
 ```
 
+## Accounts and email (Supabase Auth)
+
+In the Supabase dashboard for the live project:
+
+1. **Authentication → URL configuration**: Site URL `https://jhts.unn.edu.ng`; add `https://jhts.unn.edu.ng/auth/callback` and `https://jhts.unn.edu.ng/auth/confirm` to the redirect URLs.
+2. **Authentication → Email templates**: paste the four files from `supabase/templates` (confirm signup, invite, reset password, change email). Their links point at `/auth/confirm`.
+3. **Authentication → SMTP**: use Resend's SMTP details so auth emails come from the journal's domain (DNS records are in the deployment guide).
+4. **Authentication → Providers → Email**: keep "Confirm email" on; minimum password length 10.
+5. Optional: enable Google under Providers, then switch on the `google_sign_in` feature flag.
+6. Create the first Super Admin with `npm run admin:create`.
+
 ## Scripts
 
 | Command                                 | What it does                                        |

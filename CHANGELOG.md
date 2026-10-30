@@ -2,6 +2,18 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] - Milestone 4: Accounts and roles
+
+- Registration with email confirmation, sign-in, password reset and email change; optional Google sign-in behind a feature flag.
+- Branded Supabase Auth email templates; links verified server-side at `/auth/confirm`.
+- Rate limits on sign-in, sign-up and password reset; no account enumeration; safe post-login redirects.
+- Author dashboard (`/account`): submissions with a status timeline, reviewer assignments, profile (name, affiliation, ORCID) and security.
+- Invitations: Super Admins invite any role; editors invite reviewers. Role changes and deactivation with an audit trail; the last Super Admin is protected.
+- Admin shell (`/admin`) with role-gated navigation; Users and roles page.
+- Migrations 0900 (reviewers may submit) and 1000 (keep profile roles in step with auth app_metadata).
+- End-to-end tests for every account flow against a real Supabase stack, using captured emails.
+- Fix: the woven pattern on solid-coloured panels could fail to paint in Chrome when animated.
+
 ## [0.3.0] - Milestone 3: Public site
 
 - All Issues archive grouped by year and volume, with a year and subject filter and a sticky year index.
