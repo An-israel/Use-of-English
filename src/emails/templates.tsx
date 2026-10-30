@@ -140,3 +140,67 @@ export function ContactReceived({
     </Layout>
   );
 }
+
+export function ReviewInvitation({
+  name,
+  title,
+  abstract,
+  due,
+  url,
+}: {
+  name: string;
+  title: string;
+  abstract: string;
+  due: string;
+  url: string;
+}) {
+  return (
+    <Layout preview={`Invitation to review: ${title}`} title="Will you review a manuscript for JHTS?">
+      <P>Dear {name},</P>
+      <P>
+        The editors of the Journal of Humanities and Transcultural Studies invite you to review the manuscript “{title}
+        ”. Review is double-blind: the authors’ names are withheld.
+      </P>
+      <blockquote
+        style={{
+          borderLeft: "2px solid #C8962E",
+          margin: "16px 0",
+          padding: "4px 0 4px 16px",
+          color: "#3a352d",
+        }}
+      >
+        {abstract.length > 900 ? `${abstract.slice(0, 900)}…` : abstract}
+      </blockquote>
+      <Facts rows={[["Review due", due]]} />
+      <P>Please accept or decline on the review page. If you have a conflict of interest, decline and tell us why.</P>
+      <Button href={url}>Respond to the invitation</Button>
+    </Layout>
+  );
+}
+
+export function ReviewSubmitted({
+  publicId,
+  title,
+  reviewer,
+  recommendation,
+  url,
+}: {
+  publicId: string;
+  title: string;
+  reviewer: string;
+  recommendation: string;
+  url: string;
+}) {
+  return (
+    <Layout preview={`${publicId}: review received`} title="A review has been submitted">
+      <Facts
+        rows={[
+          ["Submission", `${publicId}, “${title}”`],
+          ["Reviewer", reviewer],
+          ["Recommendation", recommendation],
+        ]}
+      />
+      <Button href={url}>Open the submission</Button>
+    </Layout>
+  );
+}

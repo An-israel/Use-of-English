@@ -59,3 +59,16 @@ Answers given before Milestone 1, plus changes to the brief's data model and why
 - **Every email is logged** in `email_outbox`. Without `RESEND_API_KEY` they are logged instead of sent, which is how development and tests run.
 - **PDF receipts use "NGN 5,000"**: the built-in PDF fonts have no naira sign. Web pages and emails use ₦.
 - **Co-author lists lock on submission** (migration 1300), and authors may delete only their own unsent drafts.
+
+## Milestone 6: the admin dashboard
+
+- **Reviewers review on the site** (owner's choice). Editors invite from the reviewer pool (expertise and current load shown); the reviewer accepts or declines, downloads the anonymised manuscript under a neutral file name, recommends, writes comments for the author and confidential comments for the editors, and may upload a report. Editors share a reviewer's comments with the author anonymously ("Reviewer 1 comments") or upload a comments file the author can download. Invitations and submitted reviews are emailed through the queue.
+- **Articles in Press may wait for an issue.** An online article can be assigned to a forthcoming issue and stays online as In Press until that issue is published; `publish_issue()` then moves it in. Publishing an article into an unpublished issue puts it online as In Press rather than taking it offline. (Migration 1600 drops the 0200 rule that an In Press article has no issue.)
+- **Publishing happens in the database** (`publish_issue`, `publish_article`, `publish_due`), under an advisory lock, and emits domain events. Scheduled items are published by the cron route, which also refreshes the public caches.
+- **Optimistic locking counts editors' changes only.** View and download counters and the search index (refreshed when authors are saved) no longer bump an article's version, so saving the authors and then the full text is not a false conflict. Forms that edit the same row on one page share its version, updated straight from each save, so a quick second save is never a false conflict. A real conflict keeps the form open with a "Reload now" button.
+- **Rich text**: Tiptap for editorials, full texts, pages and the Call for Papers. Pasting from Word is cleaned in the browser and everything is sanitised again on the server. Text the visual editor can't represent (tables, footnotes, sidenotes, [TO CONFIRM] marks) opens in an HTML mode so nothing is lost.
+- **Pages keep every version**; restoring one keeps the text it replaces. The snapshot trigger now runs with the definer's rights (editors may read history but not write it directly).
+- **Soft deletes**: articles, issues (empty, unpublished only) and board members go to a bin and can be restored; categories are archived.
+- **Saved filters** are stored per staff member in the database (private by RLS), so they follow the person across browsers.
+- **Settings** (Super Admin) edit the same keys the public site reads; fee changes take effect for new payments and the database's `fees_enabled()` reads the same setting. Changes expire the public caches immediately (`updateTag`).
+- **A missing article streams a 404 page with status 200** because the page shell is already sent (partial prerendering); Next adds `noindex`, so search engines don't index it.

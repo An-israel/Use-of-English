@@ -2,6 +2,19 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.6.0] - Milestone 6: Admin dashboard
+
+- Admin shell: collapsible sidebar, breadcrumbs, Ctrl/⌘ + K quick actions, confirmation dialogs, toasts, unsaved-change warnings, edit-conflict messages, loading skeletons, dark mode and a TEST MODE banner.
+- Overview: stat tiles (open submissions, acceptance rate, days to decision, fees), "needs attention" and recent activity.
+- Submissions: search, type and subject filters, saved filters, a kanban board by status; detail page with reviewer invitations, overdue flags, cancel and extend, reviews with confidential comments, anonymous sharing of comments with the author, similarity percentage and plagiarism report, received and accepted dates, handling editor, and "Create article from submission".
+- Reviewers: `/review/<id>` to accept or decline, download the anonymised manuscript, recommend, comment and upload a report. Invitation and review-received emails.
+- Issues: by year and volume, create the next quarterly issue in one click, editorial (rich text), uploaded or generated cover, full-issue files, contents order, publish, schedule, unpublish, preview, bin and restore.
+- Articles and Articles in Press: create, details, authors in order, PDF and DOCX with version history, full text with Word clean-up, move into an issue, publish, schedule, unpublish, preview, bin and restore. Book reviews with book details and cover.
+- Categories (order, thread colour, archive), Call for Papers, pages and policies with live preview and version history, editorial board (groups, order, photos, terms), contact inbox, settings and feature flags.
+- Migrations 1500 (editorial workflow functions) and 1600 (saved filters, reordering, In Press assignment, version rules, page history fix). Scheduled publishing runs with the job cron.
+- Fixes: a 404 inside the site showed the header and footer twice; page saves failed on the history trigger; saving authors caused a false edit conflict.
+- Tests: admin and reviewer end-to-end tests, more database checks (27), and unit tests for the Word clean-up, HTML-mode detection and list helpers.
+
 ## [0.5.0] - Milestone 5: Submissions and payments
 
 - Five-step submission form: details (live word count, keyword chips), authors (add, reorder by drag or arrows, corresponding author), files (direct, signed uploads to Storage; type and 20 MB checks), declarations, review and submit. Drafts autosave server-side; creation is idempotent.

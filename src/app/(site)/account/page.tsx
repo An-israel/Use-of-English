@@ -11,6 +11,7 @@ import { requireViewer } from "@/lib/auth";
 import { signOut } from "@/lib/auth-actions";
 import { getFlags, getSettings } from "@/lib/data";
 import { formatDate } from "@/lib/format";
+import { REVIEW_STATUS_LABEL } from "@/lib/submission";
 import { userClient } from "@/lib/supabase/clients";
 import { ARTICLE_TYPE_LABEL, type ArticleType } from "@/lib/types";
 import { AUTHOR_NEXT_STEP, ROLE_LABEL, STAFF_ROLES, STATUS_LABEL, type SubmissionStatus } from "@/lib/workflow";
@@ -191,7 +192,8 @@ async function Account({ searchParams }: { searchParams: Promise<Record<string, 
                         {r.title}
                       </Link>
                       <p className="text-muted mt-1 text-[0.85rem]">
-                        {ARTICLE_TYPE_LABEL[r.type]} · Round {r.round} · {r.review_status.replace("_", " ")}
+                        {ARTICLE_TYPE_LABEL[r.type]} · Round {r.round} ·{" "}
+                        {REVIEW_STATUS_LABEL[r.review_status as keyof typeof REVIEW_STATUS_LABEL]}
                       </p>
                     </div>
                     <span className="tabular text-[0.9rem]">Due {formatDate(r.due_at)}</span>

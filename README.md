@@ -45,6 +45,23 @@ In the Supabase dashboard for the live project:
 3. Without keys, set `PAYSTACK_MODE=mock` locally to use the simulated checkout. It is refused in production.
 4. The job worker (receipts and emails) runs at `/api/cron/jobs`, protected by `CRON_SECRET`. Set the repository variable `SITE_URL` and the secret `CRON_SECRET` in GitHub so `.github/workflows/cron.yml` calls it every 10 minutes.
 
+## The editorial office (`/admin`)
+
+Staff sign in and open `/admin`. Press Ctrl or ⌘ + K for quick actions; the sidebar collapses and the choice is remembered.
+
+| Section            | Who                         | What                                                                             |
+| ------------------ | --------------------------- | -------------------------------------------------------------------------------- |
+| Submissions        | Editors (book reviews: BRE) | Table with saved filters, kanban board, reviewers, plagiarism data, decisions    |
+| Issues             | Editors                     | Create the next issue, editorial, cover, full-issue files, order, publish        |
+| Articles, In Press | Editors                     | Details, authors, files with versions, full text, publish or schedule, bin       |
+| Book reviews       | Editors, Book Review Editor | Book details and cover                                                           |
+| Journal            | Editors                     | Categories, Call for Papers, pages and policies (versioned), editorial board     |
+| Messages           | Editors                     | Contact-form inbox                                                               |
+| Users and roles    | Super Admin, editors        | Invitations and roles                                                            |
+| Settings           | Super Admin                 | Journal details, ISSN, DOI prefix, fees, email sender, links, SEO, feature flags |
+
+Reviewers find their requests on `/account` and review at `/review/<id>`.
+
 ## Scripts
 
 | Command                                 | What it does                                        |

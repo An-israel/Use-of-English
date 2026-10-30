@@ -3,6 +3,7 @@ import { Suspense, type ReactNode } from "react";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { Toaster } from "@/components/ui/Toaster";
 import { requireRole } from "@/lib/auth";
+import { isPaymentTestMode } from "@/lib/payments/paystack";
 import { STAFF_ROLES } from "@/lib/workflow";
 
 export const metadata: Metadata = {
@@ -18,11 +19,30 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   );
 }
 
+function testMode(): boolean {
+  try {
+    return isPaymentTestMode();
+  } catch {
+    return true;
+  }
+}
+
 async function Guarded({ children }: { children: ReactNode }) {
   const viewer = await requireRole(STAFF_ROLES, "/admin");
+  const banner = testMode() ? (
+    <p
+      role="note"
+      className="border-thread text-thread-text border-b bg-[color-mix(in_oklab,var(--thread)_10%,var(--bg))] px-5 py-2 text-[0.82rem] lg:px-10"
+    >
+      <strong className="smallcaps tracking-[0.08em]">Test mode</strong> · Payments use Paystack test keys or the local
+      simulator; no real money moves.
+    </p>
+  ) : null;
   return (
     <Toaster>
-      <AdminShell viewer={viewer}>{children}</AdminShell>
+      <AdminShell viewer={viewer} banner={banner}>
+        {children}
+      </AdminShell>
     </Toaster>
   );
 }

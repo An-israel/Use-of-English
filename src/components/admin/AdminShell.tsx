@@ -3,46 +3,71 @@ import type { ReactNode } from "react";
 import { signOut } from "@/lib/auth-actions";
 import type { Viewer } from "@/lib/auth";
 import { ROLE_LABEL, type Role } from "@/lib/workflow";
+import { AdminCommand, type QuickAction } from "./AdminCommand";
+import { AdminFrame } from "./AdminFrame";
 import { AdminNav } from "./AdminNav";
 
-export type AdminNavItem = { href: string; label: string; roles: Role[] };
+export type AdminNavItem = { href: string; label: string; short: string; group?: string; roles: Role[] };
 
-/** Sections are added milestone by milestone; each lists the roles that may open it. */
+const STAFF: Role[] = ["super_admin", "editor", "book_review_editor", "finance_officer"];
+const EDITORS: Role[] = ["super_admin", "editor"];
+const CONTENT: Role[] = ["super_admin", "editor", "book_review_editor"];
+
+/** Each section lists the roles that may open it; pages check again on the server. */
 export const ADMIN_NAV: AdminNavItem[] = [
-  { href: "/admin", label: "Overview", roles: ["super_admin", "editor", "book_review_editor", "finance_officer"] },
-  {
-    href: "/admin/submissions",
-    label: "Submissions",
-    roles: ["super_admin", "editor", "book_review_editor", "finance_officer"],
-  },
-  { href: "/admin/users", label: "Users and roles", roles: ["super_admin", "editor", "book_review_editor"] },
+  { href: "/admin", label: "Overview", short: "Ov", roles: STAFF },
+  { href: "/admin/submissions", label: "Submissions", short: "Sub", group: "Editorial", roles: STAFF },
+  { href: "/admin/messages", label: "Messages", short: "Msg", group: "Editorial", roles: EDITORS },
+  { href: "/admin/issues", label: "Issues", short: "Iss", group: "Publishing", roles: EDITORS },
+  { href: "/admin/articles", label: "Articles", short: "Art", group: "Publishing", roles: EDITORS },
+  { href: "/admin/in-press", label: "Articles in Press", short: "IP", group: "Publishing", roles: EDITORS },
+  { href: "/admin/book-reviews", label: "Book reviews", short: "BR", group: "Publishing", roles: CONTENT },
+  { href: "/admin/categories", label: "Categories", short: "Cat", group: "Journal", roles: EDITORS },
+  { href: "/admin/call-for-papers", label: "Call for Papers", short: "CfP", group: "Journal", roles: EDITORS },
+  { href: "/admin/pages", label: "Pages and policies", short: "Pg", group: "Journal", roles: EDITORS },
+  { href: "/admin/board", label: "Editorial board", short: "Brd", group: "Journal", roles: EDITORS },
+  { href: "/admin/users", label: "Users and roles", short: "Usr", group: "Office", roles: CONTENT },
+  { href: "/admin/settings", label: "Settings", short: "Set", group: "Office", roles: ["super_admin"] },
 ];
 
-export function AdminShell({ viewer, children }: { viewer: Viewer; children: ReactNode }) {
+const CREATE: (QuickAction & { roles: Role[] })[] = [
+  { group: "Create", label: "New article", href: "/admin/articles/new", roles: EDITORS, keywords: "add" },
+  { group: "Create", label: "New book review", href: "/admin/articles/new?type=book_review", roles: CONTENT },
+  {
+    group: "Create",
+    label: "Create the next issue",
+    href: "/admin/issues?create=next",
+    roles: EDITORS,
+    keywords: "volume",
+  },
+  { group: "Create", label: "Invite a reviewer or editor", href: "/admin/users", roles: CONTENT, keywords: "user" },
+  { group: "Create", label: "Add a board member", href: "/admin/board?new=1", roles: EDITORS },
+];
+
+export function AdminShell({ viewer, banner, children }: { viewer: Viewer; banner?: ReactNode; children: ReactNode }) {
   const items = ADMIN_NAV.filter((i) => i.roles.includes(viewer.role));
+  const actions: QuickAction[] = [
+    ...items.map((i) => ({ group: "Go to" as const, label: i.label, href: i.href })),
+    ...CREATE.filter((c) => c.roles.includes(viewer.role)).map(({ group, label, href, keywords }) => ({
+      group,
+      label,
+      href,
+      keywords,
+    })),
+    { group: "Go to", label: "View the public site", href: "/" },
+  ];
   return (
-    <div className="bg-bg flex min-h-dvh flex-col lg:flex-row">
-      <a
-        href="#admin-main"
-        className="bg-brand text-brand-fg fixed top-3 left-4 z-[70] -translate-y-24 rounded-sm px-4 py-2 focus:translate-y-0"
-      >
-        Skip to content
-      </a>
-      <aside className="border-rule bg-surface border-b lg:sticky lg:top-0 lg:h-dvh lg:w-64 lg:shrink-0 lg:border-r lg:border-b-0">
-        <div className="flex items-center justify-between px-5 py-5 lg:block">
-          <Link href="/admin" className="block leading-none">
-            <span className="font-display text-[1.5rem] font-semibold tracking-[-0.02em]">JHTS</span>
-            <span className="smallcaps text-muted mt-1 block text-[0.72rem]">Editorial office</span>
-          </Link>
-          <Link href="/" className="text-muted hover:text-fg text-[0.85rem] lg:mt-4 lg:inline-block">
-            View site ↗
-          </Link>
-        </div>
-        <AdminNav items={items} />
-        <div className="border-rule hidden border-t px-5 py-5 text-[0.85rem] lg:absolute lg:inset-x-0 lg:bottom-0 lg:block">
+    <AdminFrame
+      banner={banner}
+      nav={<AdminNav items={items.map(({ href, label, short, group }) => ({ href, label, short, group }))} />}
+      footer={
+        <>
           <p className="truncate">{viewer.fullName || viewer.email}</p>
           <p className="text-muted">{ROLE_LABEL[viewer.role]}</p>
-          <div className="mt-3 flex gap-4">
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+            <Link href="/" className="text-muted hover:text-fg">
+              View site ↗
+            </Link>
             <Link href="/account" className="text-muted hover:text-fg">
               My account
             </Link>
@@ -52,11 +77,11 @@ export function AdminShell({ viewer, children }: { viewer: Viewer; children: Rea
               </button>
             </form>
           </div>
-        </div>
-      </aside>
-      <main id="admin-main" tabIndex={-1} className="min-w-0 flex-1 outline-none">
-        {children}
-      </main>
-    </div>
+        </>
+      }
+    >
+      {children}
+      <AdminCommand actions={actions} />
+    </AdminFrame>
   );
 }

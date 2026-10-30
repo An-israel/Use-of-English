@@ -51,3 +51,31 @@ Every page reviewed at 390, 1024 and 1440 px.
 | Subject lists mixed issues but showed only page numbers                    | Hierarchy 7   | Rows in mixed lists show their issue label above the pages.                          |
 | Search filters filled the first screen on phones                           | Mobile 7      | Filters fold behind a "Filters" control on small screens (works without JavaScript). |
 | The archive's year index and year filter shared a label for screen readers | Accessibility | Index renamed "Jump to year".                                                        |
+
+# Design self-review: Milestone 6 (admin dashboard)
+
+The admin uses the same fonts and tokens in a denser, calmer working layout. Screenshots at 390, 1024 and 1440 px, light and dark.
+
+| Screen                                   | Hierarchy | Typography | Spacing rhythm | Colour restraint | Originality | Mobile |
+| ---------------------------------------- | --------- | ---------- | -------------- | ---------------- | ----------- | ------ |
+| Overview                                 | 9         | 9          | 8              | 9                | 8           | 8      |
+| Submissions (table and board)            | 9         | 8          | 8              | 9                | 8           | 8      |
+| Submission detail (review, files, fees)  | 8         | 9          | 8              | 9                | 8           | 8      |
+| Issue editor (contents, cover, schedule) | 9         | 9          | 8              | 9                | 9           | 8      |
+| Article editor                           | 8         | 9          | 8              | 9                | 8           | 8      |
+| Pages editor with live preview           | 9         | 9          | 8              | 9                | 8           | 8      |
+| Categories, board, Call for Papers       | 8         | 8          | 8              | 9                | 8           | 8      |
+| Settings and feature flags               | 8         | 8          | 8              | 9                | 8           | 8      |
+| Reviewer page (`/review/…`)              | 9         | 9          | 8              | 9                | 8           | 8      |
+
+## Fixed during review
+
+| Issue found                                                                                      | Score before | Fix                                                                                      |
+| ------------------------------------------------------------------------------------------------ | ------------ | ---------------------------------------------------------------------------------------- |
+| The visual editor silently flattened tables, footnotes, sidenotes and [TO CONFIRM] marks on save | Data loss    | Such text opens in HTML mode; switching to visual warns first.                           |
+| Page preview sat below the editor at desktop widths, so it wasn't "live" in practice             | Hierarchy 7  | Side by side from 1280 px.                                                               |
+| Status, note and waiver controls kept the large site buttons and inputs                          | Typography 7 | Restyled with the admin's denser inputs and buttons.                                     |
+| Fee tile figure overflowed its tile at 390 px                                                    | Mobile 6     | Smaller figure on phones.                                                                |
+| Issue contents showed "pp. pp. 1–24"                                                             | Typography 7 | Page range printed once.                                                                 |
+| A 404 inside the public site showed the header and footer twice (since milestone 3)              | Hierarchy 4  | The site group has its own not-found page; the root one keeps the chrome for other URLs. |
+| Two reviewers with the same name looked identical in the reviewer picker                         | Usability    | The picker shows each reviewer's email and current load.                                 |

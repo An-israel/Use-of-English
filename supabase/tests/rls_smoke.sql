@@ -105,7 +105,10 @@ exception when insufficient_privilege then raise notice 'ok - authors cannot wri
 end $$;
 reset role;
 
--- The last Super Admin cannot be demoted (seeded DB may have none besides ours)
+-- The last Super Admin cannot be demoted. Other Super Admins (e.g. from E2E
+-- runs) are demoted first, inside this rolled-back transaction.
+select set_config('request.jwt.claims', '', true), set_config('request.jwt.claim.sub', '', true);
+update public.profiles set role = 'editor' where role = 'super_admin' and id <> '00000000-0000-4000-a000-00000000000e';
 select pg_temp.as_user('00000000-0000-4000-a000-00000000000e');
 do $$ begin
   update public.profiles set role = 'editor' where role = 'super_admin';
@@ -115,5 +118,54 @@ exception when raise_exception then
   raise notice 'ok - last super admin is protected';
 end $$;
 reset role;
+
+-- Editorial workflow (milestone 6)
+insert into public.articles (id, type, title, slug, status, body_html) values
+  ('22222222-0000-4000-a000-000000000001', 'research_article', 'Research', 'rls-research', 'draft', '<p>x</p>'),
+  ('22222222-0000-4000-a000-000000000002', 'book_review', 'Review', 'rls-book-review', 'draft', '<p>x</p>');
+
+select pg_temp.as_user('00000000-0000-4000-a000-00000000000f');
+do $$ begin
+  perform public.publish_article('22222222-0000-4000-a000-000000000001');
+  raise exception 'FAILED: book review editor published a research article';
+exception when insufficient_privilege then raise notice 'ok - book review editor cannot publish research articles';
+end $$;
+select pg_temp.check((public.publish_article('22222222-0000-4000-a000-000000000002')).status = 'in_press',
+  'book review editor publishes a book review as In Press');
+reset role;
+
+select pg_temp.as_user('00000000-0000-4000-a000-00000000000a');
+do $$ begin
+  perform public.reorder_rows('categories', array[]::uuid[]);
+  raise exception 'FAILED: author reordered categories';
+exception when insufficient_privilege then raise notice 'ok - authors cannot reorder lists';
+end $$;
+do $$ begin
+  perform public.create_next_issue();
+  raise exception 'FAILED: author created an issue';
+exception when insufficient_privilege then raise notice 'ok - authors cannot create issues';
+end $$;
+insert into public.saved_filters (scope, name, query) values ('submissions', 'Mine', 'status=submitted');
+reset role;
+select pg_temp.as_user('00000000-0000-4000-a000-00000000000d');
+select pg_temp.check((select count(*) from public.saved_filters) = 0, 'saved filters are private to their owner');
+-- An editor's issue: publishing it publishes its assigned In Press article
+select pg_temp.check((select public.create_next_issue(2031)).status = 'draft', 'editors create the next issue as a draft');
+update public.articles set issue_id = (select i.id from public.issues i join public.volumes v on v.id = i.volume_id where v.year = 2031)
+ where id = '22222222-0000-4000-a000-000000000002';
+select pg_temp.check((select status from public.articles where id = '22222222-0000-4000-a000-000000000002') = 'in_press',
+  'an In Press article can wait for a forthcoming issue');
+select public.publish_issue((select i.id from public.issues i join public.volumes v on v.id = i.volume_id where v.year = 2031));
+select pg_temp.check((select status from public.articles where id = '22222222-0000-4000-a000-000000000002') = 'published',
+  'publishing the issue publishes its articles');
+reset role;
+
+-- Optimistic locking counts editors' changes only (not counters or the search index)
+insert into public.article_authors (article_id, position, name) values ('22222222-0000-4000-a000-000000000001', 1, 'A. Writer');
+select pg_temp.check((select version from public.articles where id = '22222222-0000-4000-a000-000000000001') = 1,
+  'saving authors does not bump the article version');
+update public.articles set title = 'Research, revised' where id = '22222222-0000-4000-a000-000000000001';
+select pg_temp.check((select version from public.articles where id = '22222222-0000-4000-a000-000000000001') = 2,
+  'editing the article bumps its version');
 
 rollback;

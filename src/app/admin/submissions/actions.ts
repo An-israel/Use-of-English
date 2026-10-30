@@ -103,3 +103,34 @@ export async function waiveFee(_: Result | null, form: FormData): Promise<Result
   revalidatePath(`/admin/submissions/${id}`);
   return { ok: true, message: `${fee === "review" ? "Review" : "Publication"} fee waived.` };
 }
+
+/** Saved filters are private to the person who saved them (RLS: owner only). */
+export async function saveFilter(form: FormData): Promise<Result> {
+  const viewer = await getViewer();
+  if (!viewer) return { ok: false, message: "Not allowed." };
+  const scope = form.get("scope") === "articles" ? "articles" : "submissions";
+  const name = String(form.get("name") ?? "")
+    .trim()
+    .slice(0, 80);
+  const query = String(form.get("query") ?? "").slice(0, 1000);
+  if (!name) return { ok: false, message: "Name the filter first." };
+  if (!query) return { ok: false, message: "Choose some filters to save." };
+  const { error } = await (
+    await userClient()
+  )
+    .from("saved_filters")
+    .upsert({ owner_id: viewer.id, scope, name, query }, { onConflict: "owner_id,scope,name" });
+  if (error) return { ok: false, message: "Couldn’t save the filter." };
+  revalidatePath(`/admin/${scope}`);
+  return { ok: true, message: `Saved “${name}”.` };
+}
+
+export async function deleteFilter(id: string): Promise<Result> {
+  const viewer = await getViewer();
+  if (!viewer) return { ok: false, message: "Not allowed." };
+  const { error } = await (await userClient()).from("saved_filters").delete().eq("id", id);
+  if (error) return { ok: false, message: "Couldn’t remove the filter." };
+  revalidatePath("/admin/submissions");
+  revalidatePath("/admin/articles");
+  return { ok: true, message: "Filter removed." };
+}

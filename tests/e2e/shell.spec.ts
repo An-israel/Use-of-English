@@ -24,6 +24,16 @@ test("unknown pages return a branded 404", async ({ page }) => {
   const res = await page.goto("/no-such-page");
   expect(res?.status()).toBe(404);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("A loose thread.");
+  await expect(page.getByRole("banner")).toHaveCount(1);
+});
+
+test("a missing article is a 404 with a single header and footer", async ({ page }) => {
+  // A streamed page can't change its status once sent; Next marks it noindex instead.
+  await page.goto("/articles/no-such-article");
+  await expect(page.locator('meta[name="robots"][content*="noindex"]').first()).toBeAttached();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("A loose thread.");
+  await expect(page.getByRole("banner")).toHaveCount(1);
+  await expect(page.getByRole("contentinfo")).toHaveCount(1);
 });
 
 test("health endpoints respond", async ({ request }) => {

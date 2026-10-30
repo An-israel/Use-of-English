@@ -3,11 +3,13 @@
 import { useActionState, useState } from "react";
 import { FormMessage } from "@/components/forms/FormMessage";
 import { SubmitButton } from "@/components/forms/SubmitButton";
+
+const submit = "px-4 py-2 text-[0.9rem]";
 import { STATUS_LABEL, type SubmissionStatus } from "@/lib/workflow";
 import { addNote, changeStatus, waiveFee } from "../actions";
 
-const box = "rounded-[3px] border border-rule bg-surface p-5";
-const field = "mt-1.5 w-full rounded-sm border border-rule bg-bg px-3 py-2.5";
+const box = "admin-box";
+const field = "admin-input";
 
 export function StatusControl({ id, moves }: { id: string; moves: SubmissionStatus[] }) {
   const [state, action] = useActionState(changeStatus, null);
@@ -17,7 +19,7 @@ export function StatusControl({ id, moves }: { id: string; moves: SubmissionStat
     <form action={action} className={`${box} space-y-4`}>
       <h3 className="font-display text-[1.15rem]">Change status</h3>
       <input type="hidden" name="id" value={id} />
-      <label className="block text-[0.92rem]">
+      <label className="admin-label">
         New status
         <select name="to" value={to} onChange={(e) => setTo(e.target.value)} className={field}>
           {moves.map((m) => (
@@ -28,17 +30,19 @@ export function StatusControl({ id, moves }: { id: string; moves: SubmissionStat
         </select>
       </label>
       {to === "rejected" && (
-        <label className="block text-[0.92rem]">
+        <label className="admin-label">
           Reason for rejection (shown to the author)
           <textarea name="reason" rows={3} required className={field} />
         </label>
       )}
-      <label className="block text-[0.92rem]">
+      <label className="admin-label">
         Message to the author (optional, emailed)
         <textarea name="message" rows={3} className={field} />
       </label>
       {state && <FormMessage status={state.ok ? "ok" : "error"} message={state.message} />}
-      <SubmitButton pendingLabel="Saving…">Update status</SubmitButton>
+      <SubmitButton pendingLabel="Saving…" className={submit}>
+        Update status
+      </SubmitButton>
     </form>
   );
 }
@@ -61,7 +65,9 @@ export function NoteControl({ id }: { id: string }) {
         </label>
       </fieldset>
       {state && <FormMessage status={state.ok ? "ok" : "error"} message={state.message} />}
-      <SubmitButton pendingLabel="Saving…">Save</SubmitButton>
+      <SubmitButton pendingLabel="Saving…" className={submit}>
+        Save
+      </SubmitButton>
     </form>
   );
 }
@@ -73,7 +79,7 @@ export function WaiveControl({ id, fees }: { id: string; fees: ("review" | "publ
     <form action={action} className={`${box} space-y-4`}>
       <h3 className="font-display text-[1.15rem]">Waive a fee</h3>
       <input type="hidden" name="id" value={id} />
-      <label className="block text-[0.92rem]">
+      <label className="admin-label">
         Fee
         <select name="fee" className={field}>
           {fees.map((f) => (
@@ -83,12 +89,14 @@ export function WaiveControl({ id, fees }: { id: string; fees: ("review" | "publ
           ))}
         </select>
       </label>
-      <label className="block text-[0.92rem]">
+      <label className="admin-label">
         Reason (kept on record)
         <textarea name="reason" rows={2} required className={field} />
       </label>
       {state && <FormMessage status={state.ok ? "ok" : "error"} message={state.message} />}
-      <SubmitButton pendingLabel="Saving…">Waive fee</SubmitButton>
+      <SubmitButton pendingLabel="Saving…" className={submit}>
+        Waive fee
+      </SubmitButton>
     </form>
   );
 }

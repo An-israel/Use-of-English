@@ -527,3 +527,137 @@ mark.to-confirm-inline {
   padding: 0.1em 0.35em;
   border-radius: 2px;
 }
+
+/* ---------------------------------------------------------------------------
+ * Admin: a denser working interface on the same tokens.
+ * ------------------------------------------------------------------------- */
+.btn-primary,
+.btn-quiet,
+.btn-danger,
+.btn-line {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 2px;
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+.btn-primary {
+  background: var(--brand);
+  color: var(--brand-fg);
+}
+.btn-primary:hover {
+  background: var(--brand-hover);
+}
+.btn-danger {
+  background: var(--accent);
+  color: var(--jhts-paper);
+}
+.btn-danger:hover {
+  background: color-mix(in oklab, var(--accent) 85%, black);
+}
+.btn-line {
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--fg);
+}
+.btn-line:hover {
+  border-color: color-mix(in oklab, var(--fg) 40%, transparent);
+}
+.btn-quiet {
+  color: var(--fg-muted);
+}
+.btn-quiet:hover {
+  color: var(--fg);
+}
+.btn-primary:disabled,
+.btn-danger:disabled,
+.btn-line:disabled,
+.btn-quiet:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.admin-input {
+  margin-top: 0.35rem;
+  width: 100%;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: var(--bg);
+  color: var(--fg);
+  padding: 0.5rem 0.7rem;
+  font-size: 0.93rem;
+}
+.admin-input:hover {
+  border-color: color-mix(in oklab, var(--fg) 30%, transparent);
+}
+.admin-input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+.admin-label {
+  display: block;
+  font-size: 0.86rem;
+}
+.admin-label > .hint {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--fg-muted);
+  font-size: 0.78rem;
+}
+.admin-box {
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--surface);
+  padding: 1.25rem;
+}
+.admin-table {
+  width: 100%;
+  text-align: left;
+  font-size: 0.9rem;
+}
+.admin-table th {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.06em;
+  font-weight: 400;
+  color: var(--fg-muted);
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+.admin-table td {
+  padding: 0.65rem 1rem;
+  border-top: 1px solid var(--rule);
+  vertical-align: top;
+}
+.admin-table tbody tr:first-child td {
+  border-top: 0;
+}
+.admin-table tbody tr:hover {
+  background: color-mix(in oklab, var(--bg) 60%, transparent);
+}
+
+/* Rich-text editor surface */
+.editor-surface .ProseMirror {
+  min-height: 14rem;
+  outline: none;
+  padding: 1rem 1.15rem;
+}
+.editor-surface .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--fg-muted);
+}
+.editor-surface:focus-within {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}

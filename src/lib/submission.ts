@@ -80,3 +80,37 @@ export function safeFileName(name: string): string {
     .replace(/_+/g, "_");
   return base.slice(-80) || "file";
 }
+
+/** Files the editorial office adds to a submission. */
+export const STAFF_FILE_KINDS = {
+  plagiarism_report: {
+    label: "Plagiarism report",
+    types: [PDF, DOCX],
+    visibleToAuthor: false,
+    hint: "PDF or Word. Never shown to the author.",
+  },
+  reviewer_comments: {
+    label: "Reviewer comments for the author",
+    types: [PDF, DOCX],
+    visibleToAuthor: true,
+    hint: "PDF or Word, anonymised. The author can download it.",
+  },
+} as const;
+
+export type StaffUploadKind = keyof typeof STAFF_FILE_KINDS;
+
+export const RECOMMENDATION_LABEL = {
+  accept: "Accept",
+  minor_revisions: "Minor revisions",
+  major_revisions: "Major revisions",
+  reject: "Reject",
+} as const;
+export type Recommendation = keyof typeof RECOMMENDATION_LABEL;
+
+export const REVIEW_STATUS_LABEL = {
+  invited: "Invited",
+  accepted: "Reviewing",
+  declined: "Declined",
+  submitted: "Review submitted",
+  cancelled: "Cancelled",
+} as const;

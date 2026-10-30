@@ -41,3 +41,22 @@ export function formatNairaPlain(kobo: number): string {
   const naira = kobo / 100;
   return `NGN ${new Intl.NumberFormat("en-NG", { minimumFractionDigits: Number.isInteger(naira) ? 0 : 2, maximumFractionDigits: 2 }).format(naira)}`;
 }
+
+/** Whole days since a timestamp (for "waiting 12d" badges); pages using it render per request. */
+export function daysSince(iso: string, now: number = Date.now()): number {
+  return Math.max(0, Math.floor((now - Date.parse(iso)) / 86_400_000));
+}
+
+/** "2026-11-20": today plus some days, for date inputs (Lagos time). */
+export function isoDateFromNow(days: number, now: number = Date.now()): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(new Date(now + days * 86_400_000));
+}
+
+export function isPast(iso: string, now: number = Date.now()): boolean {
+  return Date.parse(iso) < now;
+}
+
+/** ISO timestamp some days ago (0 = now), for date filters in queries. */
+export function isoDaysAgo(days: number, now: number = Date.now()): string {
+  return new Date(now - days * 86_400_000).toISOString();
+}

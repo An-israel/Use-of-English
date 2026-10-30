@@ -1,10 +1,18 @@
 import "server-only";
-import { ContactReceived, PaymentReceipt, StatusChanged, SubmissionReceived } from "@/emails/templates";
+import {
+  ContactReceived,
+  PaymentReceipt,
+  ReviewInvitation,
+  ReviewSubmitted,
+  StatusChanged,
+  SubmissionReceived,
+} from "@/emails/templates";
 import { sendEmail } from "@/lib/email/send";
 import { siteUrl } from "@/lib/env";
 import { formatDate, formatNaira, formatNairaPlain } from "@/lib/format";
 import { isPaymentTestMode } from "@/lib/payments/paystack";
 import { renderReceipt } from "@/lib/pdf/documents";
+import { RECOMMENDATION_LABEL, type Recommendation } from "@/lib/submission";
 import { adminClient } from "@/lib/supabase/clients";
 import { AUTHOR_NEXT_STEP, STATUS_LABEL, type SubmissionStatus } from "@/lib/workflow";
 import { enqueue } from "./queue";
@@ -45,6 +53,12 @@ async function dispatchEvent(payload: Record<string, unknown>) {
     }
     case "contact.received":
       await enqueue("email_contact", { message_id: id }, `contact:${id}`);
+      break;
+    case "review.assigned":
+      await enqueue("email_review_invitation", { assignment_id: id }, `review-invite:${id}`);
+      break;
+    case "review.submitted":
+      await enqueue("email_review_submitted", { assignment_id: id }, `review-done:${id}`);
       break;
     default:
       break; // cache revalidation and realtime arrive with later milestones
@@ -199,10 +213,77 @@ async function contactNotification(payload: Record<string, unknown>) {
   });
 }
 
+async function reviewEmail(payload: Record<string, unknown>, kind: "invitation" | "submitted") {
+  const db = adminClient();
+  // review_assignments links to profiles twice (reviewer, invited_by): name the reviewer link.
+  const { data: r, error } = await db
+    .from("review_assignments")
+    .select(
+      "id, due_at, status, recommendation, reviewer:profiles!review_assignments_reviewer_id_fkey ( full_name, email ), submission:submissions ( id, public_id, title, abstract, handling_editor_id )",
+    )
+    .eq("id", payload.assignment_id)
+    .single();
+  if (error || !r) throw new Error(`review lookup failed: ${error?.message ?? "not found"}`);
+  const reviewer = r.reviewer as unknown as { full_name: string; email: string };
+  const sub = r.submission as unknown as {
+    id: string;
+    public_id: string;
+    title: string;
+    abstract: string;
+    handling_editor_id: string | null;
+  };
+  if (kind === "invitation") {
+    if (r.status === "cancelled") return;
+    await sendEmail({
+      to: reviewer.email,
+      subject: "Invitation to review for JHTS",
+      template: "review_invitation",
+      relatedId: r.id,
+      dedupeKey: `review-invite-email:${r.id}`,
+      element: (
+        <ReviewInvitation
+          name={reviewer.full_name || "colleague"}
+          title={sub.title}
+          abstract={sub.abstract}
+          due={formatDate(r.due_at)}
+          url={`${siteUrl}/review/${r.id}`}
+        />
+      ),
+    });
+    return;
+  }
+  // The handling editor if one is set, otherwise the editorial office.
+  let to: string | null = null;
+  if (sub.handling_editor_id) {
+    const { data: ed } = await db.from("profiles").select("email").eq("id", sub.handling_editor_id).maybeSingle();
+    to = ed?.email ?? null;
+  }
+  to ??= await contactEmail();
+  if (!to) return;
+  await sendEmail({
+    to,
+    subject: `${sub.public_id}: review received`,
+    template: "review_submitted",
+    relatedId: r.id,
+    dedupeKey: `review-done-email:${r.id}`,
+    element: (
+      <ReviewSubmitted
+        publicId={sub.public_id}
+        title={sub.title}
+        reviewer={reviewer.full_name || reviewer.email}
+        recommendation={r.recommendation ? RECOMMENDATION_LABEL[r.recommendation as Recommendation] : "—"}
+        url={`${siteUrl}/admin/submissions/${sub.id}`}
+      />
+    ),
+  });
+}
+
 export const HANDLERS: Record<string, (payload: Record<string, unknown>) => Promise<void>> = {
   dispatch_event: dispatchEvent,
   payment_receipt: paymentReceipt,
   email_submission_received: (p) => submissionEmail(p, "received"),
   email_status_changed: (p) => submissionEmail(p, "status"),
   email_contact: contactNotification,
+  email_review_invitation: (p) => reviewEmail(p, "invitation"),
+  email_review_submitted: (p) => reviewEmail(p, "submitted"),
 };
