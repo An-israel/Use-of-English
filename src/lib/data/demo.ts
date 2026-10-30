@@ -43,6 +43,7 @@ function toArticle(a: SampleArticle, issue: SampleIssue | null, onlineAt: string
     issue: issue ? { volume: issue.volume, number: issue.number, month: issue.month, year: issue.year } : null,
     abstract: a.abstract,
     hasPdf: false,
+    pdfUrl: null,
     hasDocx: false,
     viewCount: a.views,
     downloadCount: a.downloads,

@@ -46,3 +46,4 @@ screenshots/
 supabase/.temp/
 test-results/
 playwright-report/
+public/pdf.worker.min.mjs

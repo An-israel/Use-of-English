@@ -66,6 +66,7 @@ function mapSummary(r: Row): ArticleSummary {
       : null,
     abstract: (r.abstract as string) ?? "",
     hasPdf: Boolean(r.pdf_path),
+    pdfUrl: storageUrl("published", r.pdf_path as string | null),
     hasDocx: Boolean(r.docx_path),
     viewCount: Number(r.view_count ?? 0),
     downloadCount: Number(r.download_count ?? 0),

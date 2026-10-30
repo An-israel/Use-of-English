@@ -97,3 +97,20 @@ The admin uses the same fonts and tokens in a denser, calmer working layout. Scr
 | The PDF report pushed the ledger to page 2, leaving page 1 mostly empty | Spacing 6    | The ledger follows the totals on the same page.      |
 | Months printed as "2027-04" in the PDF                                  | Typography 7 | Month names ("April 2027") on screen and in the PDF. |
 | On phones the ledger was a wide table you had to scroll sideways        | Mobile 6     | A compact card list below 640 px; the table above.   |
+
+# Design self-review: Milestone 8 (downloads, analytics and indexing)
+
+| Screen                          | Hierarchy | Typography | Spacing rhythm | Colour restraint | Originality | Mobile |
+| ------------------------------- | --------- | ---------- | -------------- | ---------------- | ----------- | ------ |
+| Analytics                       | 9         | 9          | 8              | 9                | 8           | 8      |
+| Article page with PDF reader    | 9         | 9          | 8              | 9                | 8           | 8      |
+| Open Graph cards                | 9         | 9          | 9              | 9                | 9           | n/a    |
+| Issue editor: DOIs and Crossref | 8         | 8          | 8              | 9                | 8           | 8      |
+
+## Fixed during review
+
+| Issue found                                                      | Score before | Fix                                                |
+| ---------------------------------------------------------------- | ------------ | -------------------------------------------------- |
+| The reader rendered only its first two pages                     | Broken       | Page observers are attached after the pages mount. |
+| "1 views" in the most-read list                                  | Typography 7 | Singular and plural, "downloads" spelled out.      |
+| Most-read figures took a fixed width and squeezed bars on phones | Mobile 7     | Figures size to their content.                     |

@@ -16,6 +16,7 @@ const CONTENT: Role[] = ["super_admin", "editor", "book_review_editor"];
 /** Each section lists the roles that may open it; pages check again on the server. */
 export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin", label: "Overview", short: "Ov", roles: STAFF },
+  { href: "/admin/analytics", label: "Analytics", short: "Ana", roles: STAFF },
   { href: "/admin/submissions", label: "Submissions", short: "Sub", group: "Editorial", roles: STAFF },
   { href: "/admin/messages", label: "Messages", short: "Msg", group: "Editorial", roles: EDITORS },
   { href: "/admin/issues", label: "Issues", short: "Iss", group: "Publishing", roles: EDITORS },

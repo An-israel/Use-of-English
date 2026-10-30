@@ -65,6 +65,14 @@ Staff sign in and open `/admin`. Press Ctrl or ⌘ + K for quick actions; the si
 
 Reviewers find their requests on `/account` and review at `/review/<id>`.
 
+## Indexing and analytics
+
+- `sitemap.xml`, `robots.txt` and `rss.xml` are generated from the published content. Submit the sitemap in Google Search Console.
+- Google Scholar tags, Dublin Core and JSON-LD are on every article; Open Graph images are generated for the journal, issues and articles.
+- Crossref: set the DOI prefix in Settings once JHTS is a member, then use "Assign DOIs" and "Crossref XML" on each issue and upload the file at Crossref. Nothing is sent automatically.
+- OAI-PMH: switch on the `oai_pmh` flag in Settings; the base URL is `/api/oai`.
+- Views and downloads appear under Admin → Analytics. Set `METRICS_SALT` (16+ random characters) in production.
+
 ## Scripts
 
 | Command                                 | What it does                                        |

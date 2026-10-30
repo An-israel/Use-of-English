@@ -196,9 +196,7 @@ export default async function AdminHome() {
                 </li>
               ))}
             </ul>
-            <p className="text-muted mt-4 text-[0.8rem]">
-              Views, downloads and trends over time arrive with the analytics charts.
-            </p>
+            <p className="text-muted mt-4 text-[0.8rem]">Views, downloads and trends over time are under Analytics.</p>
           </section>
         </div>
 

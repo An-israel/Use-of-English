@@ -381,10 +381,22 @@ export async function saveSettings(form: FormData): Promise<ActionResult> {
     social,
     seo: { description: f("seoDescription").slice(0, 300) },
   };
+  // A cleared field (ISSN, DOI prefix…) removes its row: the built-in default
+  // (none) applies, and the value column never holds SQL NULL.
+  const entries = Object.entries(values);
   const { error } = await s.db
     .from("site_settings")
-    .upsert(Object.entries(values).map(([key, value]) => ({ key, value, is_public: true, updated_by: s.viewer.id })));
+    .upsert(
+      entries
+        .filter(([, value]) => value !== null)
+        .map(([key, value]) => ({ key, value, is_public: true, updated_by: s.viewer.id })),
+    );
   if (error) return { ok: false, message: dbMessage(error) };
+  const cleared = entries.filter(([, value]) => value === null).map(([key]) => key);
+  if (cleared.length) {
+    const { error: delError } = await s.db.from("site_settings").delete().in("key", cleared);
+    if (delError) return { ok: false, message: dbMessage(delError) };
+  }
   return ok("Settings saved.", [TAGS.settings]);
 }
 

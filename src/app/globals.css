@@ -41,6 +41,9 @@
   --thread: var(--jhts-ochre);
   /* ochre for text: the raw ochre is decorative only (2.6:1) */
   --thread-text: #86621a;
+  /* Chart series (validated: lightness band, chroma, CVD with shape as second encoding) */
+  --chart-views: #1f7a55;
+  --chart-downloads: #b5721a;
   --info: var(--jhts-indigo-dye);
   --focus: var(--jhts-ochre);
   --inverse-bg: var(--jhts-ink);
@@ -65,6 +68,8 @@
     --accent: #e08466;
     --thread: #d9ab4c;
     --thread-text: #d9ab4c;
+    --chart-views: #33a06c;
+    --chart-downloads: #c4871f;
     --info: #9aa6dd;
     --focus: #d9ab4c;
     --inverse-bg: #0b0a08;
@@ -96,6 +101,8 @@
   --accent: #e08466;
   --thread: #d9ab4c;
   --thread-text: #d9ab4c;
+  --chart-views: #33a06c;
+  --chart-downloads: #c4871f;
   --info: #9aa6dd;
   --focus: #d9ab4c;
   --inverse-bg: #0b0a08;

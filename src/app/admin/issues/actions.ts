@@ -178,3 +178,41 @@ export async function assignToIssue(articleId: string, issueId: string | null): 
   if (error) return { ok: false, message: dbMessage(error) };
   return done(issueId ? "Article added to the issue." : "Article removed from the issue.");
 }
+
+/** Give every article in the issue without a DOI the suggested one (Settings → DOI prefix). */
+export async function assignDois(issueId: string): Promise<ActionResult> {
+  const s = await staff(EDITORS);
+  if (!s) return denied;
+  const { getSettings } = await import("@/lib/data");
+  const { suggestDoi } = await import("@/lib/crossref");
+  const prefix = (await getSettings()).doiPrefix;
+  if (!prefix) return { ok: false, message: "Set the DOI prefix in Settings first." };
+  const { data: issue } = await s.db
+    .from("issues")
+    .select("number, volume:volumes ( number, year )")
+    .eq("id", issueId)
+    .maybeSingle();
+  if (!issue) return { ok: false, message: "Issue not found." };
+  const v = issue.volume as unknown as { number: number; year: number };
+  const { data: articles } = await s.db
+    .from("articles")
+    .select("id, doi")
+    .eq("issue_id", issueId)
+    .is("deleted_at", null)
+    .order("sort_order");
+  let n = 0;
+  for (const [i, a] of (articles ?? []).entries()) {
+    if (a.doi) continue;
+    const { error } = await s.db
+      .from("articles")
+      .update({ doi: suggestDoi(prefix, v.year, v.number, issue.number, i + 1) })
+      .eq("id", a.id);
+    if (error) return { ok: false, message: dbMessage(error, "A DOI couldn’t be assigned (is it already used?).") };
+    n++;
+  }
+  return done(
+    n
+      ? `${n} DOI${n === 1 ? "" : "s"} assigned. Deposit them with Crossref to make them resolve.`
+      : "Every article already has a DOI.",
+  );
+}

@@ -1,6 +1,6 @@
 {
   "name": "jhts",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,7 +16,9 @@
     "samples:delete": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f scripts/db/delete-samples.sql",
     "db:test": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -o /dev/null -f supabase/tests/rls_smoke.sql",
     "screenshots": "node scripts/screenshots.mjs",
-    "admin:create": "tsx scripts/create-super-admin.ts"
+    "admin:create": "tsx scripts/create-super-admin.ts",
+    "predev": "node scripts/copy-pdf-worker.mjs",
+    "prebuild": "node scripts/copy-pdf-worker.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.3.1",
@@ -35,6 +37,7 @@
     "pino": "^10.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "react-pdf": "^10.5.0",
     "resend": "^6.35.0",
     "sanitize-html": "^2.18.1",
     "server-only": "^0.0.1",

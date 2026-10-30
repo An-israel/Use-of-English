@@ -103,6 +103,8 @@ export type ArticleSummary = {
   abstract: string;
   hasPdf: boolean;
   hasDocx: boolean;
+  /** Public CDN address of the PDF, for the in-page reader (downloads go through the counted route). */
+  pdfUrl: string | null;
   viewCount: number;
   downloadCount: number;
   isSample: boolean;

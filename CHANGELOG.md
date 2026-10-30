@@ -2,6 +2,16 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.8.0] - Milestone 8: Downloads, analytics and indexing
+
+- Downloads: `/api/download/article/[id]` and `/api/download/issue/[id]` (PDF or Word) count the download, then redirect to the CDN under a clean name such as `JHTS_Vol1_No1_2027_Okafor.pdf`. Missing formats return 404 and their buttons stay hidden.
+- Counting: one view or download per reader per article per day, keyed by a salted daily hash (no addresses or personal data stored); crawlers, link previews, scripts and headless browsers are not counted. Daily totals are rolled up by the scheduled job, which also keeps next months' partitions ready.
+- In-page PDF reader (pdf.js): pages render as they come into view, with zoom, page jump, full screen and selectable text; pdf.js loads only when the reader is near.
+- Analytics: views and downloads over 30 days, 90 days or 12 months (one count axis, views as a line and downloads as columns, crosshair tooltip, keyboard access, table view), most-read articles, submissions by status, acceptance rate, days to decision, and payments for finance staff.
+- Indexing: sitemap.xml, robots.txt, RSS, generated Open Graph images for the journal, issues and articles (Fraunces and Instrument Sans), Crossref 5.3.1 deposit XML per issue with DOIs suggested from the Settings prefix (export only), and an OAI-PMH 2.0 endpoint with Dublin Core behind the `oai_pmh` flag.
+- Fixes: saving Settings failed whenever a field (ISSN, DOI prefix) was empty; the reader would have rendered only its first two pages.
+- Tests: indexing end-to-end tests (upload, reader, counted downloads, views, analytics, sitemap, RSS, OG images, Crossref, OAI-PMH), unit tests for file names, bot filtering, analytics series, Crossref XML and every OAI-PMH verb and error.
+
 ## [0.7.0] - Milestone 7: Finance
 
 - Payments: every payment, waiver and refund with filters for date range (Lagos time), fee type, status and issue; totals overall, by month and by fee type; a card list on phones.

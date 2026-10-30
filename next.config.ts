@@ -47,6 +47,8 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   poweredByHeader: false,
   output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
+  // Fonts read from disk by the generated Open Graph images.
+  outputFileTracingIncludes: { "/**": ["./assets/fonts/*.woff"] },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: supabase

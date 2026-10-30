@@ -5,6 +5,8 @@ import { Suspense, type ReactNode } from "react";
 import { CitePanel } from "@/components/article/CitePanel";
 import { ReadingSurface } from "@/components/article/ReadingSurface";
 import { ShareButtons } from "@/components/article/ShareButtons";
+import { ViewBeacon } from "@/components/article/ViewBeacon";
+import { PdfReaderLazy } from "@/components/article/PdfReaderLazy";
 import { ArticleCard } from "@/components/journal/ArticleCard";
 import { AuthorBlock } from "@/components/journal/AuthorList";
 import { BookCover } from "@/components/journal/BookCover";
@@ -236,6 +238,7 @@ async function ArticleContent({ params }: { params: Promise<Params> }) {
 
   return (
     <article>
+      <ViewBeacon articleId={article.id} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
@@ -426,6 +429,21 @@ async function ArticleContent({ params }: { params: Promise<Params> }) {
           {full && (
             <section aria-label="Full text" className="mt-16">
               <ReadingSurface html={full.html} />
+            </section>
+          )}
+
+          {article.pdfUrl && (
+            <section aria-labelledby="pdf-title" className="mt-16">
+              <h2 id="pdf-title" className="font-display text-[1.6rem]">
+                {full ? "The typeset PDF" : "Read the article"}
+              </h2>
+              <div className="mt-5">
+                <PdfReaderLazy
+                  url={article.pdfUrl}
+                  title={article.title}
+                  downloadHref={`/api/download/article/${article.id}?format=pdf`}
+                />
+              </div>
             </section>
           )}
         </div>

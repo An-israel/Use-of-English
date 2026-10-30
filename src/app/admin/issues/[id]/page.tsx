@@ -10,7 +10,8 @@ import { formatDate, isoDateFromNow } from "@/lib/format";
 import { issueLabel, issuePath, pageRange } from "@/lib/issues";
 import { userClient } from "@/lib/supabase/clients";
 import { ARTICLE_TYPE_LABEL, type ArticleType } from "@/lib/types";
-import { deleteIssue, publishIssue, unpublishIssue, unscheduleIssue } from "../actions";
+import { getSettings } from "@/lib/data";
+import { assignDois, deleteIssue, publishIssue, unpublishIssue, unscheduleIssue } from "../actions";
 import { IssueArticles, IssueDetailsForm, ScheduleForm } from "./Editors";
 
 export const metadata = { title: "Issue" };
@@ -31,7 +32,7 @@ export default async function IssuePage({ params }: { params: Promise<{ id: stri
   const [{ data: articles }, { data: candidates }, { data: versions }] = await Promise.all([
     db
       .from("articles")
-      .select("id, title, status, type, first_page, last_page")
+      .select("id, title, status, type, first_page, last_page, doi")
       .eq("issue_id", id)
       .is("deleted_at", null)
       .order("sort_order"),
@@ -56,6 +57,8 @@ export default async function IssuePage({ params }: { params: Promise<{ id: stri
     ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/covers/${i.cover_path}`
     : null;
   const published = i.status === "published";
+  const doiPrefix = (await getSettings()).doiPrefix;
+  const missingDois = (articles ?? []).filter((a) => !a.doi).length;
 
   return (
     <>
@@ -175,6 +178,46 @@ export default async function IssuePage({ params }: { params: Promise<{ id: stri
                   ))}
                 </ul>
               </details>
+            )}
+          </section>
+          <section className="admin-box space-y-3" aria-labelledby="xref">
+            <h2 id="xref" className="font-display text-[1.15rem]">
+              DOIs and Crossref
+            </h2>
+            {!doiPrefix ? (
+              <p className="text-muted text-[0.86rem]">
+                Set the DOI prefix in{" "}
+                <Link href="/admin/settings" className="underline underline-offset-4">
+                  Settings
+                </Link>{" "}
+                once JHTS joins Crossref; DOIs and the deposit file are then generated here.
+              </p>
+            ) : (
+              <>
+                <p className="text-muted text-[0.86rem]">
+                  {missingDois
+                    ? `${missingDois} of ${articles?.length ?? 0} articles have no DOI yet.`
+                    : "Every article has a DOI."}{" "}
+                  The deposit file is for manual upload to Crossref; nothing is sent automatically.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {missingDois > 0 && (
+                    <ActionButton
+                      run={assignDois.bind(null, i.id)}
+                      confirm={{
+                        title: "Assign DOIs?",
+                        description: `Articles without a DOI get one under ${doiPrefix}, following the issue’s contents order. DOIs are permanent once deposited.`,
+                        confirmLabel: "Assign DOIs",
+                      }}
+                    >
+                      Assign DOIs
+                    </ActionButton>
+                  )}
+                  <a href={`/api/admin/crossref/${i.id}`} className="btn-line" download>
+                    Crossref XML
+                  </a>
+                </div>
+              </>
             )}
           </section>
           {!published && (

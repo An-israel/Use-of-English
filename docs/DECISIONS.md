@@ -82,3 +82,13 @@ Answers given before Milestone 1, plus changes to the brief's data model and why
 - **Reconciliation never changes money.** It compares the day's Paystack transactions (by Paystack's creation time) with payments marked paid that day, and records four kinds of mismatch. Re-running a day only adds new flags. In mock mode "Paystack" is the record the simulated checkout leaves on each payment.
 - **Exports are audited** (who, which filters, how many rows) and limited to 30 per 10 minutes per person.
 - **No honorarium calculations**, as the brief says.
+
+## Milestone 8: downloads, analytics and indexing
+
+- **Files are served from the CDN, not through the app.** The download routes count, then redirect to the public Storage URL with a clean file name, so large PDFs never pass through a serverless function (item 41). Published files are public by design (open access); submissions and finance files stay private and signed.
+- **Counting is privacy-first.** The reader is a SHA-256 of a secret salt, the Lagos date, address and browser; it changes every day and can't be reversed, so no personal data is stored. The database's unique key makes counting idempotent. Headless browsers are deliberately not counted, so automated tests send a normal browser user agent.
+- **Views are counted by a small request from the article page**, because public pages are cached and pre-rendered; the server still checks the article is public. Counts shown on article pages refresh with the page cache (at most hourly), so reading never invalidates editors' caches.
+- **Chart colours were validated** with the dataviz checks (lightness band, chroma, colour-blind separation, contrast) in light and dark. Views and downloads also differ by mark shape (line and columns), with a legend, an end label and a table view, so colour is never the only cue.
+- **Crossref is export-only** until JHTS is a member: DOIs follow `prefix/jhts.YEAR.VOL.ISSUE.NN` in contents order; "Assign DOIs" writes them to articles that lack one.
+- **OAI-PMH** offers `oai_dc` only, no sets, day granularity and resumption tokens of 100 records; it returns 404 while the flag is off.
+- **Open Graph images** use the OFL-licensed Fraunces and Instrument Sans files in `assets/fonts` (licences included), read from disk as the Next.js documentation shows.
