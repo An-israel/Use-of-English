@@ -33,15 +33,15 @@
     "motion": "^14.8.0",
     "next": "16.4.3",
     "pino": "^10.4.0",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "resend": "^6.35.0",
     "sanitize-html": "^2.18.1",
     "server-only": "^0.0.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@playwright/test": "1.63.0",
+    "@playwright/test": "1.64.1",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^22.20.5",
     "@types/react": "^19",
