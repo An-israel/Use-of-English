@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
+import { HeaderFallback } from "@/components/site/HeaderFallback";
 import { CommandPalette, type PaletteItem } from "@/components/site/CommandPalette";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
@@ -72,7 +73,9 @@ export async function SiteChrome({ children }: { children: ReactNode }) {
       >
         Skip to content
       </a>
-      <Header />
+      <Suspense fallback={<HeaderFallback />}>
+        <Header />
+      </Suspense>
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
         {children}
       </main>

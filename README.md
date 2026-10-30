@@ -38,6 +38,13 @@ In the Supabase dashboard for the live project:
 5. Optional: enable Google under Providers, then switch on the `google_sign_in` feature flag.
 6. Create the first Super Admin with `npm run admin:create`.
 
+## Payments (Paystack)
+
+1. In the Paystack dashboard (Settings → API keys and webhooks), copy the **test** keys into `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` and `PAYSTACK_SECRET_KEY`. The receipts and the admin show "TEST MODE" until live keys (`sk_live_…`) are used.
+2. Set the webhook URL to `https://jhts.unn.edu.ng/api/webhooks/paystack`. The callback URL is set per payment by the site.
+3. Without keys, set `PAYSTACK_MODE=mock` locally to use the simulated checkout. It is refused in production.
+4. The job worker (receipts and emails) runs at `/api/cron/jobs`, protected by `CRON_SECRET`. Set the repository variable `SITE_URL` and the secret `CRON_SECRET` in GitHub so `.github/workflows/cron.yml` calls it every 10 minutes.
+
 ## Scripts
 
 | Command                                 | What it does                                        |

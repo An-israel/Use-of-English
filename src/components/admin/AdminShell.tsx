@@ -10,6 +10,11 @@ export type AdminNavItem = { href: string; label: string; roles: Role[] };
 /** Sections are added milestone by milestone; each lists the roles that may open it. */
 export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin", label: "Overview", roles: ["super_admin", "editor", "book_review_editor", "finance_officer"] },
+  {
+    href: "/admin/submissions",
+    label: "Submissions",
+    roles: ["super_admin", "editor", "book_review_editor", "finance_officer"],
+  },
   { href: "/admin/users", label: "Users and roles", roles: ["super_admin", "editor", "book_review_editor"] },
 ];
 

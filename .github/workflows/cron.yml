@@ -1,0 +1,19 @@
+name: Scheduled jobs
+
+# Vercel's free plan runs cron only once a day, so this free schedule calls the
+# job worker every 10 minutes. Actions also nudge the worker immediately.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    if: ${{ vars.SITE_URL != '' }}
+    steps:
+      - name: Process the job queue
+        run: |
+          curl --fail --silent --show-error --max-time 60 \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ vars.SITE_URL }}/api/cron/jobs"

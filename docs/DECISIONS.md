@@ -46,3 +46,16 @@ Answers given before Milestone 1, plus changes to the brief's data model and why
 - **No account enumeration.** Sign-up and password reset show the same message whether or not an address is registered; sign-in failures never say which part was wrong.
 - **Deactivation** sets `profiles.is_active = false` and bans the auth user, so existing sessions end at their next refresh. The database still refuses to remove the last active Super Admin.
 - **The header** is statically generated, so it shows "My account" instead of "Sign in" by checking for the Supabase session cookie in the browser (no request).
+
+## Milestone 5: submissions and payments
+
+- **The database decides whether a fee is due.** `submit_submission()` reads the fee setting and flag itself; an author calling it directly cannot skip the review fee. Book reviews pay both fees, as agreed.
+- **One transaction applies a payment.** `apply_payment_success()` locks the payment row, checks reference, amount and currency, marks it paid, issues the receipt number, advances the submission and records a `payment.succeeded` event, all at once. A repeat webhook returns `duplicate` and changes nothing. An amount mismatch is recorded as a reconciliation flag, not applied.
+- **References** are `JHTS-RF-2027-0042-1` (review) and `JHTS-PF-2027-0042-1` (publication); the last number is the attempt. Starting a new attempt abandons earlier pending ones; a cron job abandons pending payments older than two hours.
+- **Waivers** create a ₦0 `waived` payment with the reason and the editor, plus an internal note, so the trail stays complete.
+- **Mock checkout.** Until the Unit's Paystack test keys exist, `PAYSTACK_MODE=mock` replaces Paystack Checkout with a clearly labelled local page that sends correctly signed webhooks. It is refused when `VERCEL_ENV=production`. Switching to real test keys needs no code change.
+- **Files go straight to Storage** through signed upload URLs issued after the type and size are checked; the server then confirms the object exists before recording it. Paths carry the submission ID, never the author's identity.
+- **Receipts and emails go through the job queue**, so a slow email provider never delays a payment. The queue is nudged right after payments and editor actions, runs every 10 minutes from GitHub Actions (Vercel's free plan allows cron only daily) and daily from Vercel Cron as a backstop.
+- **Every email is logged** in `email_outbox`. Without `RESEND_API_KEY` they are logged instead of sent, which is how development and tests run.
+- **PDF receipts use "NGN 5,000"**: the built-in PDF fonts have no naira sign. Web pages and emails use ₦.
+- **Co-author lists lock on submission** (migration 1300), and authors may delete only their own unsent drafts.

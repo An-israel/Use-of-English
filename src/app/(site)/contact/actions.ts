@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { RATE_LIMITS, clientKey, rateLimit } from "@/lib/api/rate-limit";
 import { isDemoMode } from "@/lib/env";
+import { kickJobs } from "@/lib/jobs/kick";
 import { logger } from "@/lib/log";
 import { verifyTurnstile } from "@/lib/security/turnstile";
 import { adminClient } from "@/lib/supabase/clients";
@@ -67,6 +68,7 @@ export async function sendContactMessage(_prev: ContactState, form: FormData): P
     logger.error({ err: error, client: clientKey({ headers: h }) }, "contact message insert failed");
     return { status: "error", message: "Something went wrong on our side. Please try again shortly.", values };
   }
+  kickJobs();
   return {
     status: "sent",
     message: "Thank you. Your message has reached the editorial office, and we will reply by email.",

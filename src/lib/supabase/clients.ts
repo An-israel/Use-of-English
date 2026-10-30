@@ -2,6 +2,7 @@ import "server-only";
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { publicEnv } from "@/lib/env";
 import { serverEnv } from "@/lib/env.server";
 import { withTimeout } from "@/lib/resilience";
@@ -34,6 +35,9 @@ export function publicClient() {
 /** Per-request client acting as the signed-in user (RLS applies). */
 export async function userClient() {
   const { url, key } = requirePublic();
+  // Sessions are per request: never part of a prerendered shell (the auth
+  // library reads the clock while loading the session).
+  await connection();
   const store = await cookies();
   return createServerClient(url, key, {
     cookies: {

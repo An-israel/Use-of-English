@@ -83,9 +83,16 @@ update public.review_assignments set status = 'submitted', recommendation = 'min
 reset role;
 select pg_temp.check((select submitted_at is not null from public.review_assignments limit 1), 'review submission is timestamped');
 
+-- After submission the author can no longer change the author list
+select pg_temp.as_user('00000000-0000-4000-a000-00000000000a');
+delete from public.submission_authors where submission_id = '11111111-0000-4000-a000-000000000001';
+reset role;
+select pg_temp.check((select count(*) from public.submission_authors where submission_id = '11111111-0000-4000-a000-000000000001') = 1,
+  'authors cannot edit co-authors after submission');
+
 -- Book Review Editor: book-review submissions only
 select pg_temp.as_user('00000000-0000-4000-a000-00000000000f');
-select pg_temp.check((select count(*) from public.submissions) = 0, 'book review editor cannot see research submissions');
+select pg_temp.check((select count(*) from public.submissions where type <> 'book_review') = 0, 'book review editor cannot see research submissions');
 reset role;
 
 -- Payments are server-only

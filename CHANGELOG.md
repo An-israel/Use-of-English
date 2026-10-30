@@ -2,6 +2,16 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.5.0] - Milestone 5: Submissions and payments
+
+- Five-step submission form: details (live word count, keyword chips), authors (add, reorder by drag or arrows, corresponding author), files (direct, signed uploads to Storage; type and 20 MB checks), declarations, review and submit. Drafts autosave server-side; creation is idempotent.
+- Paystack review and publication fees: server-side initialisation, signed and re-verified webhooks applied idempotently in one transaction, a status page that polls, retries after failure, and stale pending payments expired.
+- Receipt PDFs (stored privately) and branded emails (submission received, receipt, status changes, contact form), all through the job queue with retries and an email log.
+- Author submission page: timeline, history and messages, fee payment, receipts, files, revised-manuscript upload, withdrawal, and the acceptance letter PDF once the publication fee is paid or waived.
+- Editors: a first submissions list and detail page with workflow-checked status changes (optimistic locking), messages and internal notes, and fee waivers with a recorded reason.
+- Migrations 1100 to 1400. A mock Paystack checkout for development and tests (refused in production).
+- End-to-end tests: submit and pay, idempotent and signed webhooks, acceptance and publication fee with the letter, failed payment then waiver.
+
 ## [0.4.0] - Milestone 4: Accounts and roles
 
 - Registration with email confirmation, sign-in, password reset and email change; optional Google sign-in behind a feature flag.

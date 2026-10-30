@@ -35,3 +35,9 @@ export function joinNames(names: string[]): string {
   if (names.length <= 1) return names[0] ?? "";
   return `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
 }
+
+/** "NGN 5,000": for PDFs, whose built-in fonts have no naira sign. */
+export function formatNairaPlain(kobo: number): string {
+  const naira = kobo / 100;
+  return `NGN ${new Intl.NumberFormat("en-NG", { minimumFractionDigits: Number.isInteger(naira) ? 0 : 2, maximumFractionDigits: 2 }).format(naira)}`;
+}
