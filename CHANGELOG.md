@@ -2,6 +2,14 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - Milestone 2: Design checkpoint
+
+- Full home page: current issue feature, Articles in Press rail, subject tiles, most read, book reviews, why publish, Call for Papers countdown, editorial board strip.
+- Issue pages with editorial, table of contents grouped by type, abstract disclosures and previous/next issue; `/issues/current`.
+- Article pages: author block with affiliations, ORCID and corresponding author; metadata; abstract and keywords; Cite panel (APA 7th, MLA 9th, Chicago, BibTeX, .ris/.bib); share; counts; full text with table of contents, side notes and reading-comfort controls; related articles; Google Scholar, Dublin Core and JSON-LD metadata.
+- Editorial Board page with the Editor-in-Chief featured and consultants in their own band.
+- Citation and sanitiser unit tests; WCAG contrast check script; design self-review in docs/DESIGN_REVIEW.md.
+
 ## [0.1.0] - Milestone 1: Foundation
 
 - Next.js 16 app with the JHTS design tokens, self-hosted Fraunces, Literata and Instrument Sans, and light and dark themes.

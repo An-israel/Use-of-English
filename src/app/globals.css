@@ -39,6 +39,8 @@
   --brand-fg: var(--jhts-paper);
   --accent: var(--jhts-terracotta);
   --thread: var(--jhts-ochre);
+  /* ochre for text: the raw ochre is decorative only (2.6:1) */
+  --thread-text: #86621a;
   --info: var(--jhts-indigo-dye);
   --focus: var(--jhts-ochre);
   --inverse-bg: var(--jhts-ink);
@@ -62,6 +64,7 @@
     --brand-fg: #0c1a14;
     --accent: #e08466;
     --thread: #d9ab4c;
+    --thread-text: #d9ab4c;
     --info: #9aa6dd;
     --focus: #d9ab4c;
     --inverse-bg: #0b0a08;
@@ -92,6 +95,7 @@
   --brand-fg: #0c1a14;
   --accent: #e08466;
   --thread: #d9ab4c;
+  --thread-text: #d9ab4c;
   --info: #9aa6dd;
   --focus: #d9ab4c;
   --inverse-bg: #0b0a08;
@@ -134,6 +138,7 @@
   --color-brand-fg: var(--brand-fg);
   --color-accent: var(--accent);
   --color-thread: var(--thread);
+  --color-thread-text: var(--thread-text);
   --color-info: var(--info);
   --color-inverse: var(--inverse-bg);
   --color-inverse-fg: var(--inverse-fg);
@@ -195,8 +200,12 @@
   h4 {
     font-family: var(--font-display);
     font-optical-sizing: auto;
-    text-wrap: balance;
+    text-wrap: pretty;
     letter-spacing: -0.015em;
+  }
+  h1,
+  h2 {
+    text-wrap: balance;
   }
 
   p {
@@ -288,4 +297,208 @@
   to {
     opacity: 1;
   }
+}
+
+.skeleton {
+  background:
+    linear-gradient(100deg, transparent 30%, color-mix(in oklab, var(--thread) 14%, transparent) 50%, transparent 70%) 0
+      0 / 200% 100%,
+    color-mix(in oklab, var(--fg) 6%, transparent);
+  animation: skeleton-sheen 1.6s linear infinite;
+}
+
+@keyframes skeleton-sheen {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Consistent duotone for board photographs (ink shadows, paper highlights). */
+.duotone {
+  filter: grayscale(1) contrast(1.05) sepia(0.35) hue-rotate(-10deg) saturate(0.8);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Long-form reading: editorials, policies, article full text             */
+/* ---------------------------------------------------------------------- */
+
+.prose-jhts {
+  color: var(--fg);
+}
+.prose-jhts > * + * {
+  margin-top: 1.1em;
+}
+.prose-jhts h2 {
+  font-family: var(--font-display);
+  font-size: 1.65em;
+  line-height: 1.2;
+  margin-top: 2.2em;
+  scroll-margin-top: 6rem;
+}
+.prose-jhts h3 {
+  font-family: var(--font-display);
+  font-size: 1.25em;
+  line-height: 1.3;
+  margin-top: 1.8em;
+  scroll-margin-top: 6rem;
+}
+.prose-jhts h2 + *,
+.prose-jhts h3 + * {
+  margin-top: 0.6em;
+}
+.prose-jhts a {
+  color: var(--brand);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--thread) 70%, transparent);
+  text-underline-offset: 0.2em;
+}
+.prose-jhts a:hover {
+  text-decoration-color: var(--thread);
+}
+.prose-jhts ul,
+.prose-jhts ol {
+  padding-left: 1.4em;
+}
+.prose-jhts ul {
+  list-style: none;
+}
+.prose-jhts ul > li {
+  position: relative;
+}
+.prose-jhts ul > li::before {
+  content: "";
+  position: absolute;
+  left: -1.05em;
+  top: 0.68em;
+  width: 0.36em;
+  height: 0.36em;
+  transform: rotate(45deg);
+  background: var(--thread);
+}
+.prose-jhts ol {
+  list-style: decimal;
+}
+.prose-jhts ol > li::marker {
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+.prose-jhts li + li {
+  margin-top: 0.45em;
+}
+.prose-jhts blockquote {
+  border-left: 2px solid var(--thread);
+  padding-left: 1.2em;
+  font-style: italic;
+  color: color-mix(in oklab, var(--fg) 88%, transparent);
+}
+.prose-jhts .signature {
+  font-family: var(--font-sans);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.08em;
+  color: var(--fg-muted);
+}
+.prose-jhts mark.to-confirm {
+  background: color-mix(in oklab, var(--accent) 12%, transparent);
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 0.78em;
+  letter-spacing: 0.04em;
+  padding: 0.1em 0.35em;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.prose-jhts table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
+}
+.prose-jhts caption {
+  caption-side: top;
+  text-align: left;
+  padding-bottom: 0.6em;
+  font-size: 0.92em;
+  color: var(--fg-muted);
+}
+.prose-jhts .lede {
+  font-size: 1.12em;
+  line-height: 1.6;
+}
+.prose-jhts th,
+.prose-jhts td {
+  border-bottom: 1px solid var(--rule);
+  padding: 0.6em 0.75em 0.6em 0;
+  text-align: left;
+}
+
+/* Side notes: in the margin on wide screens, inline below 1280px. */
+.prose-jhts .sidenote-ref {
+  font-family: var(--font-sans);
+  font-size: 0.68em;
+  vertical-align: super;
+  line-height: 0;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.prose-jhts .sidenote {
+  display: block;
+  margin: 0.8em 0;
+  padding-left: 0.9em;
+  border-left: 1px solid var(--thread);
+  font-family: var(--font-sans);
+  font-size: 0.8em;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+.prose-jhts .sidenote::before {
+  content: attr(data-n) ". ";
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 1280px) {
+  .prose-jhts .sidenote {
+    float: right;
+    clear: right;
+    width: 14rem;
+    margin: 0.3em -17rem 1em 0;
+  }
+}
+
+.toast-in {
+  animation: toast-in 260ms var(--ease-weave);
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* Reading themes for full text (independent of the site theme). */
+.reading-surface {
+  --rs-bg: var(--bg);
+  --rs-muted: var(--fg-muted);
+  background: var(--rs-bg);
+}
+.reading-surface[data-reading-theme="sepia"] {
+  --rs-bg: #f3e7cf;
+  --rs-muted: #6a5a43;
+  --fg: #2b2116;
+  --fg-muted: #6a5a43;
+  --rule: #dccaa6;
+  --brand: #5b3a12;
+  color: var(--fg);
+  padding-inline: 1rem;
+}
+.reading-surface[data-reading-theme="night"] {
+  --rs-bg: #1b1915;
+  --rs-muted: #a89f90;
+  --fg: #e6dfd0;
+  --fg-muted: #a89f90;
+  --rule: #34302a;
+  --brand: #8cc8ab;
+  --accent: #e08466;
+  color: var(--fg);
+  padding-inline: 1rem;
 }

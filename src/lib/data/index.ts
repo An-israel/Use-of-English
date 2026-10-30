@@ -124,3 +124,34 @@ export async function getSlugRedirect(entity: "article" | "category" | "page", s
   cacheLife("hours");
   return source.slugRedirect(entity, slug);
 }
+
+/** Top articles by views. Uses lifetime counts until monthly metrics exist (milestone 8). */
+export async function getMostRead(limit = 5) {
+  "use cache";
+  cacheTag(TAGS.articles);
+  cacheLife("hours");
+  const all = await source.articles();
+  return all.toSorted((a, b) => b.viewCount - a.viewCount).slice(0, limit);
+}
+
+/** Latest book reviews with their bibliographic details. */
+export async function getBookReviews(limit?: number) {
+  "use cache";
+  cacheTag(TAGS.articles);
+  cacheLife("hours");
+  const all = (await source.articles()).filter((a) => a.type === "book_review");
+  const picked = limit ? all.slice(0, limit) : all;
+  const full = await Promise.all(picked.map((a) => source.article(a.slug)));
+  return full.filter((a) => a !== null);
+}
+
+/** Published and in-press article counts per category slug. */
+export async function getCategoryCounts() {
+  "use cache";
+  cacheTag(TAGS.articles, TAGS.categories);
+  cacheLife("hours");
+  const counts: Record<string, number> = {};
+  for (const a of await source.articles())
+    if (a.categorySlug) counts[a.categorySlug] = (counts[a.categorySlug] ?? 0) + 1;
+  return counts;
+}

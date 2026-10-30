@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { CommandPalette, type PaletteItem } from "@/components/site/CommandPalette";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
+import { Toaster } from "@/components/ui/Toaster";
 import { getArticles, getCategories, getIssues, getPages } from "@/lib/data";
 import { issueLabel, issuePath } from "@/lib/issues";
 import { NAV } from "@/lib/nav";
@@ -64,7 +65,7 @@ async function paletteIndex(): Promise<PaletteItem[]> {
 export async function SiteChrome({ children }: { children: ReactNode }) {
   const items = await paletteIndex();
   return (
-    <>
+    <Toaster>
       <a
         href="#main"
         className="bg-brand text-brand-fg fixed top-3 left-4 z-[70] -translate-y-24 rounded-sm px-4 py-2 transition-transform focus:translate-y-0"
@@ -77,6 +78,6 @@ export async function SiteChrome({ children }: { children: ReactNode }) {
       </main>
       <Footer />
       <CommandPalette items={items} />
-    </>
+    </Toaster>
   );
 }

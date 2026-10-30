@@ -9,8 +9,13 @@ mkdirSync(out, { recursive: true });
 
 const pages = [
   { name: "home", path: "/" },
+  { name: "issue", path: "/issues/1/1" },
+  { name: "article", path: "/articles/code-switching-and-authority-in-nsukka-classrooms" },
+  { name: "book-review", path: "/articles/review-of-writing-in-two-tongues" },
+  { name: "board", path: "/editorial-board" },
   { name: "404", path: "/this-page-does-not-exist" },
 ];
+const darkPages = new Set(["home", "article"]);
 const widths = [390, 1024, 1440];
 
 const browser = await chromium.launch();
@@ -24,9 +29,18 @@ try {
       });
       const page = await ctx.newPage();
       for (const p of pages) {
-        if (theme === "dark" && p.name !== "home") continue;
+        if (theme === "dark" && !darkPages.has(p.name)) continue;
         await page.goto(base + p.path, { waitUntil: "networkidle" });
         await page.waitForTimeout(1600); // let the weave finish drawing
+        // trigger scroll reveals so full-page shots show every section
+        await page.evaluate(async () => {
+          for (let y = 0; y < document.body.scrollHeight; y += 500) {
+            window.scrollTo(0, y);
+            await new Promise((r) => setTimeout(r, 60));
+          }
+          window.scrollTo(0, 0);
+        });
+        await page.waitForTimeout(700);
         await page.screenshot({
           path: `${out}/${p.name}-${width}${theme === "dark" ? "-dark" : ""}.png`,
           fullPage: true,

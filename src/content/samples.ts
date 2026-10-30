@@ -71,6 +71,30 @@ export const sampleIssues: SampleIssue[] = [
         citationStyle: "apa7",
         views: 1840,
         downloads: 612,
+        bodyHtml: `<p class="lede">Walk past any secondary school classroom in Nsukka and you are likely to hear two languages. A teacher explains photosynthesis in English, then turns to a restless row at the back and switches, without pause, into Igbo. Official policy treats such moments as lapses. This article argues that they are something closer to a method.</p>
+<h2>Background</h2>
+<p>Nigeria’s National Policy on Education makes English the medium of instruction from the upper primary years onwards, while encouraging the use of the language of the immediate environment in the early years.<span class="sidenote-ref">1</span><span class="sidenote" data-n="1">SAMPLE note. The policy has been revised several times; the provisions on language have changed little in substance.</span> In practice, the line between the two is crossed constantly, and research on Nigerian classrooms has long documented this movement between languages.</p>
+<p>Most earlier studies describe code-switching as a response to comprehension problems: teachers switch when students do not understand. That account is accurate but incomplete. It does not explain why switches cluster at particular moments that have little to do with difficulty, such as reprimands, jokes and praise.</p>
+<h2>Method</h2>
+<p>We recorded forty hours of lessons in four schools, two public and two private, across Junior and Senior Secondary classes. Each switch was coded for its direction, its length and its function in the lesson.<span class="sidenote-ref">2</span><span class="sidenote" data-n="2">SAMPLE note. Consent was obtained from schools, teachers and parents; student names were removed at transcription.</span></p>
+<table>
+<caption>Table 1. Functions of switches into Igbo (SAMPLE data)</caption>
+<thead><tr><th scope="col">Function</th><th scope="col">Switches</th><th scope="col">Share</th></tr></thead>
+<tbody>
+<tr><td>Discipline and classroom management</td><td>412</td><td>38%</td></tr>
+<tr><td>Explaining a difficult concept</td><td>301</td><td>28%</td></tr>
+<tr><td>Encouragement and praise</td><td>214</td><td>20%</td></tr>
+<tr><td>Humour and asides</td><td>152</td><td>14%</td></tr>
+</tbody>
+</table>
+<h2>Findings</h2>
+<h3>Two registers of authority</h3>
+<p>English, in these classrooms, is the language of the syllabus and the examination. Igbo is the language of relationship. When a teacher moves into Igbo to call a student to order, the switch does not weaken their authority; it changes its kind, from institutional to personal.</p>
+<blockquote>“When I speak Igbo to them, they know I am not reading from the scheme of work. They know it is me talking.” (Teacher, public school, SAMPLE)</blockquote>
+<h3>Switching back</h3>
+<p>Just as telling are the moments of return. Teachers almost always switch back into English to restate a point formally, often in words close to the textbook’s. The return marks what will be examined.</p>
+<h2>Conclusion</h2>
+<p>Code-switching in these classrooms is neither a failure of policy nor a simple aid to comprehension. It allows teachers to manage the classroom on two registers at once. Language policy would serve teachers better by recognising this practice and training them to use it deliberately.</p>`,
       },
       {
         slug: "the-weaver-and-the-word-akwete-cloth-in-igbo-poetry",
