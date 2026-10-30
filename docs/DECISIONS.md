@@ -72,3 +72,13 @@ Answers given before Milestone 1, plus changes to the brief's data model and why
 - **Saved filters** are stored per staff member in the database (private by RLS), so they follow the person across browsers.
 - **Settings** (Super Admin) edit the same keys the public site reads; fee changes take effect for new payments and the database's `fees_enabled()` reads the same setting. Changes expire the public caches immediately (`updateTag`).
 - **A missing article streams a 404 page with status 200** because the page shell is already sent (partial prerendering); Next adds `noindex`, so search engines don't index it.
+
+## Milestone 7: finance
+
+- **Who sees what** follows the brief's role table: the Finance Officer and Super Admins view, export, record refunds and resolve reconciliation flags; Editors view only; Book Review Editors and authors see no finance screens. The `payment_ledger` view checks the role itself, so finance staff also see which issue a paid article went into.
+- **Dates are Lagos calendar days.** Date filters, months and years, the reconciliation day and the fund statement all use Africa/Lagos, so a payment at 00:30 on 1 April counts in April.
+- **Totals are computed from the filtered ledger** (up to 10,000 rows, far beyond a quarterly journal's volume). The PDF lists up to 400 rows and says so when there are more; the CSV always has every row.
+- **Refunds count in the year they are made** on the fund statement, and against the payment on the payments screens, so each view adds up.
+- **Reconciliation never changes money.** It compares the day's Paystack transactions (by Paystack's creation time) with payments marked paid that day, and records four kinds of mismatch. Re-running a day only adds new flags. In mock mode "Paystack" is the record the simulated checkout leaves on each payment.
+- **Exports are audited** (who, which filters, how many rows) and limited to 30 per 10 minutes per person.
+- **No honorarium calculations**, as the brief says.

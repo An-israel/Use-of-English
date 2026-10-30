@@ -2,6 +2,16 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.7.0] - Milestone 7: Finance
+
+- Payments: every payment, waiver and refund with filters for date range (Lagos time), fee type, status and issue; totals overall, by month and by fee type; a card list on phones.
+- Exports: the filtered ledger as CSV (UTF-8, Excel-safe, protected against spreadsheet formula injection) and as a landscape PDF report; the fund statement as PDF and CSV. Finance Officer and Super Admin only, rate-limited and written to the audit log.
+- Refunds: recorded against a payment (amount, date, reason, Paystack refund reference), never more than was paid; a full refund marks the payment refunded.
+- Reconciliation: a daily job compares the day's Paystack transactions with the journal's records and flags money missing on either side, different amounts and missed webhooks. Flags are emailed to finance staff and resolved with a note; any day can be re-checked, idempotently.
+- Fund summary: collected, refunds and net, by year and by fee.
+- Migration 1700: the payments ledger view, refund events, and a fix that let refunds update the payment's status under RLS.
+- Tests: finance end-to-end tests (exports, refunds, reconciliation, role limits), seven more database checks (34), unit tests for totals, CSV and reconciliation rules.
+
 ## [0.6.0] - Milestone 6: Admin dashboard
 
 - Admin shell: collapsible sidebar, breadcrumbs, Ctrl/⌘ + K quick actions, confirmation dialogs, toasts, unsaved-change warnings, edit-conflict messages, loading skeletons, dark mode and a TEST MODE banner.

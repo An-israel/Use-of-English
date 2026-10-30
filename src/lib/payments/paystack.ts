@@ -3,6 +3,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { serverEnv } from "@/lib/env.server";
 import { siteUrl } from "@/lib/env";
 import { circuitBreaker, retry, withTimeout } from "@/lib/resilience";
+import type { PaystackTx } from "./reconcile";
 
 /**
  * Paystack (NGN) through the server-side Transaction API (brief section 7).
@@ -35,6 +36,8 @@ export interface PaystackClient {
     metadata: Record<string, unknown>;
   }): Promise<InitResult>;
   verify(reference: string): Promise<Verified>;
+  /** Transactions created in [from, to), for daily reconciliation. */
+  listTransactions(from: string, to: string): Promise<PaystackTx[]>;
 }
 
 export class PaystackError extends Error {
@@ -74,6 +77,13 @@ export function sign(rawBody: string, secret: string): string {
 }
 
 async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
+  return (await callWithMeta<T>(path, init)).data;
+}
+
+async function callWithMeta<T>(
+  path: string,
+  init: RequestInit = {},
+): Promise<{ data: T; meta?: { pageCount?: number } }> {
   const key = serverEnv.PAYSTACK_SECRET_KEY;
   if (!key) throw new PaystackError("PAYSTACK_SECRET_KEY is not set");
   return breaker.call(() =>
@@ -88,10 +98,15 @@ async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
             }),
           10_000,
         );
-        const body = (await res.json().catch(() => ({}))) as { status?: boolean; message?: string; data?: T };
+        const body = (await res.json().catch(() => ({}))) as {
+          status?: boolean;
+          message?: string;
+          data?: T;
+          meta?: { pageCount?: number };
+        };
         if (!res.ok || body.status === false)
           throw new PaystackError(body.message ?? `Paystack error ${res.status}`, res.status);
-        return body.data as T;
+        return { data: body.data as T, meta: body.meta };
       },
       // Retry network errors and 5xx; never retry 4xx (a bad request stays bad).
       { attempts: 3, retryable: (e) => !(e instanceof PaystackError && e.status !== undefined && e.status < 500) },
@@ -139,6 +154,20 @@ const realClient: PaystackClient = {
       raw: d,
     };
   },
+  async listTransactions(from, to) {
+    const out: PaystackTx[] = [];
+    // Paged at 100; a quarterly journal has a handful of payments a day.
+    for (let page = 1; page <= 50; page++) {
+      const q = new URLSearchParams({ from, to, perPage: "100", page: String(page) });
+      const { data, meta } = await callWithMeta<
+        { reference: string; status: string; amount: number; currency: string }[]
+      >(`/transaction?${q}`);
+      for (const t of data ?? [])
+        out.push({ reference: t.reference, status: t.status, amountKobo: t.amount, currency: t.currency });
+      if (!meta?.pageCount || page >= meta.pageCount) break;
+    }
+    return out;
+  },
 };
 
 /** Simulated checkout for development and automated tests. */
@@ -170,8 +199,30 @@ const mockClient: PaystackClient = {
       paystackId: outcome === "success" ? Math.floor(Date.now() / 1000) : null,
       channel: outcome === "success" ? "card" : null,
       paidAt: outcome === "success" ? new Date().toISOString() : null,
-      raw: { mock: true, reference, outcome },
+      raw: { mock: true, reference, outcome, amount_kobo: data?.amount_kobo ?? 0 },
     };
+  },
+  /** What "Paystack" holds in mock mode: every payment that went through the simulated checkout. */
+  async listTransactions(from, to) {
+    const { adminClient } = await import("@/lib/supabase/clients");
+    const { data } = await adminClient()
+      .from("payments")
+      .select("reference, amount_kobo, raw, created_at")
+      .gte("created_at", from)
+      .lt("created_at", to)
+      .not("raw", "is", null);
+    return (data ?? [])
+      .map((p) => ({
+        p,
+        raw: p.raw as { mock?: boolean; mock_outcome?: string; outcome?: string; amount_kobo?: number },
+      }))
+      .filter(({ raw }) => raw.mock || raw.mock_outcome)
+      .map(({ p, raw }) => ({
+        reference: p.reference,
+        status: raw.mock_outcome ?? raw.outcome ?? "pending",
+        amountKobo: raw.amount_kobo ?? p.amount_kobo,
+        currency: "NGN",
+      }));
   },
 };
 

@@ -2,6 +2,7 @@ import "server-only";
 import {
   ContactReceived,
   PaymentReceipt,
+  ReconciliationFlags,
   ReviewInvitation,
   ReviewSubmitted,
   StatusChanged,
@@ -278,6 +279,27 @@ async function reviewEmail(payload: Record<string, unknown>, kind: "invitation" 
   });
 }
 
+/** Tell the Finance Officers and Super Admins that the daily comparison found mismatches. */
+async function reconciliationEmail(payload: Record<string, unknown>) {
+  const { data: staff, error } = await adminClient()
+    .from("profiles")
+    .select("email")
+    .in("role", ["finance_officer", "super_admin"])
+    .eq("is_active", true);
+  if (error) throw new Error(`finance staff lookup failed: ${error.message}`);
+  const date = String(payload.date);
+  const flags = Number(payload.flags);
+  for (const { email } of staff ?? []) {
+    await sendEmail({
+      to: email,
+      subject: `Reconciliation ${date}: ${flags} payment${flags === 1 ? "" : "s"} to check`,
+      template: "reconciliation_flags",
+      dedupeKey: `reconcile:${date}:${flags}:${email}`,
+      element: <ReconciliationFlags date={date} flags={flags} url={`${siteUrl}/admin/reconciliation`} />,
+    });
+  }
+}
+
 export const HANDLERS: Record<string, (payload: Record<string, unknown>) => Promise<void>> = {
   dispatch_event: dispatchEvent,
   payment_receipt: paymentReceipt,
@@ -286,4 +308,5 @@ export const HANDLERS: Record<string, (payload: Record<string, unknown>) => Prom
   email_contact: contactNotification,
   email_review_invitation: (p) => reviewEmail(p, "invitation"),
   email_review_submitted: (p) => reviewEmail(p, "submitted"),
+  email_reconciliation: reconciliationEmail,
 };

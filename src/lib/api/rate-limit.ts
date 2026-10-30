@@ -19,6 +19,7 @@ export const RATE_LIMITS = {
   submission: { name: "submission", max: 20, windowSeconds: 3600 },
   payment: { name: "payment", max: 10, windowSeconds: 600 },
   download: { name: "download", max: 120, windowSeconds: 600 },
+  financeExport: { name: "finance-export", max: 30, windowSeconds: 600 },
   publicApi: { name: "public-api", max: 300, windowSeconds: 300 },
 } satisfies Record<string, RateLimitRule>;
 

@@ -204,3 +204,16 @@ export function ReviewSubmitted({
     </Layout>
   );
 }
+
+export function ReconciliationFlags({ date, flags, url }: { date: string; flags: number; url: string }) {
+  return (
+    <Layout preview={`Reconciliation ${date}: ${flags} to check`} title="Payments need checking">
+      <P>
+        The daily comparison with Paystack for {date} found {flags} payment{flags === 1 ? "" : "s"} that{" "}
+        {flags === 1 ? "doesn’t" : "don’t"} match the journal’s records. No money has been moved; please review and
+        resolve {flags === 1 ? "it" : "them"}.
+      </P>
+      <Button href={url}>Open reconciliation</Button>
+    </Layout>
+  );
+}

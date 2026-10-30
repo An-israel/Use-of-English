@@ -43,22 +43,25 @@ In the Supabase dashboard for the live project:
 1. In the Paystack dashboard (Settings → API keys and webhooks), copy the **test** keys into `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` and `PAYSTACK_SECRET_KEY`. The receipts and the admin show "TEST MODE" until live keys (`sk_live_…`) are used.
 2. Set the webhook URL to `https://jhts.unn.edu.ng/api/webhooks/paystack`. The callback URL is set per payment by the site.
 3. Without keys, set `PAYSTACK_MODE=mock` locally to use the simulated checkout. It is refused in production.
-4. The job worker (receipts and emails) runs at `/api/cron/jobs`, protected by `CRON_SECRET`. Set the repository variable `SITE_URL` and the secret `CRON_SECRET` in GitHub so `.github/workflows/cron.yml` calls it every 10 minutes.
+4. Reconciliation runs daily at `/api/cron/reconcile` (yesterday in Lagos time; `?date=YYYY-MM-DD` for another day), from Vercel Cron and the GitHub workflow. Mismatches appear under Admin → Reconciliation and are emailed to the Finance Officers. Nothing is changed automatically.
+5. Refunds are made in the Paystack dashboard, then recorded under Admin → Payments → the payment (amount, date, reason, Paystack refund reference).
+6. The job worker (receipts and emails) runs at `/api/cron/jobs`, protected by `CRON_SECRET`. Set the repository variable `SITE_URL` and the secret `CRON_SECRET` in GitHub so `.github/workflows/cron.yml` calls it every 10 minutes.
 
 ## The editorial office (`/admin`)
 
 Staff sign in and open `/admin`. Press Ctrl or ⌘ + K for quick actions; the sidebar collapses and the choice is remembered.
 
-| Section            | Who                         | What                                                                             |
-| ------------------ | --------------------------- | -------------------------------------------------------------------------------- |
-| Submissions        | Editors (book reviews: BRE) | Table with saved filters, kanban board, reviewers, plagiarism data, decisions    |
-| Issues             | Editors                     | Create the next issue, editorial, cover, full-issue files, order, publish        |
-| Articles, In Press | Editors                     | Details, authors, files with versions, full text, publish or schedule, bin       |
-| Book reviews       | Editors, Book Review Editor | Book details and cover                                                           |
-| Journal            | Editors                     | Categories, Call for Papers, pages and policies (versioned), editorial board     |
-| Messages           | Editors                     | Contact-form inbox                                                               |
-| Users and roles    | Super Admin, editors        | Invitations and roles                                                            |
-| Settings           | Super Admin                 | Journal details, ISSN, DOI prefix, fees, email sender, links, SEO, feature flags |
+| Section                                | Who                                              | What                                                                                       |
+| -------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| Submissions                            | Editors (book reviews: BRE)                      | Table with saved filters, kanban board, reviewers, plagiarism data, decisions              |
+| Issues                                 | Editors                                          | Create the next issue, editorial, cover, full-issue files, order, publish                  |
+| Articles, In Press                     | Editors                                          | Details, authors, files with versions, full text, publish or schedule, bin                 |
+| Book reviews                           | Editors, Book Review Editor                      | Book details and cover                                                                     |
+| Journal                                | Editors                                          | Categories, Call for Papers, pages and policies (versioned), editorial board               |
+| Messages                               | Editors                                          | Contact-form inbox                                                                         |
+| Users and roles                        | Super Admin, editors                             | Invitations and roles                                                                      |
+| Payments, Reconciliation, Fund summary | Finance Officer, Super Admin (editors view only) | Filters, totals by month and fee, CSV and PDF exports, refunds, mismatches, fund statement |
+| Settings                               | Super Admin                                      | Journal details, ISSN, DOI prefix, fees, email sender, links, SEO, feature flags           |
 
 Reviewers find their requests on `/account` and review at `/review/<id>`.
 

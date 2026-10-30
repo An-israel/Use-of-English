@@ -79,3 +79,21 @@ The admin uses the same fonts and tokens in a denser, calmer working layout. Scr
 | Issue contents showed "pp. pp. 1–24"                                                             | Typography 7 | Page range printed once.                                                                 |
 | A 404 inside the public site showed the header and footer twice (since milestone 3)              | Hierarchy 4  | The site group has its own not-found page; the root one keeps the chrome for other URLs. |
 | Two reviewers with the same name looked identical in the reviewer picker                         | Usability    | The picker shows each reviewer's email and current load.                                 |
+
+# Design self-review: Milestone 7 (finance)
+
+| Screen                                 | Hierarchy | Typography | Spacing rhythm | Colour restraint | Originality | Mobile |
+| -------------------------------------- | --------- | ---------- | -------------- | ---------------- | ----------- | ------ |
+| Payments (filters, totals, ledger)     | 9         | 8          | 8              | 9                | 8           | 8      |
+| Payment detail and refund              | 9         | 9          | 8              | 9                | 8           | 8      |
+| Reconciliation                         | 9         | 9          | 8              | 9                | 8           | 8      |
+| Fund summary                           | 9         | 9          | 8              | 9                | 8           | 8      |
+| PDF payments report and fund statement | 8         | 8          | 8              | 9                | 8           | n/a    |
+
+## Fixed during review
+
+| Issue found                                                             | Score before | Fix                                                  |
+| ----------------------------------------------------------------------- | ------------ | ---------------------------------------------------- |
+| The PDF report pushed the ledger to page 2, leaving page 1 mostly empty | Spacing 6    | The ledger follows the totals on the same page.      |
+| Months printed as "2027-04" in the PDF                                  | Typography 7 | Month names ("April 2027") on screen and in the PDF. |
+| On phones the ledger was a wide table you had to scroll sideways        | Mobile 6     | A compact card list below 640 px; the table above.   |
