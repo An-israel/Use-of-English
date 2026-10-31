@@ -17,6 +17,10 @@ updates:
       # Node's types follow the Node version the site runs on (22, see package.json engines).
       - dependency-name: "@types/node"
         update-types: [version-update:semver-major]
+      # @vercel/otel's OpenTelemetry packages (core 2.12) require @opentelemetry/api below 1.10.
+      # Remove this when @vercel/otel moves to a release that allows it.
+      - dependency-name: "@opentelemetry/api"
+        versions: [">=1.10.0"]
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: monthly }
