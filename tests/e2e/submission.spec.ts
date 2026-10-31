@@ -79,7 +79,7 @@ test("an author submits a manuscript and pays the review fee", async ({ page }) 
   await page.getByRole("button", { name: "Save and continue" }).click();
   await expect(page.getByText("Please complete the highlighted fields.")).toBeVisible();
   await page.getByLabel("Title").fill("Proverbs, Pidgin and the Making of Meaning in Nsukka Markets");
-  await page.getByLabel("Subject area").selectOption({ label: "Language and Linguistics" });
+  await page.getByLabel("Subject area").selectOption({ label: "Language, Literature and Linguistics" });
   await page.getByLabel(/Abstract/).fill(ABSTRACT);
   await expect(page.getByText("160 / 150–250 words")).toBeVisible();
   for (const k of ["proverbs", "Nigerian Pidgin", "markets"]) {

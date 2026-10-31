@@ -47,7 +47,9 @@ async function scan(page: Page, label: string) {
   // The <title> is streamed in after the body; wait for it, and for entrance animations to settle.
   await expect(page).toHaveTitle(/\S/);
   await page.waitForTimeout(400);
+  // The email preview is a sandboxed srcdoc frame axe can't enter; it is an email, not site UI.
   const { violations } = await new AxeBuilder({ page })
+    .exclude("iframe[srcdoc]")
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();
   const report = violations.map(
