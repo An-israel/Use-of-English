@@ -46,11 +46,16 @@ jobs:
       - run: npm ci
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.122.0 # the version in package-lock.json; "latest" changed db diff's flags
       - name: Start Supabase and apply migrations + seed
         run: supabase start -x studio,imgproxy,edge-runtime,logflare,vector,supavisor
       - name: Migration check (no drift between migrations and schema)
-        run: supabase db diff --local --schema public --exit-code || (echo "Schema drift detected" && exit 1)
+        # db diff has no exit-code flag: fail when its output contains any schema change.
+        run: |
+          out=$(supabase db diff --local --schema public 2>/dev/null)
+          if echo "$out" | grep -qiE '^\s*(create|alter|drop|grant|revoke|comment on) |"diff":"[^"]'; then
+            echo "Schema drift detected:"; echo "$out"; exit 1
+          fi
       - name: RLS tests
         run: npm run db:test
         env:
@@ -62,6 +67,7 @@ jobs:
       - name: Query-count (N+1) and end-to-end tests
         env:
           # Local-only values for the test run; production secrets never reach CI.
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
           PAYSTACK_MODE: mock
           CRON_SECRET: ci-cron-secret-0123456789abcdef
           METRICS_SALT: ci-metrics-salt-0123456789
