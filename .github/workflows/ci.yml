@@ -78,3 +78,10 @@ jobs:
           npx vitest run tests/unit/n-plus-one.test.ts
           npx playwright install --with-deps chromium
           npm run build && npm run test:e2e
+      - name: Keep the test results when end-to-end tests fail
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-results
+          path: test-results/
+          retention-days: 7

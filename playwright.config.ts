@@ -14,5 +14,8 @@ export default defineConfig({
     { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
     { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
-  webServer: process.env.E2E_BASE_URL ? undefined : { command: "npm run start", port: 3000, reuseExistingServer: true },
+  // The app's own log goes to the test output, so a failure in CI shows what the server did.
+  webServer: process.env.E2E_BASE_URL
+    ? undefined
+    : { command: "npm run start", port: 3000, reuseExistingServer: true, stdout: "pipe", stderr: "pipe" },
 });
