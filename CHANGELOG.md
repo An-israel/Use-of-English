@@ -2,6 +2,14 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.1] - Dependency updates and CI
+
+- Updated React and React DOM to 19.3.1, Playwright to 1.64.1, and the GitHub Actions to checkout v7, setup-node v7, cache v6 and Supabase setup-cli v3 (all run on Node 24 now).
+- Held back TypeScript 7, ESLint 10 and @types/node 26. TypeScript 7 breaks linting (typescript-eslint doesn't support it yet). The ESLint plugins in Next's config support ESLint 9 at most. Node's types follow the Node 22 runtime. Dependabot now skips these major versions.
+- `/issues/current` is now a plain HTTP redirect (307) instead of a redirect inside a streamed page, and it is no longer listed in the sitemap.
+- The XML character filter (RSS, Crossref, OAI-PMH) is written with explicit escapes; its behaviour is unchanged.
+- Local test runs can use an installed Chromium (`PLAYWRIGHT_CHROMIUM_PATH`).
+
 ## [1.0.0] - Milestone 10: Polish and launch
 
 - Editor's Handbook: publishing an issue, handling a submission, waivers, refunds, payments and what to do when something goes wrong. It is in the admin (Handbook, for all staff) and in `docs/EDITORS_HANDBOOK.md`, generated from one source.

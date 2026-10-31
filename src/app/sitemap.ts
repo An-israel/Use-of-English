@@ -6,7 +6,6 @@ import { issuePath } from "@/lib/issues";
 const STATIC = [
   "/",
   "/issues",
-  "/issues/current",
   "/in-press",
   "/book-reviews",
   "/subjects",

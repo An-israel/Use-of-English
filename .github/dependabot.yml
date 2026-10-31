@@ -7,6 +7,16 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    ignore:
+      # typescript-eslint (used by eslint-config-next) doesn't support TypeScript 7 yet.
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
+      # eslint-config-next's import, jsx-a11y and react plugins support ESLint 9 at most.
+      - dependency-name: eslint
+        update-types: [version-update:semver-major]
+      # Node's types follow the Node version the site runs on (22, see package.json engines).
+      - dependency-name: "@types/node"
+        update-types: [version-update:semver-major]
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: monthly }
