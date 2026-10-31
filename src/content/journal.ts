@@ -14,6 +14,7 @@ export const settings: SiteSettings = {
   journalName: "Journal of Humanities and Transcultural Studies",
   shortName: "JHTS",
   tagline: "A quarterly journal of humanities and transcultural scholarship",
+  motto: "Knowledge · Cultures · Global Voices",
   publisher: "The Use of English Unit, School of General Studies, University of Nigeria, Nsukka",
   publisherShort: "Use of English Unit, School of General Studies, UNN",
   foundedYear: 2026,
@@ -22,6 +23,13 @@ export const settings: SiteSettings = {
   eissn: null,
   doiPrefix: null,
   contactEmail: "[JHTS_EMAIL]",
+  // From the Call for Papers flyer.
+  enquiries: [
+    { name: "Associate Professor Virginia Eze", role: "Editor-in-Chief", phone: "+234 (0)803 665 9581" },
+    { name: "Professor Chinyere Ngonebu", role: "Assistant Editor", phone: "+234 (0)803 618 6242" },
+    { name: "Dr Festus Ngwoke", role: "Book Review Editor", phone: "+234 (0)803 736 7014" },
+    { name: "Dr Ifeyinwa David-Ojukwu", role: "Managing Editor", phone: "+234 (0)903 386 6531" },
+  ],
   domain: "jhts.unn.edu.ng",
   postalAddress:
     "Use of English Unit, School of General Studies, University of Nigeria, Nsukka 410001, Enugu State, Nigeria [TO CONFIRM]",
@@ -62,34 +70,24 @@ export const FEATURE_FLAG_DESCRIPTIONS: Record<keyof FeatureFlags, string> = {
 
 export const categories: Category[] = [
   {
-    id: "c0000000-0000-4000-8000-000000000001",
-    name: "Language and Linguistics",
-    slug: "language-and-linguistics",
-    shortDescription: "Structure, use and change in language, with attention to African languages and Englishes.",
+    id: "c0000000-0000-4000-8000-000000000002",
+    name: "Humanities and Social Sciences",
+    slug: "humanities-and-social-sciences",
+    shortDescription: "Human life, society and the past, studied through the humanities and social sciences.",
     description:
-      "Studies of the structure, acquisition, use and change of language: phonology, syntax, semantics, pragmatics, sociolinguistics, discourse analysis and applied linguistics. JHTS particularly welcomes work on Nigerian and other African languages, on Nigerian English and World Englishes, and on multilingual practice in classrooms, media and public life.",
-    threadColor: "--thread-language",
+      "Scholarship on human experience, society and the past: history, archaeology, the arts, music, theatre and performance, sociology, anthropology, psychology and related fields. We welcome studies of Nigerian and African societies and comparative work that sets them beside other parts of the world.",
+    threadColor: "--thread-humanities",
     sortOrder: 1,
   },
   {
-    id: "c0000000-0000-4000-8000-000000000002",
-    name: "Literature and Literary Studies",
-    slug: "literature-and-literary-studies",
-    shortDescription: "Close reading, literary history and theory across oral and written traditions.",
+    id: "c0000000-0000-4000-8000-000000000001",
+    name: "Language, Literature and Linguistics",
+    slug: "language-literature-and-linguistics",
+    shortDescription: "Language in use and in structure, and literatures in every form, oral and written.",
     description:
-      "Criticism and scholarship on literatures in any language and period: fiction, poetry, drama, life writing and oral literature. We welcome close reading, literary history, theory and comparative work, and studies that place African literatures in conversation with other traditions.",
-    threadColor: "--thread-literature",
+      "Studies of the structure, acquisition, use and change of language, from phonology and syntax to sociolinguistics, discourse analysis and applied linguistics; criticism and scholarship on fiction, poetry, drama, life writing and oral literature; and translation and interpreting as practice and theory. JHTS particularly welcomes work on Nigerian and other African languages and literatures, on Nigerian English and World Englishes, and on multilingual practice.",
+    threadColor: "--thread-language",
     sortOrder: 2,
-  },
-  {
-    id: "c0000000-0000-4000-8000-000000000003",
-    name: "Cultural and Transcultural Studies",
-    slug: "cultural-and-transcultural-studies",
-    shortDescription: "How ideas, forms and identities travel, meet and change across borders.",
-    description:
-      "Research on how cultural forms, ideas and identities move across borders and are remade in the process: diaspora, migration, hybridity, popular culture, material culture, religion and ritual, and the politics of representation. This is the journal’s home ground, and interdisciplinary approaches are encouraged.",
-    threadColor: "--thread-culture",
-    sortOrder: 3,
   },
   {
     id: "c0000000-0000-4000-8000-000000000004",
@@ -99,47 +97,67 @@ export const categories: Category[] = [
     description:
       "Studies of communication in its social settings: journalism, broadcasting, film, digital and social media, rhetoric, public relations and development communication, including the language and ethics of media in Nigeria and beyond.",
     threadColor: "--thread-communication",
+    sortOrder: 3,
+  },
+  {
+    id: "c0000000-0000-4000-8000-000000000007",
+    name: "Education and Pedagogy",
+    slug: "education-and-pedagogy",
+    shortDescription: "Teaching, learning and literacy in their social and institutional settings.",
+    description:
+      "Research on education as a social practice: language and literacy education, English for academic purposes, the teaching of the general studies curriculum, curriculum and policy, teacher education, assessment, and the place of the humanities in schools and universities.",
+    threadColor: "--thread-education",
     sortOrder: 4,
   },
   {
     id: "c0000000-0000-4000-8000-000000000005",
-    name: "Translation Studies",
-    slug: "translation-studies",
-    shortDescription: "Translation and interpreting as practice, theory and cultural exchange.",
+    name: "Technology, Innovation and Digital Cultures",
+    slug: "technology-innovation-and-digital-cultures",
+    shortDescription: "How digital tools and new technologies change language, culture, learning and society.",
     description:
-      "Work on translation and interpreting as linguistic practice, as theory and as cultural exchange: literary and technical translation, translation between African and European languages, self-translation, localisation and the history of translation.",
-    threadColor: "--thread-translation",
+      "Work on technology as a cultural and social force: digital humanities, computational and corpus approaches, artificial intelligence and language, online communities, digital literacies, e-learning, and innovation in Nigerian and African contexts.",
+    threadColor: "--thread-technology",
     sortOrder: 5,
   },
   {
-    id: "c0000000-0000-4000-8000-000000000006",
-    name: "Philosophy, History and the Arts",
-    slug: "philosophy-history-and-the-arts",
-    shortDescription: "Ideas, the past and creative practice, read through the humanities.",
+    id: "c0000000-0000-4000-8000-000000000003",
+    name: "Culture, Identity and Transcultural Studies",
+    slug: "culture-identity-and-transcultural-studies",
+    shortDescription: "How ideas, forms and identities travel, meet and change across borders.",
     description:
-      "Philosophical, historical and arts-based scholarship: African and comparative philosophy, intellectual and cultural history, art history, music, theatre and performance studies, and the visual arts.",
-    threadColor: "--thread-philosophy",
+      "Research on how cultural forms, ideas and identities move across borders and are remade in the process: diaspora, migration, hybridity, popular and material culture, gender, ethnicity, heritage and the politics of representation. This is the journal’s home ground, and interdisciplinary approaches are encouraged.",
+    threadColor: "--thread-culture",
     sortOrder: 6,
   },
   {
-    id: "c0000000-0000-4000-8000-000000000007",
-    name: "Education and Society",
-    slug: "education-and-society",
-    shortDescription: "Language, literacy and learning in their social and institutional settings.",
+    id: "c0000000-0000-4000-8000-000000000009",
+    name: "Politics, Governance and Development",
+    slug: "politics-governance-and-development",
+    shortDescription: "Power, public life and development, read through language, culture and society.",
     description:
-      "Research on education as a social practice: language and literacy education, English for academic purposes, the teaching of the general studies curriculum, curriculum and policy, and the role of the humanities in public life.",
-    threadColor: "--thread-education",
+      "Studies of politics and public life: governance, democracy, policy, law and society, conflict and peace, and development, with attention to the role of language, media and culture in public reason in Nigeria, Africa and beyond.",
+    threadColor: "--thread-politics",
     sortOrder: 7,
   },
   {
-    id: "c0000000-0000-4000-8000-000000000008",
-    name: "Other Areas of the Humanities",
-    slug: "other-areas-of-the-humanities",
-    shortDescription: "Original humanities scholarship that crosses or sits outside these areas.",
+    id: "c0000000-0000-4000-8000-000000000006",
+    name: "Philosophy, Ethics and Religion",
+    slug: "philosophy-ethics-and-religion",
+    shortDescription: "Ideas, values and belief: African and comparative philosophy, ethics and religion.",
     description:
-      "JHTS also publishes sound humanities scholarship that crosses or sits outside the areas above. If you are unsure whether your work fits, please contact the editorial office before submitting.",
-    threadColor: "--thread-other",
+      "Philosophical, ethical and religious scholarship: African and comparative philosophy, applied and research ethics, religious studies, theology in its cultural setting, and the history of ideas.",
+    threadColor: "--thread-philosophy",
     sortOrder: 8,
+  },
+  {
+    id: "c0000000-0000-4000-8000-000000000008",
+    name: "Interdisciplinary and Applied Research",
+    slug: "interdisciplinary-and-applied-research",
+    shortDescription: "Work that crosses disciplines, or applies humanities scholarship to practical problems.",
+    description:
+      "Research that crosses or sits between the areas above, and applied work that brings the humanities and social sciences to bear on practical problems in communities, institutions and industry. If you are unsure whether your work fits, please contact the editorial office before submitting.",
+    threadColor: "--thread-interdisciplinary",
+    sortOrder: 9,
   },
 ];
 
@@ -185,7 +203,7 @@ export const callForPapers: CallForPapers = {
   title: "Call for Papers: Volume 1, Issue 1",
   targetLabel: "Vol. 1 No. 1 (March 2027)",
   summaryHtml:
-    "<p>The Journal of Humanities and Transcultural Studies invites original research articles, theoretical papers, critical reviews and book reviews for its inaugural issue. Submissions are welcome across all eight subject areas of the journal, from language and linguistics to education and society. We are especially interested in work that crosses borders between languages, cultures and disciplines.</p><p>Scholars, researchers, and undergraduate and postgraduate students are all welcome to submit. Every manuscript is screened by the editors, checked for plagiarism and sent for double-blind peer review.</p>",
+    "<p>The Journal of Humanities and Transcultural Studies invites original research articles, theoretical papers, critical reviews and book reviews for its inaugural issue and forthcoming issues. Submissions are welcome across all nine areas of interest of the journal, from language, literature and linguistics to technology, innovation and digital cultures. We are especially interested in work that crosses borders between languages, cultures and disciplines.</p><p>Scholars, researchers, and undergraduate and postgraduate students are all welcome to submit. Every manuscript is screened by the editors, checked for plagiarism and sent for double-blind peer review.</p>",
   bannerText: "Now accepting submissions for the inaugural issue.",
   submissionDeadline: "2027-01-15T23:59:00+01:00",
   reviewPeriod: "January to February 2027 [TO CONFIRM]",

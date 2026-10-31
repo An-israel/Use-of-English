@@ -4,29 +4,38 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 /**
- * Generated Open Graph images (brief section 12): the journal's paper, a
- * woven forest band and the title in Fraunces. 1200 × 630, the size every
- * network expects.
+ * Generated Open Graph images (brief section 12): the journal's cream paper, a
+ * woven forest band carrying the emblem, and the title in Playfair Display.
+ * 1200 × 630, the size every network expects.
  */
 export const OG_SIZE = { width: 1200, height: 630 };
 
-const C = { ink: "#15130F", ivory: "#F6F1E7", forest: "#0F3B2E", ochre: "#C8962E", stone: "#6F675C", line: "#E4DCCD" };
+const C = { ink: "#1C211D", ivory: "#FAF7EE", forest: "#14452F", ochre: "#E1B521", stone: "#6A6A5C", line: "#E5DFCD" };
 
-let fonts: Promise<{ name: string; data: Buffer; weight: 400 | 600; style: "normal" }[]> | null = null;
+let fonts: Promise<{ name: string; data: Buffer; weight: 400 | 600 | 700; style: "normal" }[]> | null = null;
 function loadFonts() {
   const read = (f: string) => readFile(join(process.cwd(), "assets/fonts", f));
   fonts ??= Promise.all([
-    read("fraunces-latin-400-normal.woff"),
-    read("fraunces-latin-600-normal.woff"),
-    read("instrument-sans-latin-400-normal.woff"),
-    read("instrument-sans-latin-600-normal.woff"),
-  ]).then(([f4, f6, i4, i6]) => [
-    { name: "Fraunces", data: f4, weight: 400, style: "normal" },
-    { name: "Fraunces", data: f6, weight: 600, style: "normal" },
-    { name: "Instrument Sans", data: i4, weight: 400, style: "normal" },
-    { name: "Instrument Sans", data: i6, weight: 600, style: "normal" },
+    read("playfair-display-latin-400-normal.woff"),
+    read("playfair-display-latin-700-normal.woff"),
+    read("source-sans-3-latin-400-normal.woff"),
+    read("source-sans-3-latin-600-normal.woff"),
+  ]).then(([p4, p7, s4, s6]) => [
+    { name: "Playfair Display", data: p4, weight: 400, style: "normal" },
+    { name: "Playfair Display", data: p7, weight: 700, style: "normal" },
+    { name: "Source Sans 3", data: s4, weight: 400, style: "normal" },
+    { name: "Source Sans 3", data: s6, weight: 600, style: "normal" },
   ]);
   return fonts;
+}
+
+/** The emblem as a data URL (the PNG drawn by `npm run brand:generate`). */
+let emblem: Promise<string> | null = null;
+function loadEmblem() {
+  emblem ??= readFile(join(process.cwd(), "public/brand/emblem-512.png")).then(
+    (b) => `data:image/png;base64,${b.toString("base64")}`,
+  );
+  return emblem;
 }
 
 /** The Akwete-style lozenge lattice used on covers, drawn for the OG band. */
@@ -64,9 +73,10 @@ export async function ogCard({
   meta?: string;
   footer?: string;
 }) {
+  const logo = await loadEmblem();
   const size = title.length > 110 ? 48 : title.length > 70 ? 58 : 68;
   return new ImageResponse(
-    <div style={{ display: "flex", width: "100%", height: "100%", background: C.ivory, fontFamily: "Instrument Sans" }}>
+    <div style={{ display: "flex", width: "100%", height: "100%", background: C.ivory, fontFamily: "Source Sans 3" }}>
       <div
         style={{
           display: "flex",
@@ -82,27 +92,44 @@ export async function ogCard({
           style={{
             display: "flex",
             position: "absolute",
+            left: 40,
+            top: 40,
+            width: 220,
+            height: 220,
+            borderRadius: 110,
+            background: C.ivory,
+            border: `4px solid ${C.ochre}`,
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element -- Satori renders plain img */}
+          <img src={logo} width={212} height={212} alt="" />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            position: "absolute",
             left: 44,
             bottom: 44,
-            fontFamily: "Fraunces",
-            fontWeight: 600,
+            fontFamily: "Playfair Display",
+            fontWeight: 700,
             fontSize: 64,
-            color: "#F1E8D6",
-            letterSpacing: -2,
+            color: C.ivory,
+            letterSpacing: -1,
           }}
         >
           JHTS
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", flex: 1, padding: "64px 72px 56px 72px" }}>
-        <div style={{ display: "flex", fontSize: 22, letterSpacing: 3, color: "#86621A", textTransform: "uppercase" }}>
+        <div style={{ display: "flex", fontSize: 22, letterSpacing: 3, color: "#7D5F05", textTransform: "uppercase" }}>
           {kicker}
         </div>
         <div
           style={{
             display: "flex",
             marginTop: 28,
-            fontFamily: "Fraunces",
+            fontFamily: "Playfair Display",
+            fontWeight: 700,
             fontSize: size,
             lineHeight: 1.08,
             color: C.ink,

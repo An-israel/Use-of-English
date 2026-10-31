@@ -22,7 +22,7 @@ export const pages: Page[] = [
     `
 <h2>A home for humanities scholarship</h2>
 <p>The <em>Journal of Humanities and Transcultural Studies</em> (JHTS) gives scholars a platform for original research across the humanities. It was established in 2026 by the Use of English Unit of the School of General Studies, University of Nigeria, Nsukka (UNN).</p>
-<p>“Transcultural” names the journal’s central interest: ideas crossing borders and being woven together. JHTS publishes work on language, literature, culture, communication, translation, philosophy, history, the arts and education, and it especially welcomes scholarship that moves between languages, cultures and disciplines.</p>
+<p>“Transcultural” names the journal’s central interest: ideas crossing borders and being woven together. JHTS publishes work across nine areas of interest, from language, literature and linguistics to culture and identity, communication and media, education, technology and digital cultures, politics and governance, and philosophy, ethics and religion, and it especially welcomes scholarship that moves between languages, cultures and disciplines.</p>
 <h2>Purpose</h2>
 <p>The journal strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and UNN, and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
 <h2>Publisher</h2>
@@ -41,9 +41,9 @@ export const pages: Page[] = [
     "page",
     "aims-and-scope",
     "Aims and Scope",
-    "Eight subject areas, four article types, and scholars at every stage of their careers.",
+    "Nine areas of interest, four article types, and scholars at every stage of their careers.",
     `
-<p>JHTS publishes original, unpublished scholarship across the humanities, with a particular interest in work that crosses borders between languages, cultures and disciplines. Every submission is screened by the editors, checked for plagiarism and sent for double-blind peer review.</p>
+<p>JHTS publishes original, unpublished scholarship across the humanities and social sciences, in language, literature and linguistics, communication and media, education, technology and digital cultures, politics and governance, and philosophy, ethics and religion, with a particular interest in work that crosses borders between languages, cultures and disciplines. Its motto, <em>Knowledge · Cultures · Global Voices</em>, sums up that aim. Every submission is screened by the editors, checked for plagiarism and sent for double-blind peer review.</p>
 `,
   ),
   page(
@@ -74,7 +74,7 @@ export const pages: Page[] = [
 <h2>Originality</h2>
 <p>Manuscripts must be original and unpublished, and must not be under review elsewhere at the same time.</p>
 <h2>Formatting</h2>
-<p>Prepare your manuscript in Microsoft Word (.docx), set in Times New Roman, 12 point, double-spaced throughout, with page numbers.</p>
+<p>Prepare your manuscript in Microsoft Word (.docx), set in Times New Roman, 12 point, double-spaced throughout, with page numbers. The <a href="/templates/JHTS-manuscript-template.docx">JHTS manuscript template</a> is set up this way.</p>
 <h2>Referencing</h2>
 <p>Use either APA 7th edition or MLA 9th edition, consistently throughout the paper. Tell us which style you used when you submit.</p>
 <h2>Recommended structure for research articles</h2>
@@ -126,6 +126,35 @@ export const pages: Page[] = [
     "Contact",
     "Write to the JHTS editorial office.",
     `<p>For questions about submissions, reviews, payments or the journal in general, write to the editorial office using the form on this page. We aim to reply within three working days ${TC}.</p>`,
+  ),
+  page(
+    "page",
+    "faq",
+    "Questions and Timeline",
+    "Answers to common questions, and how long each stage usually takes.",
+    `
+<h2>How long does it take?</h2>
+<p>Typical times for each stage ${TC}:</p>
+<ul>
+<li><strong>Screening and plagiarism check:</strong> about ${TC} after submission and payment of the review fee.</li>
+<li><strong>Peer review:</strong> about ${TC}.</li>
+<li><strong>Decision:</strong> sent soon after the reviews are in.</li>
+<li><strong>Revisions:</strong> authors are usually given ${TC} for minor and ${TC} for major revisions.</li>
+<li><strong>Publication:</strong> accepted articles appear online as Articles in Press, then in the next quarterly issue (March, June, September or December).</li>
+</ul>
+<h2>Who can submit?</h2>
+<p>Scholars, researchers, and undergraduate and postgraduate students, from Nigeria and anywhere else. You do not need to be at the University of Nigeria.</p>
+<h2>What can I submit?</h2>
+<p>Original research articles, theoretical papers, critical reviews and book reviews in any of the journal’s nine areas of interest. See the Aims and Scope.</p>
+<h2>Is there a template?</h2>
+<p>Yes: download the <a href="/templates/JHTS-manuscript-template.docx">JHTS manuscript template</a> (Word). It is set up in Times New Roman 12 point, double-spaced, with page numbers and the recommended headings.</p>
+<h2>What does it cost?</h2>
+<p>A review fee at submission and a publication fee only if your manuscript is accepted. See Fees and Payment. Payment of fees does not guarantee acceptance.</p>
+<h2>Can I follow my submission?</h2>
+<p>Yes. Your author dashboard shows each stage, and we email you whenever the status changes.</p>
+<h2>What if I disagree with a decision?</h2>
+<p>You may appeal. See the Complaints and Appeals policy.</p>
+`,
   ),
 ];
 
@@ -307,7 +336,7 @@ export const policies: Page[] = [
 <h2>Cookies</h2>
 <p>The site uses only essential cookies needed to keep you signed in. It does not use advertising or tracking cookies.</p>
 <h2>Your rights</h2>
-<p>You may ask to see, correct or delete your personal data by writing to the editorial office. Published articles and financial records must be kept for the scholarly record and for audit purposes.</p>
+<p>You can download a copy of your data, correct your profile or delete your account yourself from My account, or write to the editorial office. Published articles, submitted manuscripts, reviews and financial records must be kept for the scholarly record and for audit purposes; when you delete your account, your name and contact details are removed from them.</p>
 <h2>Retention</h2>
 <p>How long submission files and records of rejected submissions are kept ${TC}</p>
 `,
@@ -332,5 +361,75 @@ export const policies: Page[] = [
 <p>Waivers may be granted at the editors’ discretion.</p>
 `,
     11,
+  ),
+  page(
+    "policy",
+    "reviewer-guidelines",
+    "Guidelines for Reviewers",
+    "What we ask of reviewers, and how to write a useful report.",
+    `
+<p>Peer reviewers are the heart of JHTS. These guidelines follow the COPE Ethical Guidelines for Peer Reviewers.</p>
+<h2>Before you accept</h2>
+<ul>
+<li>Accept only if the manuscript is within your expertise and you can return the report by the due date shown in the invitation.</li>
+<li>Decline, and tell the editors, if you have a conflict of interest: for example, you think you know who the authors are, you work closely with them, or you are writing on the same question.</li>
+<li>If you need more time, ask the editors before the due date.</li>
+</ul>
+<h2>Confidentiality</h2>
+<p>Treat the manuscript as confidential. Do not share it, discuss it with others or use its ideas or data before publication. Do not try to identify the authors. Do not upload the manuscript, or any part of it, to generative AI tools (see the policy on generative AI).</p>
+<h2>Writing the report</h2>
+<ol>
+<li><strong>Summary.</strong> In a few sentences, say what the manuscript argues and what it contributes.</li>
+<li><strong>Strengths.</strong> What does the work do well?</li>
+<li><strong>Major points.</strong> Problems with the argument, method, evidence or use of the literature that must be addressed.</li>
+<li><strong>Minor points.</strong> Clarity, structure, referencing (APA 7th or MLA 9th) and language.</li>
+<li><strong>Recommendation.</strong> Accept, minor revisions, major revisions or reject.</li>
+</ol>
+<p>Be specific, constructive and courteous: write as you would wish to be reviewed. Comments to the authors are shared with them anonymously; confidential comments are seen by the editors only.</p>
+<h2>Timing and recognition</h2>
+<p>Reviews are due within the period stated in the invitation ${TC}. You will receive reminders before and after the due date. Recognition for reviewers ${TC}.</p>
+`,
+    12,
+  ),
+  page(
+    "policy",
+    "generative-ai",
+    "Generative AI in Writing and Reviewing",
+    "How authors, reviewers and editors may and may not use AI tools.",
+    `
+<p>JHTS follows the COPE position on authorship and AI tools. ${TC}</p>
+<h2>Authors</h2>
+<ul>
+<li>AI tools cannot be authors: they cannot take responsibility for the work, approve the final version or answer for its integrity.</li>
+<li>If you used a generative AI tool in the research or writing (beyond basic spelling and grammar checking), say so in the Methodology or in a note, naming the tool and how it was used.</li>
+<li>You are responsible for everything in your manuscript, including checking any AI-assisted text, translation or references for accuracy and for plagiarism.</li>
+<li>Fabricated references, data or quotations are research misconduct, whatever their source.</li>
+</ul>
+<h2>Reviewers</h2>
+<p>Manuscripts under review are confidential. Reviewers must not upload a manuscript, or any part of it, to a generative AI tool, and must not use such tools to write their reports.</p>
+<h2>Editors</h2>
+<p>Editors do not upload submissions to generative AI tools and do not use them to make editorial decisions. Similarity checking is done with the journal’s plagiarism-detection service.</p>
+`,
+    13,
+  ),
+  page(
+    "policy",
+    "complaints-and-appeals",
+    "Complaints and Appeals",
+    "How to appeal a decision or complain about the journal, and what happens next.",
+    `
+<p>JHTS handles complaints and appeals following COPE guidance. We take every complaint seriously and will not treat you differently for making one.</p>
+<h2>Appealing an editorial decision</h2>
+<ol>
+<li>Write to the Editor-in-Chief within ${TC} of the decision, using the contact page and quoting your submission ID (for example JHTS-2027-0042).</li>
+<li>Explain clearly why you think the decision should be reconsidered, responding to the reviewers’ and editors’ comments point by point. New evidence or a clear error in the review is a stronger ground than disagreement alone.</li>
+<li>The appeal is considered by an editor who was not involved in the original decision, who may seek a further review.</li>
+<li>We aim to reply within ${TC}. The outcome of an appeal is final.</li>
+</ol>
+<h2>Complaints</h2>
+<p>Complaints about the journal’s processes, delays, conduct of editors or reviewers, or published content can be made through the contact page. Complaints about possible misconduct in published work are handled under the Publication Ethics and the Corrections and Retractions policies.</p>
+<p>If you are not satisfied with how your complaint was handled, you may take it to ${TC}.</p>
+`,
+    14,
   ),
 ];

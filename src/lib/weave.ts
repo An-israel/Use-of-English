@@ -169,10 +169,10 @@ export function diamondPath(cx: number, cy: number, r: number) {
 
 /** Season colour for each quarterly issue month (1-indexed month). */
 export function seasonFor(month: number): { ground: string; thread: string; accent: string; name: string } {
-  if (month <= 3) return { name: "harmattan", ground: "#0F3B2E", thread: "#C8962E", accent: "#E9DCC0" };
-  if (month <= 6) return { name: "rains", ground: "#2D3561", thread: "#C8962E", accent: "#E7D7C9" };
+  if (month <= 3) return { name: "harmattan", ground: "#14452F", thread: "#E1B521", accent: "#E9E2C8" };
+  if (month <= 6) return { name: "rains", ground: "#2D3561", thread: "#E1B521", accent: "#E7D7C9" };
   if (month <= 9) return { name: "harvest", ground: "#7A2F1D", thread: "#E1B65A", accent: "#F1E3CC" };
-  return { name: "festival", ground: "#15130F", thread: "#C8962E", accent: "#B4472B" };
+  return { name: "festival", ground: "#1C211D", thread: "#E1B521", accent: "#B4472B" };
 }
 
 export type CoverDesign = {

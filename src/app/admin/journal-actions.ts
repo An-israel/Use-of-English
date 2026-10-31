@@ -364,10 +364,19 @@ export async function saveSettings(form: FormData): Promise<ActionResult> {
     .map((line) => line.split("|").map((p) => p.trim()))
     .filter(([label, url]) => label && /^https:\/\//.test(url ?? ""))
     .map(([label, url]) => ({ label, url }));
+  // Enquiry contacts, one per line: Name | Role | Phone.
+  const enquiries = f("enquiries")
+    .split("\n")
+    .map((line) => line.split("|").map((p) => p.trim()))
+    .filter(([name, role, phone]) => name && role && /^[+\d][\d ()-]{6,24}$/.test(phone ?? ""))
+    .slice(0, 8)
+    .map(([name, role, phone]) => ({ name: name.slice(0, 120), role: role.slice(0, 80), phone }));
   const values: Record<string, unknown> = {
     journalName: v.journalName,
     shortName: v.shortName,
     tagline: f("tagline"),
+    motto: f("motto").slice(0, 120),
+    enquiries,
     publisher: f("publisher"),
     publisherShort: f("publisherShort"),
     frequency: f("frequency"),

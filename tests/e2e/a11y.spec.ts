@@ -22,7 +22,7 @@ const publicPages = [
   "/in-press",
   "/book-reviews",
   "/subjects",
-  "/subjects/translation-studies",
+  "/subjects/language-literature-and-linguistics",
   "/editorial-board",
   "/about",
   "/aims-and-scope",
@@ -32,6 +32,9 @@ const publicPages = [
   "/fees",
   "/policies",
   "/policies/peer-review",
+  "/policies/reviewer-guidelines",
+  "/faq",
+  "/goodbye",
   "/contact",
   "/search?q=language",
   "/login",
@@ -169,6 +172,8 @@ test.describe("signed in", () => {
         "/admin/system",
         "/admin/audit",
         "/admin/handbook",
+        "/admin/emails",
+        "/admin/emails?t=receipt",
       ];
       for (const path of paths) {
         await page.goto(path);

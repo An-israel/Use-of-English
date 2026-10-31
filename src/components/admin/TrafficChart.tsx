@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 export type TrafficPoint = { day: string; views: number; downloads: number };
 
@@ -34,13 +34,17 @@ const fmtN = (n: number) => new Intl.NumberFormat("en-GB").format(n);
  */
 export function TrafficChart({ points }: { points: TrafficPoint[] }) {
   const box = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(720);
+  // Unknown until measured: the server's markup scales a 720-wide drawing to
+  // the container (viewBox), so a phone never sees a too-wide chart (B9).
+  const [measured, setMeasured] = useState<number | null>(null);
+  const width = measured ?? 720;
   const [hover, setHover] = useState<number | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = box.current;
     if (!el) return;
-    const ro = new ResizeObserver(([e]) => setWidth(Math.max(300, e.contentRect.width)));
+    setMeasured(Math.max(300, el.clientWidth));
+    const ro = new ResizeObserver(([e]) => setMeasured(Math.max(300, e.contentRect.width)));
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
@@ -91,10 +95,11 @@ export function TrafficChart({ points }: { points: TrafficPoint[] }) {
           Downloads
         </li>
       </ul>
-      <div ref={box} className="relative">
+      <div ref={box} className="relative w-full overflow-x-clip">
         <svg
-          width={width}
-          height={H}
+          width={measured ?? "100%"}
+          height={measured ? H : undefined}
+          viewBox={`0 0 ${width} ${H}`}
           role="img"
           aria-label={`Views and downloads per day, ${fmtDay(points[0].day, true)} to ${fmtDay(points[last].day, true)}. The table below lists every value.`}
           tabIndex={0}

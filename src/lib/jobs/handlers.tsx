@@ -17,7 +17,7 @@ import { renderReceipt } from "@/lib/pdf/documents";
 import { RECOMMENDATION_LABEL, type Recommendation } from "@/lib/submission";
 import { adminClient } from "@/lib/supabase/clients";
 import { AUTHOR_NEXT_STEP, STATUS_LABEL, type SubmissionStatus } from "@/lib/workflow";
-import { enqueue } from "./queue";
+import { enqueue, PRIORITY } from "./queue";
 
 export type Job = { id: number; kind: string; payload: Record<string, unknown>; attempts: number };
 
@@ -41,7 +41,7 @@ async function dispatchEvent(payload: Record<string, unknown>) {
   const id = ev.aggregate_id as string;
   switch (ev.type) {
     case "payment.succeeded":
-      await enqueue("payment_receipt", { payment_id: id }, `receipt:${id}`);
+      await enqueue("payment_receipt", { payment_id: id }, `receipt:${id}`, "default", PRIORITY.payment);
       break;
     case "submission.created":
       await enqueue("email_submission_received", { submission_id: id }, `received:${id}`);

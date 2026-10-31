@@ -4,8 +4,8 @@ const pages = [
   ["/issues", "All Issues"],
   ["/in-press", "Articles in Press"],
   ["/book-reviews", "New books, read closely"],
-  ["/subjects", "Eight threads, one cloth"],
-  ["/subjects/translation-studies", "Translation Studies"],
+  ["/subjects", "Nine threads, one cloth"],
+  ["/subjects/language-literature-and-linguistics", "Language, Literature and Linguistics"],
   ["/about", "About the Journal"],
   ["/aims-and-scope", "Aims and Scope"],
   ["/use-of-english-unit", "The Use of English Unit"],
@@ -14,6 +14,10 @@ const pages = [
   ["/fees", "Fees and Payment"],
   ["/policies", "Policies"],
   ["/policies/peer-review", "Peer Review Policy"],
+  ["/policies/reviewer-guidelines", "Guidelines for Reviewers"],
+  ["/policies/generative-ai", "Generative AI in Writing and Reviewing"],
+  ["/policies/complaints-and-appeals", "Complaints and Appeals"],
+  ["/faq", "Questions and Timeline"],
   ["/contact", "Contact the editorial office"],
 ] as const;
 
@@ -57,4 +61,51 @@ test("contact form validates in place", async ({ page }) => {
 test("privacy redirects to the policy", async ({ page }) => {
   await page.goto("/privacy");
   await expect(page).toHaveURL(/\/policies\/privacy$/);
+});
+
+test("missing content answers with a real 404 (B1)", async ({ request }) => {
+  for (const path of [
+    "/articles/no-such-article",
+    "/subjects/no-such-subject",
+    "/policies/no-such-policy",
+    "/issues/99/9",
+  ]) {
+    const res = await request.get(path);
+    expect(res.status(), path).toBe(404);
+    expect(await res.text()).toContain("Page not found");
+  }
+});
+
+test("old subject addresses and feed guesses redirect", async ({ request }) => {
+  const subject = await request.get("/subjects/translation-studies", { maxRedirects: 0 });
+  expect(subject.status()).toBe(308);
+  expect(subject.headers().location).toMatch(/\/subjects\/language-literature-and-linguistics$/);
+  for (const path of ["/feed", "/rss"]) {
+    const res = await request.get(path, { maxRedirects: 0 });
+    expect(res.headers().location).toMatch(/\/rss\.xml$/);
+  }
+});
+
+test("security.txt, manifest and icons are served", async ({ request }) => {
+  const sec = await request.get("/.well-known/security.txt");
+  expect(sec.status()).toBe(200);
+  expect(await sec.text()).toMatch(/^Contact: \S+\nExpires: \d{4}-/m);
+  const manifest = await (await request.get("/manifest.webmanifest")).json();
+  expect(manifest.short_name).toBe("JHTS");
+  for (const path of [
+    "/favicon.ico",
+    "/apple-icon.png",
+    "/brand/icon-512.png",
+    "/templates/JHTS-manuscript-template.docx",
+  ])
+    expect((await request.get(path)).status(), path).toBe(200);
+});
+
+test("the contact page lists the enquiry contacts", async ({ page }) => {
+  await page.goto("/contact");
+  await expect(page.getByRole("main").getByRole("link", { name: "+234 (0)803 665 9581" })).toHaveAttribute(
+    "href",
+    "tel:+2348036659581",
+  );
+  await expect(page.getByRole("main").getByText("Editor-in-Chief", { exact: true })).toBeVisible();
 });

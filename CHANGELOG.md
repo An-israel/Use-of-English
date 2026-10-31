@@ -2,6 +2,36 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - Flyer brand, fixes and improvements from the audit
+
+Everything the committee selected in the audit report.
+
+- **New brand from the flyer:**
+  - Forest green, gold and cream throughout (light and dark, contrast-checked); the woven background stays.
+  - A new emblem, redrawn from the flyer as crisp SVG: a carved mask between the leaves of an open book, under a rising quill, in a green-and-gold ring. It appears in the header, footer, admin, sign-in pages, home page, social images, receipts and letters (PDF) and emails.
+  - Playfair Display and Source Sans 3, as on the flyer.
+  - Favicon, phone home-screen icon and web app manifest (B6). `npm run brand:generate` redraws them from the emblem.
+- **Content from the flyer:**
+  - The nine areas of interest replace the eight subject areas, with sample articles moved to fit. Old subject addresses redirect to the new ones.
+  - The motto, "Knowledge · Cultures · Global Voices", on the home page, footer and emails.
+  - The four enquiry contacts with phone numbers on the Contact page. While the office email is not set, the footer shows the Editor-in-Chief's number instead of the placeholder (B5). Both are editable in Admin → Settings.
+  - Broader Aims and Scope, and a Call for Papers for the inaugural and forthcoming issues.
+- **Fixes:**
+  - Missing articles, subjects, policies and issues now answer with a real 404 status, so search engines don't index them (B1).
+  - Receipts no longer wait behind other emails in the background queue: payment work goes first, and the queue keeps running after a payment until it is empty (B4).
+  - Housekeeping data is cleared by the daily maintenance run: finished jobs after 30 days, rate-limit counters after a day, events and sent emails after a year, staff notifications after six months. Payments, submissions, reviews and the audit log are never pruned (B7).
+  - The Editor's Handbook fits on phones (B8), and the analytics chart no longer starts too wide (B9).
+  - A dropped connection while a page loads now retries once by itself and says what happened, instead of showing the "loom has jammed" error (B3).
+  - B2 (a subject page failing to refresh) could not be reproduced on this version, including after clearing every cache and creating new subjects; it remains on watch.
+- **Improvements:**
+  - Articles print cleanly: title, authors, details, abstract, citation and full text, with the article's address at the end (I3).
+  - My account → Your data: download a copy of your data, or delete your account. Drafts are deleted; submitted work, reviews and payments are kept with the name and contact details removed (I4, Nigeria Data Protection Act 2023).
+  - New pages: Guidelines for Reviewers, Generative AI in Writing and Reviewing, Complaints and Appeals, and Questions and Timeline, with [TO CONFIRM] where the committee must decide; and a Word manuscript template (`npm run template:generate`) (I5).
+  - Admin → Email previews shows every email the site sends, with example details (I6).
+  - The revised-manuscript upload is a drop zone like the submission wizard (I7).
+  - `/feed` and `/rss` redirect to the RSS feed, and `/.well-known/security.txt` says where to report security problems (I9).
+  - X and Facebook share links on articles, as plain links with no tracking scripts (I10).
+
 ## [1.0.1] - Dependency updates and CI
 
 - Updated React and React DOM to 19.3.1, Playwright to 1.64.1, and the GitHub Actions to checkout v7, setup-node v7, cache v6 and Supabase setup-cli v3 (all run on Node 24 now).

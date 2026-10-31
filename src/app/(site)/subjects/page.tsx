@@ -7,7 +7,7 @@ import { getCategories, getCategoryCounts } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Browse by Subject",
-  description: "The eight subject areas of the Journal of Humanities and Transcultural Studies.",
+  description: "The nine areas of interest of the Journal of Humanities and Transcultural Studies.",
   alternates: { canonical: "/subjects" },
 };
 
@@ -18,7 +18,7 @@ export default async function SubjectsPage() {
       <PageHeader
         crumbs={[{ label: "Home", href: "/" }, { label: "Subjects" }]}
         eyebrow="Browse by subject"
-        title="Eight threads, one cloth"
+        title="Nine threads, one cloth"
         summary="JHTS publishes across the humanities. Each subject has its own thread colour, used on its articles throughout the site."
         seed={23}
       />

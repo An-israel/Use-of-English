@@ -6,17 +6,17 @@
  * components use, so dark mode only has to redefine the semantic layer.
  */
 :root {
-  /* Palette (section 3.2 of the brief) */
-  --jhts-ink: #15130f;
-  --jhts-ivory: #f6f1e7;
-  --jhts-paper: #fffdf8;
-  --jhts-forest: #0f3b2e;
-  --jhts-forest-700: #145240;
-  --jhts-terracotta: #b4472b;
-  --jhts-ochre: #c8962e;
+  /* Palette, from the journal's flyer: forest green, gold and cream, with carved-wood bronze */
+  --jhts-ink: #1c211d;
+  --jhts-ivory: #faf7ee;
+  --jhts-paper: #fffdf7;
+  --jhts-forest: #14452f;
+  --jhts-forest-700: #1f5a3d;
+  --jhts-terracotta: #9c4a1f; /* carved-wood bronze (the mask), the accent */
+  --jhts-ochre: #e1b521; /* flyer gold: decorative on cream, readable on forest */
   --jhts-indigo-dye: #2d3561;
-  --jhts-stone: #6f675c;
-  --jhts-line: #e4dccd;
+  --jhts-stone: #6a6a5c;
+  --jhts-line: #e5dfcd;
 
   /* Category thread colours: muted, each ≥ 4.5:1 on ivory and paper. */
   --thread-language: #2d3561; /* indigo dye */
@@ -27,6 +27,10 @@
   --thread-philosophy: #5a4a36; /* umber */
   --thread-education: #2f5563; /* slate blue */
   --thread-other: #6b4a3d; /* clay */
+  --thread-humanities: #6d2f45; /* kola plum */
+  --thread-technology: #5b3a63; /* aubergine */
+  --thread-politics: #7a3b2a; /* burnt sienna */
+  --thread-interdisciplinary: #3f5a24; /* palm olive */
 
   /* Semantic tokens — light */
   --bg: var(--jhts-ivory);
@@ -38,18 +42,19 @@
   --brand-hover: var(--jhts-forest-700);
   --brand-fg: var(--jhts-paper);
   --accent: var(--jhts-terracotta);
-  --accent-text: #9a3b22; /* terracotta, darkened for small text on accent tints */
+  --accent-text: #8b3f17; /* bronze, darkened for small text on accent tints */
   --thread: var(--jhts-ochre);
-  /* ochre for text: the raw ochre is decorative only (2.6:1) */
-  --thread-text: #86621a;
+  /* gold for text on cream: the raw gold is decorative there (5.6:1 for this one) */
+  --thread-text: #7d5f05;
   /* Chart series (validated: lightness band, chroma, CVD with shape as second encoding) */
   --chart-views: #1f7a55;
   --chart-downloads: #b5721a;
   --info: var(--jhts-indigo-dye);
   --focus: var(--jhts-ochre);
-  --inverse-bg: var(--jhts-ink);
-  --inverse-fg: #efe8da;
-  --inverse-muted: #b3aa9b;
+  /* Footer and bands: forest green, as on the flyer */
+  --inverse-bg: var(--jhts-forest);
+  --inverse-fg: #faf7ee;
+  --inverse-muted: #c9d6c8;
 
   color-scheme: light;
 }
@@ -58,25 +63,25 @@
    paper-toned text, forest lifted so it still reads as the brand colour. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #12110e;
-    --surface: #1b1915;
-    --fg: #ece5d6;
-    --fg-muted: #a89f90;
-    --rule: #34302a;
-    --brand: #6fb595;
-    --brand-hover: #8cc8ab;
-    --brand-fg: #0c1a14;
-    --accent: #e08466;
+    --bg: #101511;
+    --surface: #171d18;
+    --fg: #ece8dc;
+    --fg-muted: #a8ad9f;
+    --rule: #2b332c;
+    --brand: #7fc79f;
+    --brand-hover: #9ad6b4;
+    --brand-fg: #0b1a12;
+    --accent: #e3946b;
     --accent-text: var(--accent);
-    --thread: #d9ab4c;
-    --thread-text: #d9ab4c;
+    --thread: #e1b521;
+    --thread-text: #e1b521;
     --chart-views: #33a06c;
     --chart-downloads: #c4871f;
     --info: #9aa6dd;
-    --focus: #d9ab4c;
-    --inverse-bg: #0b0a08;
-    --inverse-fg: #ece5d6;
-    --inverse-muted: #a89f90;
+    --focus: #e1b521;
+    --inverse-bg: #0c2a1c;
+    --inverse-fg: #ece8dc;
+    --inverse-muted: #b5c6b6;
 
     --thread-language: #9aa6dd;
     --thread-literature: #e0997f;
@@ -86,31 +91,35 @@
     --thread-philosophy: #c9b392;
     --thread-education: #8fbccc;
     --thread-other: #d1a491;
+    --thread-humanities: #e39bb5;
+    --thread-technology: #c39ccc;
+    --thread-politics: #e0997f;
+    --thread-interdisciplinary: #a9c98a;
 
     color-scheme: dark;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #12110e;
-  --surface: #1b1915;
-  --fg: #ece5d6;
-  --fg-muted: #a89f90;
-  --rule: #34302a;
-  --brand: #6fb595;
-  --brand-hover: #8cc8ab;
-  --brand-fg: #0c1a14;
-  --accent: #e08466;
+  --bg: #101511;
+  --surface: #171d18;
+  --fg: #ece8dc;
+  --fg-muted: #a8ad9f;
+  --rule: #2b332c;
+  --brand: #7fc79f;
+  --brand-hover: #9ad6b4;
+  --brand-fg: #0b1a12;
+  --accent: #e3946b;
   --accent-text: var(--accent);
-  --thread: #d9ab4c;
-  --thread-text: #d9ab4c;
+  --thread: #e1b521;
+  --thread-text: #e1b521;
   --chart-views: #33a06c;
   --chart-downloads: #c4871f;
   --info: #9aa6dd;
-  --focus: #d9ab4c;
-  --inverse-bg: #0b0a08;
-  --inverse-fg: #ece5d6;
-  --inverse-muted: #a89f90;
+  --focus: #e1b521;
+  --inverse-bg: #0c2a1c;
+  --inverse-fg: #ece8dc;
+  --inverse-muted: #b5c6b6;
 
   --thread-language: #9aa6dd;
   --thread-literature: #e0997f;
@@ -120,6 +129,10 @@
   --thread-philosophy: #c9b392;
   --thread-education: #8fbccc;
   --thread-other: #d1a491;
+  --thread-humanities: #e39bb5;
+  --thread-technology: #c39ccc;
+  --thread-politics: #e0997f;
+  --thread-interdisciplinary: #a9c98a;
 
   color-scheme: dark;
 }
@@ -154,9 +167,10 @@
   --color-inverse-fg: var(--inverse-fg);
   --color-inverse-muted: var(--inverse-muted);
 
-  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
-  --font-reading: var(--font-literata), Georgia, serif;
-  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  /* The flyer's faces: Playfair Display for headings, Source Sans 3 for everything else, reading text included */
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-reading: var(--font-source-sans), "Segoe UI", Roboto, sans-serif;
+  --font-sans: var(--font-source-sans), ui-sans-serif, system-ui, sans-serif;
 
   /* Modular type scale, ratio 1.25 from 16px */
   --text-2xs: 0.64rem;
@@ -245,9 +259,8 @@
 
   /* High-contrast display setting for huge headings */
   .display-tight {
-    font-variation-settings: "opsz" 144;
-    letter-spacing: -0.035em;
-    line-height: 0.95;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
   }
 
   .rule-thread {
@@ -530,10 +543,10 @@
   --rs-bg: #1b1915;
   --rs-muted: #a89f90;
   --fg: #e6dfd0;
-  --fg-muted: #a89f90;
-  --rule: #34302a;
+  --fg-muted: #a8ad9f;
+  --rule: #2b332c;
   --brand: #8cc8ab;
-  --accent: #e08466;
+  --accent: #e3946b;
   color: var(--fg);
   padding-inline: 1rem;
 }
@@ -688,4 +701,64 @@ mark.to-confirm-inline {
 .editor-surface:focus-within {
   outline: 2px solid var(--focus);
   outline-offset: 1px;
+}
+
+/* Print (I3): an article prints as title, authors, details, abstract, citation
+   and full text on white paper; site chrome and reading tools are left out. */
+@media print {
+  :root,
+  :root[data-theme] {
+    --bg: #fff;
+    --surface: #fff;
+    --fg: #000;
+    --fg-muted: #333;
+    --rule: #bbb;
+    --brand: #000;
+    --thread-text: #333;
+    color-scheme: light;
+  }
+  .reading-surface[data-reading-theme] {
+    --rs-bg: #fff;
+    --fg: #000;
+    --fg-muted: #333;
+    --rule: #bbb;
+    font-size: 11.5pt;
+  }
+  @page {
+    margin: 18mm 16mm;
+  }
+  body {
+    background: #fff !important;
+    color: #000;
+  }
+  a[href="#main"],
+  header:has(~ #main),
+  #main ~ footer,
+  [role="dialog"] {
+    display: none !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
+  }
+  figure,
+  table,
+  blockquote {
+    break-inside: avoid;
+  }
 }

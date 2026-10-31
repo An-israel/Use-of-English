@@ -62,8 +62,14 @@ export async function POST(req: NextRequest) {
     );
     if (error) throw new Error(error.message);
     log.info({ reference, outcome }, "payment webhook processed");
-    // Receipt and emails go through the queue; run it now rather than waiting for cron.
-    after(() => runJobs({ maxBatches: 3 }).catch((err) => logger.error({ err }, "post-webhook job run failed")));
+    // Receipt and emails go through the queue; run it now rather than waiting for
+    // cron. Payment jobs are claimed first (B4), and the run keeps going until the
+    // queue is empty or 20 seconds have passed, so a backlog can't hold a receipt.
+    after(() =>
+      runJobs({ maxBatches: 50, budgetMs: 20_000 }).catch((err) =>
+        logger.error({ err }, "post-webhook job run failed"),
+      ),
+    );
     return NextResponse.json({ ok: true, outcome });
   } catch (err) {
     log.error({ err, reference }, "payment webhook failed; Paystack will retry");

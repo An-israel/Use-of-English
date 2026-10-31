@@ -9,6 +9,7 @@ import { ArrowRightIcon, ChevronDownIcon, CloseIcon, MenuIcon, SearchIcon } from
 import { AccountLink } from "./AccountLink";
 import { ThemeToggle } from "./ThemeToggle";
 import { openCommandPalette } from "./command-palette-events";
+import { Emblem } from "@/components/brand/Emblem";
 
 type Props = {
   nav: NavGroup[];
@@ -99,23 +100,33 @@ export function HeaderClient({ nav, features, journalName, shortName, submission
           scrolled ? "h-16" : "h-20 lg:h-24",
         )}
       >
-        <Link href="/" className="group mr-auto flex flex-col leading-none">
-          <span
+        <Link href="/" className="group mr-auto flex items-center gap-3 leading-none">
+          <Emblem
+            title=""
+            wordmark={false}
             className={clsx(
-              "font-display text-fg font-semibold tracking-[-0.02em] transition-[font-size] duration-300",
-              scrolled ? "text-[1.6rem]" : "text-[1.85rem] lg:text-[2.1rem]",
+              "shrink-0 transition-[width,height] duration-300",
+              scrolled ? "size-11" : "size-12 lg:size-16",
             )}
-          >
-            {shortName}
-          </span>
-          <span
-            className={clsx(
-              "smallcaps text-muted mt-1 hidden max-w-[22rem] text-[0.78rem] transition-all duration-300 sm:block lg:max-w-[14rem] xl:max-w-[22rem]",
-              scrolled ? "pointer-events-none -mt-1 h-0 opacity-0" : "opacity-100",
-            )}
-          >
-            {" "}
-            {journalName}
+          />
+          <span className="flex flex-col">
+            <span
+              className={clsx(
+                "font-display text-brand font-extrabold tracking-[-0.01em] transition-[font-size] duration-300",
+                scrolled ? "text-[1.5rem]" : "text-[1.7rem] lg:text-[1.95rem]",
+              )}
+            >
+              {shortName}
+            </span>
+            <span
+              className={clsx(
+                "smallcaps text-muted mt-1 hidden max-w-[22rem] text-[0.78rem] transition-all duration-300 sm:block lg:max-w-[14rem] xl:max-w-[22rem]",
+                scrolled ? "pointer-events-none -mt-1 h-0 opacity-0" : "opacity-100",
+              )}
+            >
+              {" "}
+              {journalName}
+            </span>
           </span>
           <span className="sr-only"> (home)</span>
         </Link>

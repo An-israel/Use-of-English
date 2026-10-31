@@ -35,18 +35,37 @@ export default async function ContactPage() {
         <aside className="col-span-12 lg:col-span-4 lg:col-start-9">
           <div className="lg:sticky lg:top-24">
             <dl className="space-y-8">
-              <div>
-                <dt className="smallcaps text-muted text-[0.78rem]">Email</dt>
-                <dd className="font-display mt-2 text-[1.2rem]">
-                  {emailPlaceholder ? (
-                    s.contactEmail
-                  ) : (
+              {!emailPlaceholder && (
+                <div>
+                  <dt className="smallcaps text-muted text-[0.78rem]">Email</dt>
+                  <dd className="font-display mt-2 text-[1.2rem]">
                     <a href={`mailto:${s.contactEmail}`} className="decoration-thread underline underline-offset-4">
                       {s.contactEmail}
                     </a>
-                  )}
-                </dd>
-              </div>
+                  </dd>
+                </div>
+              )}
+              {s.enquiries.length > 0 && (
+                <div>
+                  <dt className="smallcaps text-muted text-[0.78rem]">For enquiries</dt>
+                  <dd className="mt-3">
+                    <ul className="divide-rule border-rule divide-y border-y">
+                      {s.enquiries.map((e) => (
+                        <li key={e.phone} className="py-3">
+                          <span className="block leading-snug">{e.name}</span>
+                          <span className="text-muted block text-[0.88rem]">{e.role}</span>
+                          <a
+                            href={`tel:${e.phone.replace(/\(0\)|[^+\d]/g, "")}`}
+                            className="tabular decoration-thread mt-1 inline-block underline underline-offset-4"
+                          >
+                            {e.phone}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+              )}
               <div>
                 <dt className="smallcaps text-muted text-[0.78rem]">Post</dt>
                 <dd className="mt-2 leading-relaxed">

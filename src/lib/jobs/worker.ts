@@ -16,10 +16,13 @@ export async function runJobs({
   maxBatches = 5,
   batchSize = 10,
   worker = `w-${crypto.randomUUID().slice(0, 8)}`,
+  /** Stop starting new batches after this many milliseconds. */
+  budgetMs = Infinity,
 } = {}) {
   const db = adminClient();
   const summary = { done: 0, retried: 0, dead: 0 };
-  for (let b = 0; b < maxBatches; b++) {
+  const started = Date.now();
+  for (let b = 0; b < maxBatches && Date.now() - started < budgetMs; b++) {
     const { data: jobs, error } = await withDbRetry(() =>
       db.rpc("claim_jobs", { p_worker: worker, p_limit: batchSize }),
     );

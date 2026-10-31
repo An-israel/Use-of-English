@@ -51,7 +51,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   // Fonts read from disk by the generated Open Graph images.
-  outputFileTracingIncludes: { "/**": ["./assets/fonts/*.woff"] },
+  outputFileTracingIncludes: { "/**": ["./assets/fonts/*.woff", "./public/brand/emblem-512.png"] },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: supabase
@@ -74,6 +74,19 @@ const nextConfig: NextConfig = {
     return [
       { source: "/privacy", destination: "/policies/privacy", permanent: true },
       { source: "/fees-and-payment", destination: "/fees", permanent: true },
+      // Feed readers often guess these addresses (I9).
+      { source: "/feed", destination: "/rss.xml", permanent: true },
+      { source: "/rss", destination: "/rss.xml", permanent: true },
+      // The launch subject areas, renamed to the flyer's nine areas of interest.
+      ...Object.entries({
+        "language-and-linguistics": "language-literature-and-linguistics",
+        "literature-and-literary-studies": "language-literature-and-linguistics",
+        "translation-studies": "language-literature-and-linguistics",
+        "cultural-and-transcultural-studies": "culture-identity-and-transcultural-studies",
+        "philosophy-history-and-the-arts": "philosophy-ethics-and-religion",
+        "education-and-society": "education-and-pedagogy",
+        "other-areas-of-the-humanities": "interdisciplinary-and-applied-research",
+      }).map(([from, to]) => ({ source: `/subjects/${from}`, destination: `/subjects/${to}`, permanent: true })),
     ];
   },
 };

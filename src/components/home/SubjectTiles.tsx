@@ -9,16 +9,16 @@ export function SubjectTiles({ categories, counts }: { categories: Category[]; c
       <div className="max-w-page mx-auto px-4 sm:px-6 lg:px-10">
         <SectionHeading
           eyebrow="Browse by subject"
-          title="Eight threads, one cloth"
+          title="Nine threads, one cloth"
           id="subjects-title"
           link={{ href: "/subjects", label: "All subjects" }}
         />
-        <ul className="border-rule bg-rule mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-[3px] border lg:grid-cols-4">
+        <ul className="border-rule bg-rule mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-[3px] border sm:grid-cols-3">
           {categories.map((c, i) => {
             const colour = `var(${c.threadColor})`;
             const n = counts[c.slug] ?? 0;
             return (
-              <Reveal as="li" index={i} key={c.slug} className="bg-surface">
+              <Reveal as="li" index={i} key={c.slug} className="bg-surface last:odd:col-span-2 sm:last:odd:col-span-1">
                 <Link
                   href={`/subjects/${c.slug}`}
                   className="group hover:bg-bg relative flex h-full flex-col p-4 transition-colors sm:p-6 lg:min-h-[15rem]"

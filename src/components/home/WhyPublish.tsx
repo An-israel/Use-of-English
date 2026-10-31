@@ -23,10 +23,10 @@ const POINTS = [
 
 export function WhyPublish() {
   return (
-    <section aria-labelledby="why-title" className="bg-forest relative isolate overflow-hidden text-[#EFE8DA]">
+    <section aria-labelledby="why-title" className="bg-forest relative isolate overflow-hidden text-[#FAF7EE]">
       <Weave
         density="regular"
-        colours={["#C8962E"]}
+        colours={["#E1B521"]}
         opacity={0.12}
         fade="right"
         className="absolute inset-y-0 left-0 -z-10 h-full w-full"
@@ -46,11 +46,11 @@ export function WhyPublish() {
           <ol className="col-span-12 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:col-span-7 lg:col-start-6">
             {POINTS.map((p, i) => (
               <Reveal as="li" index={i} key={p.title}>
-                <span aria-hidden="true" className="tabular font-display text-[0.95rem] text-[#C8962E]">
+                <span aria-hidden="true" className="tabular font-display text-[0.95rem] text-[#E1B521]">
                   0{i + 1}
                 </span>
                 <h3 className="font-display mt-3 text-[1.45rem] leading-snug">{p.title}</h3>
-                <p className="mt-3 leading-relaxed text-[#EFE8DA]/75">{p.body}</p>
+                <p className="mt-3 leading-relaxed text-[#FAF7EE]/75">{p.body}</p>
               </Reveal>
             ))}
           </ol>

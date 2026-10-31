@@ -1,5 +1,6 @@
 "use client";
 
+import { FileDrop } from "@/components/ui/FileDrop";
 import { useActionState, useState } from "react";
 import { FormMessage } from "@/components/forms/FormMessage";
 import { SubmitButton } from "@/components/forms/SubmitButton";
@@ -59,12 +60,12 @@ export function RevisionUpload({ id }: { id: string }) {
       <p className="font-display mt-2 text-[1.4rem]">Upload your revised manuscript</p>
       <p className="text-muted mt-1 text-[0.92rem]">{FILE_KINDS.revision.hint}</p>
       <div className="mt-5 space-y-4">
-        <input
-          type="file"
+        <FileDrop
+          label="Revised manuscript"
           accept={FILE_KINDS.revision.types.join(",")}
-          onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-          aria-label="Revised manuscript"
-          className="block text-[0.92rem]"
+          file={file}
+          onFile={setFile}
+          disabled={busy}
         />
         <label className="block text-[0.92rem]">
           Response to the reviewers (optional)

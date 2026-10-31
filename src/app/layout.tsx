@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Instrument_Sans, Literata } from "next/font/google";
+import { Playfair_Display, Source_Sans_3 } from "next/font/google";
 import { themeScript } from "@/components/site/ThemeToggle";
 import { siteUrl } from "@/lib/env";
 import { Analytics } from "@vercel/analytics/next";
@@ -7,25 +7,19 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 // Self-hosted at build time by next/font (no requests to Google from browsers).
-// Only the Latin files are preloaded; Latin Extended and the other subsets are
-// still declared and download only on pages that use those characters.
-const fraunces = Fraunces({
+// The flyer's faces: Playfair Display for headings, Source Sans 3 for text. Only
+// the Latin files are preloaded; other subsets download when a page needs them.
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-fraunces",
-  axes: ["opsz"],
-  display: "swap",
-});
-
-const literata = Literata({
-  subsets: ["latin"],
-  variable: "--font-literata",
+  variable: "--font-playfair",
   style: ["normal", "italic"],
   display: "swap",
 });
 
-const instrument = Instrument_Sans({
+const sourceSans = Source_Sans_3({
   subsets: ["latin"],
-  variable: "--font-instrument",
+  variable: "--font-source-sans",
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -45,8 +39,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#F6F1E7" },
-    { media: "(prefers-color-scheme: dark)", color: "#12110E" },
+    { media: "(prefers-color-scheme: light)", color: "#FAF7EE" },
+    { media: "(prefers-color-scheme: dark)", color: "#101511" },
   ],
 };
 
@@ -54,7 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-GB"
-      className={`${fraunces.variable} ${literata.variable} ${instrument.variable}`}
+      className={`${playfair.variable} ${sourceSans.variable}`}
       suppressHydrationWarning
     >
       <head>

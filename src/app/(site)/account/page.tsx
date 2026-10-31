@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
+import { DataRights } from "@/components/account/DataRights";
 import { EmailForm, ProfileForm } from "@/components/account/ProfileForms";
 import { StatusTimeline } from "@/components/account/StatusTimeline";
 import { SetPasswordForm } from "@/components/auth/SetPasswordForm";
@@ -219,7 +220,7 @@ async function Account({ searchParams }: { searchParams: Promise<Record<string, 
         </div>
       </section>
 
-      <section aria-labelledby="security" className={`${section} mb-16`}>
+      <section aria-labelledby="security" className={section}>
         <div className={sectionHead}>
           <h2 id="security" className="font-display text-[1.6rem]">
             Sign-in and security
@@ -239,6 +240,18 @@ async function Account({ searchParams }: { searchParams: Promise<Record<string, 
               Sign out
             </button>
           </form>
+        </div>
+      </section>
+
+      <section aria-labelledby="your-data" className={`${section} mb-16`}>
+        <div className={sectionHead}>
+          <h2 id="your-data" className="font-display text-[1.6rem]">
+            Your data
+          </h2>
+          <p className="text-muted mt-2 text-[0.9rem]">Your rights under the Nigeria Data Protection Act 2023.</p>
+        </div>
+        <div className={`${sectionBody} max-w-[32rem]`}>
+          <DataRights isStaff={STAFF_ROLES.includes(viewer.role)} />
         </div>
       </section>
     </div>

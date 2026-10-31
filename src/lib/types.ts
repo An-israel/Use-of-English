@@ -155,6 +155,8 @@ export type SiteSettings = {
   journalName: string;
   shortName: string;
   tagline: string;
+  /** The journal's motto, from its logo: "Knowledge · Cultures · Global Voices". */
+  motto: string;
   publisher: string;
   publisherShort: string;
   foundedYear: number;
@@ -163,6 +165,8 @@ export type SiteSettings = {
   eissn: string | null;
   doiPrefix: string | null;
   contactEmail: string;
+  /** People to contact with enquiries, as on the Call for Papers flyer. */
+  enquiries: { name: string; role: string; phone: string }[];
   domain: string;
   postalAddress: string;
   officeHours: string;
