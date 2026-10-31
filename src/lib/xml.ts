@@ -3,7 +3,7 @@
 /** Escape text and attribute values, and drop characters XML 1.0 forbids. */
 export function esc(v: string | number | null | undefined): string {
   return String(v ?? "")
-    .replace(/[^\u0009\u000A\u000D -퟿-�\u{10000}-\u{10FFFF}]/gu, "")
+    .replace(/[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/gu, "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")

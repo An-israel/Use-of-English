@@ -14,8 +14,8 @@ jobs:
     name: Lint, typecheck, unit tests, build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -27,7 +27,7 @@ jobs:
       - run: npm test
       - name: Seed file is up to date
         run: npm run seed:generate && git diff --exit-code supabase/seed.sql
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: .next/cache
           key: next-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**') }}
@@ -38,13 +38,13 @@ jobs:
     name: Migrations, RLS tests and end-to-end
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@v3
         with:
           version: 2.122.0 # the version in package-lock.json; "latest" changed db diff's flags
       - name: Start Supabase and apply migrations + seed
@@ -78,3 +78,10 @@ jobs:
           npx vitest run tests/unit/n-plus-one.test.ts
           npx playwright install --with-deps chromium
           npm run build && npm run test:e2e
+      - name: Keep the test results when end-to-end tests fail
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-results
+          path: test-results/
+          retention-days: 7
