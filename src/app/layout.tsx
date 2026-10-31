@@ -2,25 +2,29 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Instrument_Sans, Literata } from "next/font/google";
 import { themeScript } from "@/components/site/ThemeToggle";
 import { siteUrl } from "@/lib/env";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 // Self-hosted at build time by next/font (no requests to Google from browsers).
+// Only the Latin files are preloaded; Latin Extended and the other subsets are
+// still declared and download only on pages that use those characters.
 const fraunces = Fraunces({
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   variable: "--font-fraunces",
-  axes: ["opsz", "SOFT", "WONK"],
+  axes: ["opsz"],
   display: "swap",
 });
 
 const literata = Literata({
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   variable: "--font-literata",
   style: ["normal", "italic"],
   display: "swap",
 });
 
 const instrument = Instrument_Sans({
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   variable: "--font-instrument",
   display: "swap",
 });
@@ -56,7 +60,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="flex min-h-dvh flex-col">{children}</body>
+      <body className="flex min-h-dvh flex-col">
+        {children}
+        {/* Vercel Web Analytics and Speed Insights (item 58): cookie-free, only on Vercel. */}
+        {process.env.VERCEL === "1" && (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        )}
+      </body>
     </html>
   );
 }

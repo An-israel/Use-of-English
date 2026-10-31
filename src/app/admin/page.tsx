@@ -108,9 +108,16 @@ export default async function AdminHome() {
       label: "Accepted, awaiting publication fee",
       n: count("accepted_awaiting_fee"),
     },
-    { href: "/admin/submissions", label: "Failed payments (30 days)", n: failed.count ?? 0, tone: "accent" },
+    { href: "/admin/payments?status=failed", label: "Failed payments (30 days)", n: failed.count ?? 0, tone: "accent" },
     ...(finance
-      ? [{ href: "/admin", label: "Unresolved reconciliation flags", n: flags.count ?? 0, tone: "accent" as const }]
+      ? [
+          {
+            href: "/admin/reconciliation",
+            label: "Unresolved reconciliation flags",
+            n: flags.count ?? 0,
+            tone: "accent" as const,
+          },
+        ]
       : []),
     ...(["super_admin", "editor"].includes(viewer.role)
       ? [{ href: "/admin/messages", label: "Unread messages", n: unread.count ?? 0 }]
@@ -189,9 +196,7 @@ export default async function AdminHome() {
                 </li>
               ))}
             </ul>
-            <p className="text-muted mt-4 text-[0.8rem]">
-              Views, downloads and trends over time arrive with the analytics charts.
-            </p>
+            <p className="text-muted mt-4 text-[0.8rem]">Views, downloads and trends over time are under Analytics.</p>
           </section>
         </div>
 

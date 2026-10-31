@@ -34,10 +34,12 @@ export function SubjectTiles({ categories, counts }: { categories: Category[]; c
                       className="inline-block size-2.5 rotate-45"
                       style={{ backgroundColor: colour }}
                     />
-                    <span className="tabular text-muted text-[0.82rem]">
-                      {n}
-                      <span className="hidden sm:inline"> {n === 1 ? "article" : "articles"}</span>
-                    </span>
+                    {n > 0 && (
+                      <span className="tabular text-muted text-[0.82rem]">
+                        {n}
+                        <span className="hidden sm:inline"> {n === 1 ? "article" : "articles"}</span>
+                      </span>
+                    )}
                   </span>
                   <span className="font-display text-fg mt-5 text-[1.08rem] leading-snug sm:mt-6 sm:text-[1.35rem]">
                     {c.name}

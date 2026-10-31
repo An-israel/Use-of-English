@@ -2,7 +2,9 @@ import "server-only";
 import {
   ContactReceived,
   PaymentReceipt,
+  ReconciliationFlags,
   ReviewInvitation,
+  ReviewReminder,
   ReviewSubmitted,
   StatusChanged,
   SubmissionReceived,
@@ -278,6 +280,57 @@ async function reviewEmail(payload: Record<string, unknown>, kind: "invitation" 
   });
 }
 
+/** Tell the Finance Officers and Super Admins that the daily comparison found mismatches. */
+async function reconciliationEmail(payload: Record<string, unknown>) {
+  const { data: staff, error } = await adminClient()
+    .from("profiles")
+    .select("email")
+    .in("role", ["finance_officer", "super_admin"])
+    .eq("is_active", true);
+  if (error) throw new Error(`finance staff lookup failed: ${error.message}`);
+  const date = String(payload.date);
+  const flags = Number(payload.flags);
+  for (const { email } of staff ?? []) {
+    await sendEmail({
+      to: email,
+      subject: `Reconciliation ${date}: ${flags} payment${flags === 1 ? "" : "s"} to check`,
+      template: "reconciliation_flags",
+      dedupeKey: `reconcile:${date}:${flags}:${email}`,
+      element: <ReconciliationFlags date={date} flags={flags} url={`${siteUrl}/admin/reconciliation`} />,
+    });
+  }
+}
+
+async function reviewReminder(payload: Record<string, unknown>) {
+  const { data: r, error } = await adminClient()
+    .from("review_assignments")
+    .select(
+      "id, status, due_at, reviewer:profiles!review_assignments_reviewer_id_fkey ( full_name, email ), submission:submissions ( title )",
+    )
+    .eq("id", payload.assignment_id)
+    .single();
+  if (error || !r) throw new Error(`review lookup failed: ${error?.message ?? "not found"}`);
+  if (!["invited", "accepted"].includes(r.status)) return; // answered since the reminder was queued
+  const reviewer = r.reviewer as unknown as { full_name: string; email: string };
+  const sub = r.submission as unknown as { title: string };
+  await sendEmail({
+    to: reviewer.email,
+    subject: Date.parse(r.due_at) < Date.now() ? "Your JHTS review is overdue" : "Reminder: your JHTS review",
+    template: "review_reminder",
+    relatedId: r.id,
+    dedupeKey: `review-reminder:${r.id}:${new Date().toISOString().slice(0, 10)}`,
+    element: (
+      <ReviewReminder
+        name={reviewer.full_name || "colleague"}
+        title={sub.title}
+        due={formatDate(r.due_at)}
+        overdue={Date.parse(r.due_at) < Date.now()}
+        url={`${siteUrl}/review/${r.id}`}
+      />
+    ),
+  });
+}
+
 export const HANDLERS: Record<string, (payload: Record<string, unknown>) => Promise<void>> = {
   dispatch_event: dispatchEvent,
   payment_receipt: paymentReceipt,
@@ -286,4 +339,6 @@ export const HANDLERS: Record<string, (payload: Record<string, unknown>) => Prom
   email_contact: contactNotification,
   email_review_invitation: (p) => reviewEmail(p, "invitation"),
   email_review_submitted: (p) => reviewEmail(p, "submitted"),
+  email_reconciliation: reconciliationEmail,
+  email_review_reminder: reviewReminder,
 };

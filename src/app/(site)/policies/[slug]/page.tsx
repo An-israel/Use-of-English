@@ -6,11 +6,15 @@ import { PageHeader } from "@/components/journal/PageHeader";
 import { ProseBody } from "@/components/journal/ProseBody";
 import { PageSkeleton } from "@/components/journal/Skeleton";
 import { getPage, getPages, getSlugRedirect } from "@/lib/data";
+import { atLeastOne } from "@/lib/static-params";
 
 type Params = { slug: string };
 
 export async function generateStaticParams(): Promise<Params[]> {
-  return (await getPages("policy")).map((p) => ({ slug: p.slug }));
+  return atLeastOne(
+    (await getPages("policy")).map((p) => ({ slug: p.slug })),
+    { slug: "none" },
+  );
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {

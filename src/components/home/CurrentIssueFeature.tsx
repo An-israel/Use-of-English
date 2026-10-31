@@ -26,7 +26,7 @@ export function CurrentIssueFeature({
       <div className="max-w-page mx-auto grid grid-cols-12 gap-x-6 gap-y-12 px-4 py-20 sm:px-6 lg:px-10 lg:py-32">
         <div className="col-span-12 md:col-span-5 lg:col-span-4">
           <div className="md:sticky md:top-28">
-            <Link href={issuePath(issue)} className="group block" aria-label={`Open ${issueRunningHead(issue)}`}>
+            <Link href={issuePath(issue)} className="group block">
               <IssueCover
                 volume={issue.volume}
                 issue={issue.number}

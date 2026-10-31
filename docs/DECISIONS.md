@@ -72,3 +72,41 @@ Answers given before Milestone 1, plus changes to the brief's data model and why
 - **Saved filters** are stored per staff member in the database (private by RLS), so they follow the person across browsers.
 - **Settings** (Super Admin) edit the same keys the public site reads; fee changes take effect for new payments and the database's `fees_enabled()` reads the same setting. Changes expire the public caches immediately (`updateTag`).
 - **A missing article streams a 404 page with status 200** because the page shell is already sent (partial prerendering); Next adds `noindex`, so search engines don't index it.
+
+## Milestone 7: finance
+
+- **Who sees what** follows the brief's role table: the Finance Officer and Super Admins view, export, record refunds and resolve reconciliation flags; Editors view only; Book Review Editors and authors see no finance screens. The `payment_ledger` view checks the role itself, so finance staff also see which issue a paid article went into.
+- **Dates are Lagos calendar days.** Date filters, months and years, the reconciliation day and the fund statement all use Africa/Lagos, so a payment at 00:30 on 1 April counts in April.
+- **Totals are computed from the filtered ledger** (up to 10,000 rows, far beyond a quarterly journal's volume). The PDF lists up to 400 rows and says so when there are more; the CSV always has every row.
+- **Refunds count in the year they are made** on the fund statement, and against the payment on the payments screens, so each view adds up.
+- **Reconciliation never changes money.** It compares the day's Paystack transactions (by Paystack's creation time) with payments marked paid that day, and records four kinds of mismatch. Re-running a day only adds new flags. In mock mode "Paystack" is the record the simulated checkout leaves on each payment.
+- **Exports are audited** (who, which filters, how many rows) and limited to 30 per 10 minutes per person.
+- **No honorarium calculations**, as the brief says.
+
+## Milestone 8: downloads, analytics and indexing
+
+- **Files are served from the CDN, not through the app.** The download routes count, then redirect to the public Storage URL with a clean file name, so large PDFs never pass through a serverless function (item 41). Published files are public by design (open access); submissions and finance files stay private and signed.
+- **Counting is privacy-first.** The reader is a SHA-256 of a secret salt, the Lagos date, address and browser; it changes every day and can't be reversed, so no personal data is stored. The database's unique key makes counting idempotent. Headless browsers are deliberately not counted, so automated tests send a normal browser user agent.
+- **Views are counted by a small request from the article page**, because public pages are cached and pre-rendered; the server still checks the article is public. Counts shown on article pages refresh with the page cache (at most hourly), so reading never invalidates editors' caches.
+- **Chart colours were validated** with the dataviz checks (lightness band, chroma, colour-blind separation, contrast) in light and dark. Views and downloads also differ by mark shape (line and columns), with a legend, an end label and a table view, so colour is never the only cue.
+- **Crossref is export-only** until JHTS is a member: DOIs follow `prefix/jhts.YEAR.VOL.ISSUE.NN` in contents order; "Assign DOIs" writes them to articles that lack one.
+- **OAI-PMH** offers `oai_dc` only, no sets, day granularity and resumption tokens of 100 records; it returns 404 while the flag is off.
+- **Open Graph images** use the OFL-licensed Fraunces and Instrument Sans files in `assets/fonts` (licences included), read from disk as the Next.js documentation shows.
+
+## Milestone 9: reliability and operations
+
+- **One queue, one place to look.** Failed background work lands in the dead-letter table after six attempts and shows on the System screen with retry and discard, rather than in a separate tool.
+- **Notifications are rows, not pushes.** A trigger turns domain events into `staff_notifications` that RLS limits to the right roles. Realtime delivers them live; the bell falls back to polling every minute, so nothing depends on a websocket.
+- **Backups are ours as well as Supabase's.** Supabase's daily backups don't cover Storage files and are lost if the project is deleted, so a weekly encrypted dump goes to Google Drive and a second location, and a restore drill proves it can be read back.
+- **An outage is not "signed out".** If the profile can't be read, the admin shows "The editorial office can't reach the database" instead of redirecting to the login page.
+- **Production costs about $45 a month** (Vercel Pro and Supabase Pro), because Vercel's free plan is for non-commercial use and Supabase's free projects pause and have no backups. The free tiers are fine until launch. Details in `docs/ENGINEERING.md`.
+- **The public API is read-only and versioned** (`/api/v1`, `X-API-Version: 1`), returns only published content and is open to any origin.
+
+## Milestone 10: polish and launch
+
+- **Scroll reveals are CSS, not Framer Motion.** The brief names Framer Motion for small animations, but its reveal kept content invisible until JavaScript loaded. That was the largest cost to LCP on 4G (5.0 s down to about 3 s from this change alone). A CSS scroll-driven animation gives the same rise with no JavaScript, and it does nothing where unsupported or when reduced motion is preferred. Motion had no other use, so the package was removed. The hero's thread-drawing animation stays as the brief asks.
+- **Decorative weaves are cached files, drawn as masks.** Inline SVG was sent twice per page (in the HTML and in React's payload). Each colour is now a rectangle masked by an immutable SVG file, so themes still apply and the paths download once.
+- **Lighthouse is measured over HTTP/2.** The default simulation treats the local HTTP/1.1 server far more harshly than Vercel's CDN, so the recorded figures use a local HTTP/2 + Brotli proxy, with applied-throttling runs as a cross-check. The real check is PageSpeed Insights on the production domain at launch.
+- **Validation is enforced by a test, not a convention.** `tests/unit/server-actions.test.ts` fails if any server action skips zod or a caller check, so new actions can't drift.
+- **Supabase reads are never fetch-cached.** Caching lives in the tagged `use cache` reads only, so publishing, deleting and builds always see current data.
+- **Launch-day content.** The site is designed to look complete with no issue published: the Call for Papers leads, and empty pages explain what will appear.

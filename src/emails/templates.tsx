@@ -204,3 +204,56 @@ export function ReviewSubmitted({
     </Layout>
   );
 }
+
+export function ReconciliationFlags({ date, flags, url }: { date: string; flags: number; url: string }) {
+  return (
+    <Layout preview={`Reconciliation ${date}: ${flags} to check`} title="Payments need checking">
+      <P>
+        The daily comparison with Paystack for {date} found {flags} payment{flags === 1 ? "" : "s"} that{" "}
+        {flags === 1 ? "doesn’t" : "don’t"} match the journal’s records. No money has been moved; please review and
+        resolve {flags === 1 ? "it" : "them"}.
+      </P>
+      <Button href={url}>Open reconciliation</Button>
+    </Layout>
+  );
+}
+
+export function ReviewReminder({
+  name,
+  title,
+  due,
+  overdue,
+  url,
+}: {
+  name: string;
+  title: string;
+  due: string;
+  overdue: boolean;
+  url: string;
+}) {
+  return (
+    <Layout
+      preview={overdue ? `Your review is overdue: ${title}` : `Your review is due ${due}`}
+      title={overdue ? "Your review is overdue" : "A gentle reminder"}
+    >
+      <P>Dear {name},</P>
+      <P>
+        {overdue
+          ? `Your review of “${title}” was due on ${due}. If you need more time, reply to this email and the editors will adjust the date.`
+          : `Your review of “${title}” is due on ${due}. Thank you for making time for it.`}
+      </P>
+      <Button href={url}>Open the review</Button>
+    </Layout>
+  );
+}
+
+export function OpsAlert({ subject, lines, url }: { subject: string; lines: string[]; url: string }) {
+  return (
+    <Layout preview={subject} title={subject}>
+      {lines.map((l) => (
+        <P key={l}>{l}</P>
+      ))}
+      <Button href={url}>Open the System screen</Button>
+    </Layout>
+  );
+}

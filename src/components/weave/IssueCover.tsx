@@ -1,6 +1,6 @@
 import Image from "next/image";
 import clsx from "clsx";
-import { coverDesign, diamondPath, seasonFor, weaveGeometry } from "@/lib/weave";
+import { COVER_H, COVER_W, coverDesign, coverLatticePath, diamondPath, seasonFor } from "@/lib/weave";
 import { monthName } from "@/lib/issues";
 
 export type IssueCoverProps = {
@@ -16,8 +16,8 @@ export type IssueCoverProps = {
   sizes?: string;
 };
 
-const W = 600;
-const H = 800;
+const W = COVER_W;
+const H = COVER_H;
 
 /**
  * A generated, on-brand cover for each issue. The weave is seeded by volume and
@@ -44,21 +44,12 @@ export function IssueCover({ volume, issue, month, year, coverUrl, className, pr
 
   const season = seasonFor(month);
   const design = coverDesign(volume, issue);
-  const geo = weaveGeometry({
-    width: W,
-    height: H,
-    cell: design.cell,
-    colours: 2,
-    lozengeDensity: 0.08,
-    seed: design.seed,
-  });
   const mx = W * design.motifX;
   const my = H * design.motifY;
   const mr = W * design.motifR;
   const band = H * design.bandY;
   const display = { fontFamily: "var(--font-display)" };
   const sans = { fontFamily: "var(--font-sans)" };
-  const threadColours = [season.thread, season.accent];
 
   return (
     <svg
@@ -70,21 +61,8 @@ export function IssueCover({ volume, issue, month, year, coverUrl, className, pr
       <title>{label}</title>
       <rect width={W} height={H} fill={season.ground} />
 
-      {/* Lattice field */}
-      <g opacity={0.42} fill="none" strokeWidth={1.25}>
-        {threadColours.map((c, ci) => (
-          <g key={ci} stroke={c} opacity={ci === 0 ? 1 : 0.55}>
-            {geo.lines
-              .filter((l) => l.colour === ci)
-              .map((l, i) => (
-                <path key={i} d={l.d} strokeDasharray={l.dash} />
-              ))}
-          </g>
-        ))}
-        {geo.lozenges.map((z, i) => (
-          <path key={i} d={diamondPath(z.cx, z.cy, z.r)} stroke={season.accent} opacity={0.7} />
-        ))}
-      </g>
+      {/* Lattice field: a cached SVG file (see coverLatticeSvg), so pages don't carry hundreds of paths. */}
+      <image href={coverLatticePath(volume, issue, month)} width={W} height={H} preserveAspectRatio="none" />
 
       {/* Quiet masthead field */}
       <rect width={W} height={168} fill={season.ground} />

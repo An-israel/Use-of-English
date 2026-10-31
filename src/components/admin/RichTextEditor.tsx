@@ -191,7 +191,8 @@ function Toolbar({ editor }: { editor: Editor }) {
           key={b.label}
           type="button"
           title={b.label}
-          aria-label={b.label}
+          // Visible letters such as "H2" stay in the name (WCAG 2.5.3, label in name).
+          aria-label={b.text.length > 1 && /[a-z0-9]/i.test(b.text) ? `${b.text} ${b.label}` : b.label}
           aria-pressed={b.active ?? undefined}
           disabled={b.disabled}
           onClick={b.run}

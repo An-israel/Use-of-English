@@ -2,6 +2,78 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.0] - Milestone 10: Polish and launch
+
+- Editor's Handbook: publishing an issue, handling a submission, waivers, refunds, payments and what to do when something goes wrong. It is in the admin (Handbook, for all staff) and in `docs/EDITORS_HANDBOOK.md`, generated from one source.
+- Launch tooling:
+  - `npm run launch:check` checks the production settings: live Paystack keys, https address, secrets, no SAMPLE content, a Super Admin, and any [TO CONFIRM] text left.
+  - `npm run samples:delete` now also removes the samples' files, asks for confirmation and refreshes the live pages.
+  - `docs/LAUNCH.md` gives the go-live order, including a ₦100 live payment test.
+  - `docs/DNS_FOR_UNN_ICT.md` gives UNN ICT the DNS records and how to check them.
+- Launch-day pages: with no issue published yet, the home page points to the Call for Papers, the archive says the first issue is in preparation, and subject pages say no articles yet, instead of showing empty filters.
+- Accessibility: automated WCAG 2.2 AA scans of every public, author and admin page in light and dark mode, all passing.
+  - Visible labels are now part of buttons' accessible names.
+  - [TO CONFIRM] marks have stronger contrast.
+  - The fees table can be scrolled with the keyboard.
+  - The contact details are a valid definition list.
+  - Heading order is fixed on Articles in Press.
+- Performance (Lighthouse, mobile): public pages are 40–50% smaller and score 92–95 (simulated 4G) or 93–98 (applied throttling), with no layout shift.
+  - Scroll reveals are CSS instead of JavaScript.
+  - Weaves and cover lattices are cached SVG files.
+  - The search index loads only when the palette opens.
+  - Only Latin font files are preloaded.
+  - Covers are rendered on the server.
+- Security:
+  - Every server action and API route validates its input with zod, and a test enforces that each action checks its input and its caller.
+  - The admin page preview is sanitised.
+  - Citation links are escaped.
+  - `upgrade-insecure-requests` applies only when the site is on https.
+- Fixes:
+  - **Production build:** it failed whenever there were no issues or articles (it would have broken the first deploy after deleting the samples).
+  - **Search:** robots.txt hid the author guidelines from search engines.
+  - **First Super Admin:** `npm run admin:create` couldn't run.
+  - **Stale content:** Supabase reads were held in an untagged 15-minute fetch cache that outlived publishing and builds.
+  - **LCP:** a scroll-snap rail stopped Chrome measuring LCP on the home page.
+  - **Favicon:** the site now has one.
+- The brief's Framer Motion: its only use (scroll reveals) is now CSS, so the package was removed (see DECISIONS.md).
+- Tests: accessibility scans, server-action and robots unit tests, handbook checks. 88 end-to-end, 285 unit and 38 database tests pass.
+
+## [0.9.0] - Milestone 9: Reliability and operations
+
+- System screen (Super Admin): database and storage health, queue size, failed jobs with retry and discard, scheduled jobs and their last result, off-site backups, email failures and suppressions, schema version. Audit log screen with filters.
+- Notifications: a bell in the admin for new submissions, payments, failed payments, reviews, contact messages and reconciliation flags, shown to the roles that need them. Live through Supabase Realtime, with polling every minute as a fallback.
+- Daily maintenance (`/api/cron/daily`): reminders to reviewers two days before a review is due and when overdue (once each), removal of uploads abandoned for over a day, expiry of untouched drafts, and alerts to the Super Admin about failed jobs, missing backups and the certificate's expiry date.
+- Email: a signed Resend webhook records bounces and complaints and stops sending to those addresses.
+- Backups: a weekly GitHub Actions workflow dumps the database and the file list, encrypts them and copies them to Google Drive and Supabase Storage, then reports to the System screen. Restore and rollback drills (`npm run db:restore-drill`, `npm run db:rollback-test`); every migration's rollback is tested in CI.
+- Public read-only API at `/api/v1` (issues, categories, articles with filters and pages, one article by slug), CORS-open and versioned.
+- Tracing with OpenTelemetry (Sentry when `SENTRY_DSN` is set), Vercel Analytics and Speed Insights on Vercel, retries for database deadlocks, and an admin screen that says plainly when the database can't be reached.
+- Bulk PDF upload on the issue editor: drop several PDFs, each is matched to an article by name, three upload at a time.
+- Finance: "Check with Paystack" re-verifies a pending payment on demand.
+- Docs: `docs/ENGINEERING.md` (all 111 items, SLOs, measurements, costs), `docs/RUNBOOK.md` and `docs/POSTMORTEM_TEMPLATE.md`.
+- Migration 1800: staff notifications, email suppressions, backup runs and the failed-payment event.
+- Fixes: when the database was unreachable, the admin sent staff to the login page as if they were signed out.
+- Tests: operations end-to-end tests, chaos tests for provider outages, webhook signature and concurrency unit tests, a query-count check, and 38 database checks.
+
+## [0.8.0] - Milestone 8: Downloads, analytics and indexing
+
+- Downloads: `/api/download/article/[id]` and `/api/download/issue/[id]` (PDF or Word) count the download, then redirect to the CDN under a clean name such as `JHTS_Vol1_No1_2027_Okafor.pdf`. Missing formats return 404 and their buttons stay hidden.
+- Counting: one view or download per reader per article per day, keyed by a salted daily hash (no addresses or personal data stored); crawlers, link previews, scripts and headless browsers are not counted. Daily totals are rolled up by the scheduled job, which also keeps next months' partitions ready.
+- In-page PDF reader (pdf.js): pages render as they come into view, with zoom, page jump, full screen and selectable text; pdf.js loads only when the reader is near.
+- Analytics: views and downloads over 30 days, 90 days or 12 months (one count axis, views as a line and downloads as columns, crosshair tooltip, keyboard access, table view), most-read articles, submissions by status, acceptance rate, days to decision, and payments for finance staff.
+- Indexing: sitemap.xml, robots.txt, RSS, generated Open Graph images for the journal, issues and articles (Fraunces and Instrument Sans), Crossref 5.3.1 deposit XML per issue with DOIs suggested from the Settings prefix (export only), and an OAI-PMH 2.0 endpoint with Dublin Core behind the `oai_pmh` flag.
+- Fixes: saving Settings failed whenever a field (ISSN, DOI prefix) was empty; the reader would have rendered only its first two pages.
+- Tests: indexing end-to-end tests (upload, reader, counted downloads, views, analytics, sitemap, RSS, OG images, Crossref, OAI-PMH), unit tests for file names, bot filtering, analytics series, Crossref XML and every OAI-PMH verb and error.
+
+## [0.7.0] - Milestone 7: Finance
+
+- Payments: every payment, waiver and refund with filters for date range (Lagos time), fee type, status and issue; totals overall, by month and by fee type; a card list on phones.
+- Exports: the filtered ledger as CSV (UTF-8, Excel-safe, protected against spreadsheet formula injection) and as a landscape PDF report; the fund statement as PDF and CSV. Finance Officer and Super Admin only, rate-limited and written to the audit log.
+- Refunds: recorded against a payment (amount, date, reason, Paystack refund reference), never more than was paid; a full refund marks the payment refunded.
+- Reconciliation: a daily job compares the day's Paystack transactions with the journal's records and flags money missing on either side, different amounts and missed webhooks. Flags are emailed to finance staff and resolved with a note; any day can be re-checked, idempotently.
+- Fund summary: collected, refunds and net, by year and by fee.
+- Migration 1700: the payments ledger view, refund events, and a fix that let refunds update the payment's status under RLS.
+- Tests: finance end-to-end tests (exports, refunds, reconciliation, role limits), seven more database checks (34), unit tests for totals, CSV and reconciliation rules.
+
 ## [0.6.0] - Milestone 6: Admin dashboard
 
 - Admin shell: collapsible sidebar, breadcrumbs, Ctrl/⌘ + K quick actions, confirmation dialogs, toasts, unsaved-change warnings, edit-conflict messages, loading skeletons, dark mode and a TEST MODE banner.

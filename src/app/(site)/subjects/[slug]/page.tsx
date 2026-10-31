@@ -5,11 +5,15 @@ import { PageHeader } from "@/components/journal/PageHeader";
 import { PageSkeleton } from "@/components/journal/Skeleton";
 import { getArticles, getCategories, getSlugRedirect } from "@/lib/data";
 import { SubjectArticles } from "./SubjectArticles";
+import { atLeastOne } from "@/lib/static-params";
 
 type Params = { slug: string };
 
 export async function generateStaticParams(): Promise<Params[]> {
-  return (await getCategories()).map((c) => ({ slug: c.slug }));
+  return atLeastOne(
+    (await getCategories()).map((c) => ({ slug: c.slug })),
+    { slug: "none" },
+  );
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {

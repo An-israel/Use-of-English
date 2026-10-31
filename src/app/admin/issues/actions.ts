@@ -12,7 +12,9 @@ import {
   type ActionResult,
 } from "@/lib/admin/server";
 import { TAGS } from "@/lib/data";
+import { withDbRetry } from "@/lib/resilience";
 import { sanitize } from "@/lib/sanitize";
+import { fields, Id, INVALID, validArgs } from "@/lib/validation";
 
 /**
  * Issues: create the next quarterly issue, edit the editorial, order the
@@ -26,6 +28,7 @@ const done = (message: string, id?: string): ActionResult => {
 };
 
 export async function createNextIssue(year?: number): Promise<ActionResult> {
+  if (!validArgs(z.number().int().min(2026).max(2200).optional(), year)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { data, error } = await s.db.rpc("create_next_issue", { p_year: year ?? null });
@@ -35,6 +38,8 @@ export async function createNextIssue(year?: number): Promise<ActionResult> {
 }
 
 export async function createVolumeYear(form: FormData): Promise<ActionResult> {
+  if (!validArgs(z.object({ year: z.coerce.number().int().min(2026).max(2200) }), fields(form)))
+    return { ok: false, message: "Enter a year such as 2028." };
   const year = Number(form.get("year"));
   if (!Number.isInteger(year) || year < 2026 || year > 2200)
     return { ok: false, message: "Enter a year such as 2028." };
@@ -64,14 +69,16 @@ export async function saveIssue(form: FormData): Promise<ActionResult> {
 }
 
 export async function publishIssue(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
-  const { error } = await s.db.rpc("publish_issue", { p_issue: id });
+  const { error } = await withDbRetry(() => s.db.rpc("publish_issue", { p_issue: id }));
   if (error) return { ok: false, message: dbMessage(error, "Couldn’t publish the issue.") };
   return done("Issue published. Its articles are live.");
 }
 
 export async function unpublishIssue(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { error } = await s.db.rpc("unpublish_issue", { p_issue: id });
@@ -96,6 +103,7 @@ export async function scheduleIssue(form: FormData): Promise<ActionResult> {
 }
 
 export async function unscheduleIssue(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { error } = await s.db
@@ -108,6 +116,7 @@ export async function unscheduleIssue(id: string): Promise<ActionResult> {
 }
 
 export async function deleteIssue(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { count } = await s.db
@@ -126,6 +135,7 @@ export async function deleteIssue(id: string): Promise<ActionResult> {
 }
 
 export async function restoreIssue(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { error } = await s.db.from("issues").update({ deleted_at: null }).eq("id", id);
@@ -149,6 +159,7 @@ export async function reorderArticles(ids: string[]): Promise<ActionResult> {
  * Press stays online until the issue appears.
  */
 export async function assignToIssue(articleId: string, issueId: string | null): Promise<ActionResult> {
+  if (!validArgs(z.tuple([Id, Id.nullable()]), [articleId, issueId])) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const { data: a } = await s.db.from("articles").select("status").eq("id", articleId).maybeSingle();
@@ -177,4 +188,43 @@ export async function assignToIssue(articleId: string, issueId: string | null): 
   const { error } = await s.db.from("articles").update(patch).eq("id", articleId);
   if (error) return { ok: false, message: dbMessage(error) };
   return done(issueId ? "Article added to the issue." : "Article removed from the issue.");
+}
+
+/** Give every article in the issue without a DOI the suggested one (Settings → DOI prefix). */
+export async function assignDois(issueId: string): Promise<ActionResult> {
+  if (!validArgs(Id, issueId)) return INVALID;
+  const s = await staff(EDITORS);
+  if (!s) return denied;
+  const { getSettings } = await import("@/lib/data");
+  const { suggestDoi } = await import("@/lib/crossref");
+  const prefix = (await getSettings()).doiPrefix;
+  if (!prefix) return { ok: false, message: "Set the DOI prefix in Settings first." };
+  const { data: issue } = await s.db
+    .from("issues")
+    .select("number, volume:volumes ( number, year )")
+    .eq("id", issueId)
+    .maybeSingle();
+  if (!issue) return { ok: false, message: "Issue not found." };
+  const v = issue.volume as unknown as { number: number; year: number };
+  const { data: articles } = await s.db
+    .from("articles")
+    .select("id, doi")
+    .eq("issue_id", issueId)
+    .is("deleted_at", null)
+    .order("sort_order");
+  let n = 0;
+  for (const [i, a] of (articles ?? []).entries()) {
+    if (a.doi) continue;
+    const { error } = await s.db
+      .from("articles")
+      .update({ doi: suggestDoi(prefix, v.year, v.number, issue.number, i + 1) })
+      .eq("id", a.id);
+    if (error) return { ok: false, message: dbMessage(error, "A DOI couldn’t be assigned (is it already used?).") };
+    n++;
+  }
+  return done(
+    n
+      ? `${n} DOI${n === 1 ? "" : "s"} assigned. Deposit them with Crossref to make them resolve.`
+      : "Every article already has a DOI.",
+  );
 }

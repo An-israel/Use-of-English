@@ -14,6 +14,7 @@ import { formatDate } from "@/lib/format";
 import { issueLabel, issueLabelShort, issuePath, issueRunningHead } from "@/lib/issues";
 import { sanitize } from "@/lib/sanitize";
 import type { ArticleType } from "@/lib/types";
+import { atLeastOne } from "@/lib/static-params";
 
 type Params = { volume: string; issue: string };
 
@@ -40,7 +41,10 @@ function parse(p: Params) {
 
 export async function generateStaticParams(): Promise<Params[]> {
   const issues = await getIssues();
-  return issues.map((i) => ({ volume: String(i.volume), issue: String(i.number) }));
+  return atLeastOne(
+    issues.map((i) => ({ volume: String(i.volume), issue: String(i.number) })),
+    { volume: "0", issue: "0" },
+  );
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {

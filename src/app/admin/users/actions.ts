@@ -8,6 +8,7 @@ import { siteUrl } from "@/lib/env";
 import { logger } from "@/lib/log";
 import { adminClient } from "@/lib/supabase/clients";
 import { ROLES, ROLE_LABEL, invitableRoles, type Role } from "@/lib/workflow";
+import { Id, INVALID, RoleName, validArgs } from "@/lib/validation";
 
 /**
  * Invitations and role changes. Every action re-checks the caller's role on
@@ -84,6 +85,7 @@ export async function inviteUser(_: FormState, form: FormData): Promise<FormStat
 }
 
 export async function changeRole(userId: string, role: Role): Promise<{ ok: boolean; message: string }> {
+  if (!validArgs(z.tuple([Id, RoleName]), [userId, role])) return INVALID;
   const viewer = await getViewer();
   if (viewer?.role !== "super_admin") return { ok: false, message: "Only a Super Admin can change roles." };
   if (!ROLES.includes(role)) return { ok: false, message: "Unknown role." };
@@ -105,6 +107,7 @@ export async function changeRole(userId: string, role: Role): Promise<{ ok: bool
 }
 
 export async function setActive(userId: string, active: boolean): Promise<{ ok: boolean; message: string }> {
+  if (!validArgs(z.tuple([Id, z.boolean()]), [userId, active])) return INVALID;
   const viewer = await getViewer();
   if (viewer?.role !== "super_admin") return { ok: false, message: "Only a Super Admin can deactivate accounts." };
   if (userId === viewer.id && !active) return { ok: false, message: "You can’t deactivate your own account." };

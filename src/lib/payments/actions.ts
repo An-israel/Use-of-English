@@ -9,6 +9,8 @@ import { siteUrl } from "@/lib/env";
 import { logger } from "@/lib/log";
 import { paystack } from "@/lib/payments/paystack";
 import { adminClient, userClient } from "@/lib/supabase/clients";
+import { z } from "zod";
+import { fields, Id, INVALID, validArgs } from "@/lib/validation";
 
 export type PayState = { status: "idle" | "error"; message?: string };
 
@@ -17,6 +19,8 @@ export type PayState = { status: "idle" | "error"; message?: string };
  * settings and is stored on the payment row; card details never touch JHTS.
  */
 export async function startPayment(_: PayState, form: FormData): Promise<PayState> {
+  if (!validArgs(z.object({ submissionId: Id, fee: z.enum(["review", "publication"]) }), fields(form)))
+    return { status: "error", message: INVALID.message };
   const viewer = await getViewer();
   if (!viewer) return { status: "error", message: "Please sign in again." };
   const submissionId = String(form.get("submissionId") ?? "");

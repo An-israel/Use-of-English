@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ArchiveBrowser, type ArchiveIssue } from "@/components/archive/ArchiveBrowser";
 import { PageHeader } from "@/components/journal/PageHeader";
+import { IssueCover } from "@/components/weave/IssueCover";
 import { getArticles, getCategories, getIssues } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -28,7 +29,24 @@ export default async function AllIssuesPage() {
         summary="JHTS publishes one volume a year in four quarterly issues: March, June, September and December."
         seed={13}
       />
-      <ArchiveBrowser issues={archive} categories={categories} />
+      <ArchiveBrowser
+        issues={archive}
+        categories={categories}
+        covers={Object.fromEntries(
+          issues.map((i) => [
+            i.id,
+            <IssueCover
+              key={i.id}
+              volume={i.volume}
+              issue={i.number}
+              month={i.month}
+              year={i.year}
+              coverUrl={i.coverUrl}
+              className="ease-weave shadow-[0_18px_30px_-22px_rgb(21_19_15/0.7)] transition-transform duration-300 group-hover:-translate-y-0.5"
+            />,
+          ]),
+        )}
+      />
     </>
   );
 }

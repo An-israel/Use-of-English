@@ -7,6 +7,7 @@ import { getFlags, getSettings } from "@/lib/data";
 import { kickJobs } from "@/lib/jobs/kick";
 import { userClient } from "@/lib/supabase/clients";
 import { STATUSES, STATUS_LABEL, editorTransitions, type SubmissionStatus } from "@/lib/workflow";
+import { fields, Id, INVALID, validArgs } from "@/lib/validation";
 
 type Result = { ok: boolean; message: string };
 
@@ -71,6 +72,13 @@ export async function changeStatus(_: Result | null, form: FormData): Promise<Re
 }
 
 export async function addNote(_: Result | null, form: FormData): Promise<Result> {
+  if (
+    !validArgs(
+      z.object({ id: Id, message: z.string().max(10_000), visibility: z.enum(["author", "internal"]).optional() }),
+      fields(form),
+    )
+  )
+    return INVALID;
   const viewer = await getViewer();
   if (!viewer) return { ok: false, message: "Not allowed." };
   const id = String(form.get("id") ?? "");
@@ -88,6 +96,10 @@ export async function addNote(_: Result | null, form: FormData): Promise<Result>
 }
 
 export async function waiveFee(_: Result | null, form: FormData): Promise<Result> {
+  if (
+    !validArgs(z.object({ id: Id, fee: z.enum(["review", "publication"]), reason: z.string().max(4000) }), fields(form))
+  )
+    return INVALID;
   const viewer = await getViewer();
   if (!viewer || !["super_admin", "editor"].includes(viewer.role))
     return { ok: false, message: "Only editors can waive fees." };
@@ -106,6 +118,13 @@ export async function waiveFee(_: Result | null, form: FormData): Promise<Result
 
 /** Saved filters are private to the person who saved them (RLS: owner only). */
 export async function saveFilter(form: FormData): Promise<Result> {
+  if (
+    !validArgs(
+      z.object({ scope: z.enum(["articles", "submissions"]), name: z.string().max(200), query: z.string().max(4000) }),
+      fields(form),
+    )
+  )
+    return INVALID;
   const viewer = await getViewer();
   if (!viewer) return { ok: false, message: "Not allowed." };
   const scope = form.get("scope") === "articles" ? "articles" : "submissions";
@@ -126,6 +145,7 @@ export async function saveFilter(form: FormData): Promise<Result> {
 }
 
 export async function deleteFilter(id: string): Promise<Result> {
+  if (!validArgs(Id, id)) return INVALID;
   const viewer = await getViewer();
   if (!viewer) return { ok: false, message: "Not allowed." };
   const { error } = await (await userClient()).from("saved_filters").delete().eq("id", id);

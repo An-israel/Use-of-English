@@ -4,12 +4,16 @@ import { notFound, redirect } from "next/navigation";
 import { siteUrl } from "@/lib/env";
 import { sign, webhookSecret } from "@/lib/payments/paystack";
 import { adminClient } from "@/lib/supabase/clients";
+import { z } from "zod";
 
 /** Records the simulated outcome, then sends a signed charge.success webhook like Paystack. */
 export async function mockOutcome(form: FormData) {
   if (process.env.PAYSTACK_MODE !== "mock" || process.env.VERCEL_ENV === "production") notFound();
-  const reference = String(form.get("reference") ?? "");
-  const outcome = form.get("outcome") === "success" ? "success" : "failed";
+  const input = z
+    .object({ reference: z.string().min(1).max(100), outcome: z.enum(["success", "failed"]) })
+    .safeParse(Object.fromEntries(form));
+  if (!input.success) notFound();
+  const { reference, outcome } = input.data;
   const db = adminClient();
   const { data: p } = await db.from("payments").select("id, amount_kobo, raw").eq("reference", reference).maybeSingle();
   if (!p) notFound();

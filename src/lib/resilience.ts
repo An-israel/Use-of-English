@@ -104,3 +104,47 @@ export function circuitBreaker(name: string, { threshold = 5, coolDownMs = 60_00
     },
   };
 }
+
+/** Postgres errors worth retrying: deadlock, serialization failure, lock timeout. */
+export const TRANSIENT_DB_CODES = new Set(["40P01", "40001", "55P03"]);
+
+export class TransientDbError extends Error {
+  constructor(
+    public code: string,
+    message: string,
+  ) {
+    super(message);
+    this.name = "TransientDbError";
+  }
+}
+
+/**
+ * Run a Supabase call, retrying with backoff only when Postgres reports a
+ * deadlock or serialization failure (item 40). Other errors are returned
+ * unchanged for the caller to handle.
+ */
+export async function withDbRetry<T extends { error: { code?: string; message: string } | null }>(
+  call: () => PromiseLike<T>,
+  opts: { attempts?: number; sleep?: (ms: number) => Promise<void> } = {},
+): Promise<T> {
+  try {
+    return await retry(
+      async () => {
+        const res = await call();
+        if (res.error?.code && TRANSIENT_DB_CODES.has(res.error.code))
+          throw new TransientDbError(res.error.code, res.error.message);
+        return res;
+      },
+      {
+        attempts: opts.attempts ?? 4,
+        baseMs: 100,
+        capMs: 2_000,
+        sleep: opts.sleep,
+        retryable: (e) => e instanceof TransientDbError,
+      },
+    );
+  } catch (err) {
+    if (err instanceof TransientDbError) return { error: { code: err.code, message: err.message } } as T;
+    throw err;
+  }
+}

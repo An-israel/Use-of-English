@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { ArticleRow } from "@/components/journal/ArticleRow";
 import { EmptyState } from "@/components/journal/EmptyState";
@@ -15,6 +16,17 @@ export function SubjectArticles({ articles, category }: { articles: ArticleSumma
   const years = [...new Set(articles.map(yearOf))].sort((a, b) => b - a);
   const shown = articles.filter((a) => (type === "all" || a.type === type) && (year === "all" || yearOf(a) === year));
   const select = "rounded-sm border border-rule bg-surface px-3 py-2.5 text-[0.92rem] text-fg";
+  // Nothing published yet: filters would have nothing to filter.
+  if (!articles.length)
+    return (
+      <EmptyState title={`No articles in ${category.name} yet`}>
+        Published articles in this subject will appear here. Have work in this area? Read the{" "}
+        <Link href="/call-for-papers" className="text-brand decoration-thread underline underline-offset-4">
+          Call for Papers
+        </Link>
+        .
+      </EmptyState>
+    );
   return (
     <>
       <div

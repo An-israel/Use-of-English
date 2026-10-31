@@ -33,8 +33,23 @@ function score(item: PaletteItem, tokens: string[]): number {
 
 const GROUP_ORDER: PaletteItem["group"][] = ["Articles", "Issues", "Authors", "Pages"];
 
-export function CommandPalette({ items }: { items: PaletteItem[] }) {
+let indexRequest: Promise<PaletteItem[]> | null = null;
+
+/** Fetch the index once per page load; a failed request is retried next time the palette opens. */
+function loadIndex(): Promise<PaletteItem[]> {
+  indexRequest ??= fetch("/search-index.json")
+    .then((r) => (r.ok ? (r.json() as Promise<PaletteItem[]>) : Promise.reject(new Error(String(r.status)))))
+    .catch((e) => {
+      indexRequest = null;
+      throw e;
+    });
+  return indexRequest;
+}
+
+export function CommandPalette() {
   const [open, setOpen] = useState(false);
+  const [items, setItems] = useState<PaletteItem[] | null>(null);
+  const [failed, setFailed] = useState(false);
   const [query, setQuery] = useState("");
   const [cursor, setCursor] = useState(0);
   const router = useRouter();
@@ -46,6 +61,8 @@ export function CommandPalette({ items }: { items: PaletteItem[] }) {
     const show = () => {
       restoreFocus.current = document.activeElement as HTMLElement | null;
       setOpen(true);
+      setFailed(false);
+      loadIndex().then(setItems, () => setFailed(true));
     };
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
@@ -71,6 +88,7 @@ export function CommandPalette({ items }: { items: PaletteItem[] }) {
   }, [open]);
 
   const results = useMemo(() => {
+    if (!items) return [];
     const tokens = normalise(query).split(/\s+/).filter(Boolean);
     if (tokens.length === 0) {
       return items.filter((i) => i.group === "Pages" || i.group === "Issues").slice(0, 8);
@@ -133,6 +151,9 @@ export function CommandPalette({ items }: { items: PaletteItem[] }) {
           if (e.key === "Enter" && flat[cursor]) {
             e.preventDefault();
             go(flat[cursor].href);
+          } else if (e.key === "Enter" && query.trim()) {
+            e.preventDefault();
+            go(`/search?q=${encodeURIComponent(query.trim())}`);
           }
           if (e.key === "Tab") e.preventDefault(); // keep focus in the dialog
         }}
@@ -157,7 +178,12 @@ export function CommandPalette({ items }: { items: PaletteItem[] }) {
           <kbd className="border-rule text-muted rounded-[3px] border px-1.5 py-0.5 text-[0.7rem]">Esc</kbd>
         </div>
         <div id={`${uid}-list`} role="listbox" aria-label="Results" className="max-h-[60vh] overflow-y-auto py-2">
-          {flat.length === 0 && (
+          {!items && (
+            <p className="text-muted px-5 py-8 text-center" role="status">
+              {failed ? "Couldn’t load suggestions. Press Enter for a full search." : "Loading…"}
+            </p>
+          )}
+          {items && flat.length === 0 && (
             <p className="text-muted px-5 py-8 text-center">
               No matches for “{query}”.{" "}
               <button

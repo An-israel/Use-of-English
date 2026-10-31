@@ -198,7 +198,15 @@ export async function signInWithGoogle(form: FormData) {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(safeNext(String(form.get("next") ?? "")))}`,
+      redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(
+        safeNext(
+          z
+            .string()
+            .max(500)
+            .catch("")
+            .parse(form.get("next") ?? ""),
+        ),
+      )}`,
     },
   });
   if (error || !data.url) redirect("/login?error=oauth");

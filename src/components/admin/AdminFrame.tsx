@@ -5,6 +5,7 @@ import { useSyncExternalStore, type ReactNode } from "react";
 import clsx from "clsx";
 import { ThemeToggle } from "@/components/site/ThemeToggle";
 import { OPEN_ADMIN_COMMAND } from "./AdminCommand";
+import { NotificationBell } from "./NotificationBell";
 
 const KEY = "jhts-admin-sidebar";
 const listeners = new Set<() => void>();
@@ -59,11 +60,20 @@ export function AdminFrame({
         )}
       >
         <div className={clsx("flex items-center justify-between gap-2 px-5 py-5", collapsed && "lg:flex-col lg:px-2")}>
-          <Link href="/admin" className="block leading-none" aria-label="JHTS editorial office">
+          <Link href="/admin" className="block leading-none">
             <span className="font-display text-[1.5rem] font-semibold tracking-[-0.02em]">
-              {collapsed ? <span className="lg:text-[1.1rem]">J</span> : "JHTS"}
+              {collapsed ? (
+                <>
+                  <span aria-hidden="true" className="lg:text-[1.1rem]">
+                    J
+                  </span>
+                  <span className="sr-only">JHTS editorial office</span>
+                </>
+              ) : (
+                "JHTS"
+              )}
             </span>
-            {!collapsed && <span className="smallcaps text-muted mt-1 block text-[0.72rem]">Editorial office</span>}
+            {!collapsed && <span className="smallcaps text-muted mt-1 block text-[0.72rem]"> Editorial office</span>}
           </Link>
           <div className={clsx("flex items-center gap-1", collapsed && "lg:flex-col")}>
             <button
@@ -71,10 +81,11 @@ export function AdminFrame({
               onClick={() => window.dispatchEvent(new Event(OPEN_ADMIN_COMMAND))}
               className="text-muted hover:text-fg rounded-sm px-2 py-1 text-[0.78rem]"
               title="Quick actions (Ctrl or ⌘ + K)"
-              aria-label="Quick actions"
             >
+              <span className="sr-only">Quick actions </span>
               <kbd className="border-rule rounded-[2px] border px-1.5 py-0.5 font-sans">⌘K</kbd>
             </button>
+            <NotificationBell />
             <ThemeToggle />
             <button
               type="button"

@@ -6,6 +6,7 @@ import { CONTENT_EDITORS, dbMessage, denied, lockedUpdate, staff, type ActionRes
 import { kickJobs } from "@/lib/jobs/kick";
 import { adminClient } from "@/lib/supabase/clients";
 import { MAX_FILE_BYTES, STAFF_FILE_KINDS, safeFileName, type StaffUploadKind } from "@/lib/submission";
+import { fields, Id, INVALID, StaffUploadKindSchema, StoragePath, UploadFile, validArgs } from "@/lib/validation";
 
 /**
  * Editorial actions on one submission: reviewers, plagiarism data, files for
@@ -64,6 +65,7 @@ export async function inviteReviewer(form: FormData): Promise<ActionResult> {
 }
 
 export async function cancelReview(assignmentId: string, submissionId: string): Promise<ActionResult> {
+  if (!validArgs(z.tuple([Id, Id]), [assignmentId, submissionId])) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const { error } = await s.db
@@ -94,6 +96,7 @@ export async function shareReviewComments(
   submissionId: string,
   label: string,
 ): Promise<ActionResult> {
+  if (!validArgs(z.tuple([Id, Id, z.string().max(100)]), [assignmentId, submissionId, label])) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const { data } = await s.db
@@ -116,6 +119,18 @@ export async function shareReviewComments(
 }
 
 export async function saveEditorial(form: FormData): Promise<ActionResult> {
+  if (
+    !validArgs(
+      z.object({
+        id: Id,
+        version: z.coerce.number().int(),
+        similarity: z.string().max(10).optional(),
+        handling_editor: z.union([Id, z.literal("")]).optional(),
+      }),
+      fields(form),
+    )
+  )
+    return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const id = String(form.get("id") ?? "");
@@ -144,6 +159,7 @@ export async function requestStaffUpload(
   kind: StaffUploadKind,
   file: { name: string; size: number; type: string },
 ): Promise<{ ok: true; path: string; token: string } | { ok: false; message: string }> {
+  if (!validArgs(z.tuple([Id, StaffUploadKindSchema, UploadFile]), [id, kind, file])) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return { ok: false, message: denied.message };
   const spec = STAFF_FILE_KINDS[kind];
@@ -174,6 +190,7 @@ export async function registerStaffUpload(
   path: string,
   originalName: string,
 ): Promise<ActionResult> {
+  if (!validArgs(z.tuple([Id, StaffUploadKindSchema, StoragePath]), [id, kind, path])) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const spec = STAFF_FILE_KINDS[kind];
@@ -214,6 +231,7 @@ export async function registerStaffUpload(
 }
 
 export async function createArticleFromSubmission(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const { data, error } = await s.db.rpc("article_from_submission", { p_submission: id });

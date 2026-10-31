@@ -23,9 +23,10 @@ export default async function InPressPage() {
         seed={17}
       />
       <div className="max-w-page mx-auto px-4 py-12 sm:px-6 lg:px-10 lg:py-16">
-        <p className="tabular text-muted mb-6 text-[0.9rem]">
+        {/* The list's heading, so article titles (h3) sit under an h2. */}
+        <h2 className="tabular text-muted mb-6 text-[0.9rem] font-normal">
           {articles.length} {articles.length === 1 ? "article" : "articles"}, newest first
-        </p>
+        </h2>
         {articles.length === 0 ? (
           <EmptyState title="Nothing in press right now">
             New articles appear here as soon as they are ready, ahead of their issue.

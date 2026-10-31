@@ -16,18 +16,43 @@ const CONTENT: Role[] = ["super_admin", "editor", "book_review_editor"];
 /** Each section lists the roles that may open it; pages check again on the server. */
 export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin", label: "Overview", short: "Ov", roles: STAFF },
+  { href: "/admin/analytics", label: "Analytics", short: "Ana", roles: STAFF },
   { href: "/admin/submissions", label: "Submissions", short: "Sub", group: "Editorial", roles: STAFF },
   { href: "/admin/messages", label: "Messages", short: "Msg", group: "Editorial", roles: EDITORS },
   { href: "/admin/issues", label: "Issues", short: "Iss", group: "Publishing", roles: EDITORS },
   { href: "/admin/articles", label: "Articles", short: "Art", group: "Publishing", roles: EDITORS },
   { href: "/admin/in-press", label: "Articles in Press", short: "IP", group: "Publishing", roles: EDITORS },
   { href: "/admin/book-reviews", label: "Book reviews", short: "BR", group: "Publishing", roles: CONTENT },
+  {
+    href: "/admin/payments",
+    label: "Payments",
+    short: "Pay",
+    group: "Finance",
+    roles: ["super_admin", "finance_officer", "editor"],
+  },
+  {
+    href: "/admin/reconciliation",
+    label: "Reconciliation",
+    short: "Rec",
+    group: "Finance",
+    roles: ["super_admin", "finance_officer", "editor"],
+  },
+  {
+    href: "/admin/fund-summary",
+    label: "Fund summary",
+    short: "Fund",
+    group: "Finance",
+    roles: ["super_admin", "finance_officer", "editor"],
+  },
   { href: "/admin/categories", label: "Categories", short: "Cat", group: "Journal", roles: EDITORS },
   { href: "/admin/call-for-papers", label: "Call for Papers", short: "CfP", group: "Journal", roles: EDITORS },
   { href: "/admin/pages", label: "Pages and policies", short: "Pg", group: "Journal", roles: EDITORS },
   { href: "/admin/board", label: "Editorial board", short: "Brd", group: "Journal", roles: EDITORS },
   { href: "/admin/users", label: "Users and roles", short: "Usr", group: "Office", roles: CONTENT },
+  { href: "/admin/system", label: "System", short: "Sys", group: "Office", roles: ["super_admin"] },
+  { href: "/admin/audit", label: "Audit log", short: "Aud", group: "Office", roles: ["super_admin"] },
   { href: "/admin/settings", label: "Settings", short: "Set", group: "Office", roles: ["super_admin"] },
+  { href: "/admin/handbook", label: "Handbook", short: "?", group: "Office", roles: STAFF },
 ];
 
 const CREATE: (QuickAction & { roles: Role[] })[] = [

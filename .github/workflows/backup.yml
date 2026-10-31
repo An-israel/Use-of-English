@@ -1,0 +1,67 @@
+name: Weekly backup
+
+# Off-site copy of the database and every stored file (item 84), so the
+# journal's PDFs and financial records never live in only one place.
+# Secrets (Settings → Secrets and variables → Actions):
+#   SUPABASE_DB_URL            session-pooler connection string (port 5432)
+#   SUPABASE_SERVICE_ROLE_KEY  for the file manifest
+#   BACKUP_PASSPHRASE          encrypts the dumps (keep a copy offline!)
+#   RCLONE_CONFIG              rclone config with two remotes:
+#                                gdrive   the journal's Google Drive
+#                                supabase Supabase Storage's S3 endpoint
+#   CRON_SECRET                to report the result to the site
+# Variables: SITE_URL, NEXT_PUBLIC_SUPABASE_URL
+on:
+  schedule:
+    - cron: "13 2 * * 0" # Sundays, 03:13 Lagos time
+  workflow_dispatch:
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    if: ${{ vars.SITE_URL != '' }}
+    timeout-minutes: 60
+    env:
+      DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --omit=dev --ignore-scripts
+      - name: Install pg_dump 17 and rclone
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/postgresql-common/pgdg/apt.gpg
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.gpg] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client-17 rclone
+          mkdir -p ~/.config/rclone && echo "${{ secrets.RCLONE_CONFIG }}" > ~/.config/rclone/rclone.conf
+      - name: Record the start time
+        run: echo "STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+      - name: Dump the database and list the files
+        run: PG_DUMP=/usr/lib/postgresql/17/bin/pg_dump OUT=backup-out scripts/backup.sh
+      - name: Copy the dumps and the file buckets to Google Drive
+        run: |
+          DEST="gdrive:JHTS-backups/$(date -u +%Y-%m-%d)"
+          rclone copy backup-out "$DEST"
+          for b in published finance covers submissions; do rclone sync "supabase:$b" "gdrive:JHTS-backups/storage/$b" --fast-list; done
+          echo "DEST=$DEST" >> "$GITHUB_ENV"
+      - name: Report success
+        run: |
+          curl --fail --silent --show-error -X POST -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" "${{ vars.SITE_URL }}/api/cron/backup-report" \
+            -d "{\"status\":\"ok\",\"location\":\"$DEST\",\"started_at\":\"$STARTED_AT\",\"details\":{\"run\":\"${{ github.run_id }}\"}}"
+      - name: Report failure
+        if: failure()
+        run: |
+          curl --silent -X POST -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" "${{ vars.SITE_URL }}/api/cron/backup-report" \
+            -d "{\"status\":\"failed\",\"details\":{\"run\":\"${{ github.run_id }}\"}}"

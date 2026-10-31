@@ -170,3 +170,207 @@ export function renderAcceptanceLetter(d: LetterData) {
     </Document>,
   );
 }
+
+const t = StyleSheet.create({
+  page: {
+    padding: 40,
+    paddingBottom: 60,
+    fontFamily: "Helvetica",
+    fontSize: 8.5,
+    color: C.ink,
+    backgroundColor: C.paper,
+  },
+  h1: { fontFamily: "Times-Roman", fontSize: 18, marginBottom: 4 },
+  h2: { fontFamily: "Times-Roman", fontSize: 13, marginTop: 18, marginBottom: 6 },
+  muted: { color: C.stone, fontSize: 8.5 },
+  tiles: { flexDirection: "row", marginTop: 14, gap: 8 },
+  tile: { flexGrow: 1, flexBasis: 0, borderWidth: 1, borderColor: C.line, padding: 8 },
+  tileK: { color: C.stone, fontSize: 7, letterSpacing: 1 },
+  tileV: { fontFamily: "Times-Roman", fontSize: 14, marginTop: 3 },
+  tr: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: C.line, paddingVertical: 4 },
+  th: { color: C.stone, fontSize: 7, letterSpacing: 0.8 },
+  num: { textAlign: "right" },
+});
+
+type Col = { label: string; width: string; num?: boolean };
+
+function Table({ cols, rows }: { cols: Col[]; rows: string[][] }) {
+  return (
+    <View>
+      <View style={t.tr} fixed>
+        {cols.map((c) => (
+          <Text key={c.label} style={[t.th, { width: c.width }, c.num ? t.num : {}]}>
+            {c.label.toUpperCase()}
+          </Text>
+        ))}
+      </View>
+      {rows.map((r, i) => (
+        <View key={i} style={t.tr} wrap={false}>
+          {r.map((v, j) => (
+            <Text key={j} style={[{ width: cols[j].width, paddingRight: 4 }, cols[j].num ? t.num : {}]}>
+              {v}
+            </Text>
+          ))}
+        </View>
+      ))}
+    </View>
+  );
+}
+
+function ReportFoot({ generated, testMode }: { generated: string; testMode: boolean }) {
+  return (
+    <Text
+      fixed
+      style={{ position: "absolute", left: 40, right: 40, bottom: 26, fontSize: 7, color: C.stone }}
+      render={({ pageNumber, totalPages }) =>
+        `${PUBLISHER} · Generated ${generated}${testMode ? " · TEST MODE: not real payments" : ""} · Page ${pageNumber} of ${totalPages}`
+      }
+    />
+  );
+}
+
+export type Tile = [label: string, value: string];
+
+export type PaymentsReportData = {
+  title: string;
+  filters: string;
+  generated: string;
+  testMode: boolean;
+  tiles: Tile[];
+  byMonth: string[][];
+  byFee: string[][];
+  rows: string[][];
+  truncated: number;
+};
+
+/** Payments report (brief section 7.3): totals by month and fee type, then the ledger. Landscape A4. */
+export function renderPaymentsReport(d: PaymentsReportData) {
+  return renderToBuffer(
+    <Document title={d.title} author="JHTS" subject="Payments report">
+      <Page size="A4" orientation="landscape" style={t.page}>
+        <Text style={t.h1}>{d.title}</Text>
+        <Text style={t.muted}>{d.filters}</Text>
+        <View style={t.tiles}>
+          {d.tiles.map(([k, v]) => (
+            <View key={k} style={t.tile}>
+              <Text style={t.tileK}>{k.toUpperCase()}</Text>
+              <Text style={t.tileV}>{v}</Text>
+            </View>
+          ))}
+        </View>
+        <View style={{ flexDirection: "row", gap: 24 }}>
+          <View style={{ flexGrow: 3, flexBasis: 0 }}>
+            <Text style={t.h2}>By month</Text>
+            <Table
+              cols={[
+                { label: "Month", width: "28%" },
+                { label: "Payments", width: "14%", num: true },
+                { label: "Collected", width: "20%", num: true },
+                { label: "Refunded", width: "18%", num: true },
+                { label: "Net", width: "20%", num: true },
+              ]}
+              rows={d.byMonth}
+            />
+          </View>
+          <View style={{ flexGrow: 2, flexBasis: 0 }}>
+            <Text style={t.h2}>By fee type</Text>
+            <Table
+              cols={[
+                { label: "Fee", width: "34%" },
+                { label: "Paid", width: "14%", num: true },
+                { label: "Net", width: "30%", num: true },
+                { label: "Waived", width: "22%", num: true },
+              ]}
+              rows={d.byFee}
+            />
+          </View>
+        </View>
+        <Text style={t.h2}>Payments</Text>
+        <Table
+          cols={[
+            { label: "Reference", width: "17%" },
+            { label: "Date", width: "10%" },
+            { label: "Fee", width: "11%" },
+            { label: "Status", width: "8%" },
+            { label: "Submission", width: "11%" },
+            { label: "Payer", width: "17%" },
+            { label: "Amount", width: "9%", num: true },
+            { label: "Refunded", width: "8%", num: true },
+            { label: "Net", width: "9%", num: true },
+          ]}
+          rows={d.rows}
+        />
+        {d.truncated > 0 && (
+          <Text style={[t.muted, { marginTop: 8 }]}>
+            {d.truncated} more payments are in the totals but not listed; export CSV for every row.
+          </Text>
+        )}
+        <ReportFoot generated={d.generated} testMode={d.testMode} />
+      </Page>
+    </Document>,
+  );
+}
+
+export type FundStatementData = {
+  generated: string;
+  testMode: boolean;
+  tiles: Tile[];
+  years: string[][];
+  byFee: string[][];
+};
+
+/** The fund statement for transparency: collected, refunds and net, by year. */
+export function renderFundStatement(d: FundStatementData) {
+  return renderToBuffer(
+    <Document title="JHTS fund statement" author="JHTS" subject="Fund statement">
+      <Page size="A4" style={s.page}>
+        <Masthead />
+        <Text style={s.h1}>Fund statement</Text>
+        <Text style={s.muted}>
+          Review and publication fees received through Paystack, refunds and net, as of {d.generated}.
+        </Text>
+        <View style={t.tiles}>
+          {d.tiles.map(([k, v]) => (
+            <View key={k} style={t.tile}>
+              <Text style={t.tileK}>{k.toUpperCase()}</Text>
+              <Text style={t.tileV}>{v}</Text>
+            </View>
+          ))}
+        </View>
+        <Text style={t.h2}>By year</Text>
+        <View style={{ fontFamily: "Helvetica", fontSize: 9 }}>
+          <Table
+            cols={[
+              { label: "Year", width: "16%" },
+              { label: "Payments", width: "14%", num: true },
+              { label: "Collected", width: "20%", num: true },
+              { label: "Refunds", width: "18%", num: true },
+              { label: "Net", width: "20%", num: true },
+              { label: "Waived", width: "12%", num: true },
+            ]}
+            rows={d.years}
+          />
+          <Text style={t.h2}>By fee type</Text>
+          <Table
+            cols={[
+              { label: "Fee", width: "40%" },
+              { label: "Payments", width: "20%", num: true },
+              { label: "Net", width: "25%", num: true },
+              { label: "Waived", width: "15%", num: true },
+            ]}
+            rows={d.byFee}
+          />
+        </View>
+        <Lozenge />
+        <Text style={s.body}>
+          Fees cover review administration, similarity checking, copy-editing, production and website maintenance.{" "}
+          {STATEMENT}
+        </Text>
+        <Text style={s.foot}>
+          {PUBLISHER}
+          {d.testMode ? "\nTEST MODE: these are not real payments." : ""}
+        </Text>
+      </Page>
+    </Document>,
+  );
+}

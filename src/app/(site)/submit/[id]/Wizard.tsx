@@ -282,9 +282,7 @@ export function Wizard(props: WizardProps) {
                       <input
                         type="checkbox"
                         checked={declared.includes(k)}
-                        onChange={(e) =>
-                          setDeclared(e.target.checked ? [...declared, k] : declared.filter((d) => d !== k))
-                        }
+                        onChange={(e) => setDeclared((d) => (e.target.checked ? [...d, k] : d.filter((x) => x !== k)))}
                         className="mt-1 size-4 shrink-0 accent-[var(--brand)]"
                       />
                       <span>{label}</span>

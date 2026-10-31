@@ -30,7 +30,7 @@ export function BookCover({ book, className }: { book: BookDetails; className?: 
       <span className="font-display pl-[8%] text-[clamp(0.85rem,1.2vw,1.1rem)] leading-tight">{title}</span>
       <span className="pl-[8%]">
         <span aria-hidden="true" className="mb-2 block size-2 rotate-45 bg-[#C8962E]" />
-        <span className="smallcaps block text-[0.68rem] text-[#F1E8D6]/80">{book.bookAuthor}</span>
+        <span className="smallcaps block text-[0.68rem] text-[#F1E8D6]">{book.bookAuthor}</span>
       </span>
     </div>
   );

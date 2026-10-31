@@ -84,13 +84,13 @@ export function apa(c: Citable): string {
   const link = c.doi ? doiUrl(c.doi) : c.url;
   let out = `${esc(authors)} (${c.year}). ${esc(endWithPeriod(c.title))} <i>${esc(c.journal)}</i>`;
   if (c.inPress) {
-    out += `. Advance online publication. ${link}`;
+    out += `. Advance online publication. ${esc(link)}`;
   } else {
     if (c.volume != null) out += `, <i>${c.volume}</i>`;
     if (c.issue != null) out += `(${c.issue})`;
     const p = pages(c);
     if (p) out += `, ${p}`;
-    out += `. ${link}`;
+    out += `. ${esc(link)}`;
   }
   return out;
 }

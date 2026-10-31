@@ -33,38 +33,40 @@ export default async function ContactPage() {
           <ContactForm turnstileSiteKey={publicEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY} />
         </div>
         <aside className="col-span-12 lg:col-span-4 lg:col-start-9">
-          <dl className="space-y-8 lg:sticky lg:top-24">
-            <div>
-              <dt className="smallcaps text-muted text-[0.78rem]">Email</dt>
-              <dd className="font-display mt-2 text-[1.2rem]">
-                {emailPlaceholder ? (
-                  s.contactEmail
-                ) : (
-                  <a href={`mailto:${s.contactEmail}`} className="decoration-thread underline underline-offset-4">
-                    {s.contactEmail}
-                  </a>
-                )}
-              </dd>
-            </div>
-            <div>
-              <dt className="smallcaps text-muted text-[0.78rem]">Post</dt>
-              <dd className="mt-2 leading-relaxed">
-                <address className="not-italic">{clean(s.postalAddress)}</address>
-                {pending(s.postalAddress) && <mark className="to-confirm-inline">[TO CONFIRM]</mark>}
-              </dd>
-            </div>
-            <div>
-              <dt className="smallcaps text-muted text-[0.78rem]">Office hours</dt>
-              <dd className="mt-2">
-                {clean(s.officeHours)}{" "}
-                {pending(s.officeHours) && <mark className="to-confirm-inline">[TO CONFIRM]</mark>}
-              </dd>
-            </div>
-            <div className="border-rule text-muted border-t pt-6 text-[0.9rem]">
+          <div className="lg:sticky lg:top-24">
+            <dl className="space-y-8">
+              <div>
+                <dt className="smallcaps text-muted text-[0.78rem]">Email</dt>
+                <dd className="font-display mt-2 text-[1.2rem]">
+                  {emailPlaceholder ? (
+                    s.contactEmail
+                  ) : (
+                    <a href={`mailto:${s.contactEmail}`} className="decoration-thread underline underline-offset-4">
+                      {s.contactEmail}
+                    </a>
+                  )}
+                </dd>
+              </div>
+              <div>
+                <dt className="smallcaps text-muted text-[0.78rem]">Post</dt>
+                <dd className="mt-2 leading-relaxed">
+                  <address className="not-italic">{clean(s.postalAddress)}</address>
+                  {pending(s.postalAddress) && <mark className="to-confirm-inline">[TO CONFIRM]</mark>}
+                </dd>
+              </div>
+              <div>
+                <dt className="smallcaps text-muted text-[0.78rem]">Office hours</dt>
+                <dd className="mt-2">
+                  {clean(s.officeHours)}{" "}
+                  {pending(s.officeHours) && <mark className="to-confirm-inline">[TO CONFIRM]</mark>}
+                </dd>
+              </div>
+            </dl>
+            <p className="border-rule text-muted mt-8 border-t pt-6 text-[0.9rem]">
               Questions about a submission? Include your submission ID (for example JHTS-2027-0042) so we can find it
               quickly.
-            </div>
-          </dl>
+            </p>
+          </div>
         </aside>
       </div>
     </>

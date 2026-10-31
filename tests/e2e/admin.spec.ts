@@ -357,7 +357,13 @@ test("categories, pages with version history, and an edit conflict", async ({ pa
   await expect(page.getByLabel("Summary")).toHaveValue(`Summary by the admin ${run}`);
   await expect(page.getByRole("heading", { name: "Version history" })).toBeVisible();
   await expect(page.getByText(`Test Policy ${run}`).last()).toBeVisible();
-  await confirm(page, "Restore");
+  // "Reload now" reloads the whole page: a click before hydration does nothing, so retry until the dialog opens.
+  await expect(async () => {
+    await page.getByRole("button", { name: "Restore" }).first().click();
+    await expect(page.getByRole("dialog")).toBeVisible({ timeout: 1_000 });
+  }).toPass({ timeout: 15_000 });
+  await page.getByRole("dialog").getByRole("button", { name: "Restore" }).click();
+  await expect(page.getByRole("dialog")).toBeHidden({ timeout: 15_000 });
   await expect(page.getByText(/restored/)).toBeVisible();
 });
 

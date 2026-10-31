@@ -24,8 +24,10 @@ export function InPressRail({
         </SectionHeading>
       </div>
       <div className="max-w-page mx-auto mt-10">
+        {/* Scroll padding matches the padding: otherwise the browser snaps on load, which counts as a scroll and
+            stops Chrome measuring Largest Contentful Paint. */}
         <ul
-          className="flex snap-x snap-mandatory [scrollbar-width:thin] gap-5 overflow-x-auto scroll-smooth px-4 pb-4 sm:px-6 lg:px-10"
+          className="flex snap-x snap-mandatory scroll-px-4 [scrollbar-width:thin] gap-5 overflow-x-auto scroll-smooth px-4 pb-4 sm:scroll-px-6 sm:px-6 lg:scroll-px-10 lg:px-10"
           aria-label="Articles in press"
         >
           {articles.map((a, i) => (

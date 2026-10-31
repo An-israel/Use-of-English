@@ -44,7 +44,7 @@ export default async function FeesPage() {
         before={
           <div className="mb-14 space-y-10">
             {enabled ? (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Fees table">
                 <table className="w-full min-w-[32rem] border-collapse text-left">
                   <caption className="sr-only">JHTS fees</caption>
                   <thead>

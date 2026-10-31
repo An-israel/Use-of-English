@@ -15,6 +15,7 @@ import {
 import { TAGS } from "@/lib/data";
 import { sanitize } from "@/lib/sanitize";
 import { ARTICLE_TYPE_LABEL, type ArticleType } from "@/lib/types";
+import { fields, Id, INVALID, validArgs } from "@/lib/validation";
 
 /**
  * Articles and book reviews. Book-review editors reach only book reviews:
@@ -122,6 +123,13 @@ export async function saveArticle(form: FormData): Promise<ActionResult> {
 }
 
 export async function saveFullText(form: FormData): Promise<ActionResult> {
+  if (
+    !validArgs(
+      z.object({ id: Id, version: z.coerce.number().int(), body_html: z.string().max(2_000_000) }),
+      fields(form),
+    )
+  )
+    return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const id = String(form.get("id") ?? "");
@@ -205,6 +213,7 @@ export async function saveBookDetails(form: FormData): Promise<ActionResult> {
 }
 
 export async function publishArticle(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const { data, error } = await s.db.rpc("publish_article", { p_article: id });
@@ -214,6 +223,7 @@ export async function publishArticle(id: string): Promise<ActionResult> {
 }
 
 export async function unpublishArticle(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const { error } = await s.db
@@ -245,6 +255,7 @@ export async function scheduleArticle(form: FormData): Promise<ActionResult> {
 }
 
 export async function unscheduleArticle(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const { error } = await s.db
@@ -257,6 +268,7 @@ export async function unscheduleArticle(id: string): Promise<ActionResult> {
 }
 
 export async function deleteArticle(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const { error } = await s.db
@@ -268,6 +280,7 @@ export async function deleteArticle(id: string): Promise<ActionResult> {
 }
 
 export async function restoreArticle(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const { error } = await s.db.from("articles").update({ deleted_at: null }).eq("id", id);

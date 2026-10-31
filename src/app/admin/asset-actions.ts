@@ -5,6 +5,8 @@ import { CONTENT_EDITORS, dbMessage, expire, staff, type ActionResult } from "@/
 import { TAGS } from "@/lib/data";
 import { adminClient } from "@/lib/supabase/clients";
 import { safeFileName } from "@/lib/submission";
+import { z } from "zod";
+import { AssetSlot, Id, INVALID, StoragePath, UploadFile, validArgs } from "@/lib/validation";
 
 /**
  * Covers, PDFs and photos go straight from the browser to Storage through a
@@ -19,6 +21,7 @@ export async function requestAssetUpload(
   id: string,
   file: { name: string; size: number; type: string },
 ): Promise<{ ok: true; path: string; token: string; bucket: string } | { ok: false; message: string }> {
+  if (!validArgs(z.tuple([AssetSlot, Id, UploadFile]), [key, id, file])) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s || !isSlot(key)) return { ok: false, message: "You don’t have permission to upload here." };
   const spec = ASSET_SLOTS[key];
@@ -39,6 +42,7 @@ export async function requestAssetUpload(
 }
 
 export async function commitAsset(key: string, id: string, path: string): Promise<ActionResult> {
+  if (!validArgs(z.tuple([AssetSlot, Id, StoragePath]), [key, id, path])) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s || !isSlot(key)) return { ok: false, message: "You don’t have permission to upload here." };
   const spec = ASSET_SLOTS[key];
@@ -82,6 +86,7 @@ export async function commitAsset(key: string, id: string, path: string): Promis
 
 /** Detach a file (e.g. go back to the generated cover). The file itself is kept. */
 export async function clearAsset(key: string, id: string): Promise<ActionResult> {
+  if (!validArgs(z.tuple([AssetSlot, Id]), [key, id])) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s || !isSlot(key)) return { ok: false, message: "You don’t have permission to do that." };
   const spec = ASSET_SLOTS[key];
