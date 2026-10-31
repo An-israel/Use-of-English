@@ -31,6 +31,7 @@ Everything the committee selected in the audit report.
   - The revised-manuscript upload is a drop zone like the submission wizard (I7).
   - `/feed` and `/rss` redirect to the RSS feed, and `/.well-known/security.txt` says where to report security problems (I9).
   - X and Facebook share links on articles, as plain links with no tracking scripts (I10).
+  - Performance rechecked (I8): Lighthouse mobile now scores 94–97 (was 92–95) with accessibility, SEO and best practices at 100 (96 on article pages); the final check belongs on the live domain with PageSpeed Insights.
 
 ## [1.0.1] - Dependency updates and CI
 
