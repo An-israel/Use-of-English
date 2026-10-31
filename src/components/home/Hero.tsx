@@ -40,11 +40,12 @@ export function Hero({ settings, cfp, current, submissionsOpen }: Props) {
             {settings.tagline}.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-3">
+            {/* Before the first issue, the main invitation is the Call for Papers. */}
             <Link
-              href={current ? issuePath(current) : "/issues"}
+              href={current ? issuePath(current) : cfp ? "/call-for-papers" : "/issues"}
               className="group bg-brand text-brand-fg hover:bg-brand-hover inline-flex items-center gap-3 rounded-sm px-6 py-3.5 font-medium transition-colors"
             >
-              Read the current issue
+              {current ? "Read the current issue" : cfp ? "Read the Call for Papers" : "Browse the archive"}
               <ArrowRightIcon width={18} height={18} className="transition-transform group-hover:translate-x-0.5" />
             </Link>
             {submissionsOpen && (

@@ -5,8 +5,7 @@ import { downloadName } from "@/lib/downloads";
 import { publicEnv } from "@/lib/env";
 import { recordMetric } from "@/lib/metrics";
 import { publicClient } from "@/lib/supabase/clients";
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+import { Id } from "@/lib/validation";
 
 /**
  * /api/download/article/[id]?format=pdf|docx (brief section 9.3): counts the
@@ -17,7 +16,7 @@ export const GET = handler<{ id: string }>(
   async ({ req, params }) => {
     await connection();
     const format = req.nextUrl.searchParams.get("format") === "docx" ? "docx" : "pdf";
-    if (!UUID.test(params.id)) throw new ApiError(404, "not_found", "No such article.");
+    if (!Id.safeParse(params.id).success) throw new ApiError(404, "not_found", "No such article.");
     const { data: a } = await publicClient()
       .from("articles")
       .select(

@@ -38,7 +38,7 @@ Do these once when moving to production; each is needed for something in this ru
 
 ## DNS
 
-Records for UNN ICT to create (the values in angle brackets come from Vercel and Resend when the domain is added):
+Records for UNN ICT to create (the values in angle brackets come from Vercel and Resend when the domain is added). Send UNN ICT [DNS_FOR_UNN_ICT.md](DNS_FOR_UNN_ICT.md), which explains each record and how to check it; the launch sequence is in [LAUNCH.md](LAUNCH.md).
 
 | Purpose                     | Name                                | Type  | Value                                                                                                  |
 | --------------------------- | ----------------------------------- | ----- | ------------------------------------------------------------------------------------------------------ |
@@ -50,6 +50,14 @@ Records for UNN ICT to create (the values in angle brackets come from Vercel and
 | Email: DMARC                | `_dmarc.jhts.unn.edu.ng`            | TXT   | `v=DMARC1; p=none; rua=mailto:<journal email>` (move to `p=quarantine` after a month of clean reports) |
 
 Vercel issues and renews the HTTPS certificate once the CNAME resolves. If `jhts.unn.edu.ng` must be an apex record instead, use an A record to `76.76.21.21`. Allow up to 24 hours for DNS to propagate.
+
+## Refreshing the site's pages
+
+Public pages are cached for up to a few hours and refresh themselves whenever an editor saves in the admin. After a change made directly in the database (the SQL editor, `npm run samples:delete`), refresh them at once:
+
+```bash
+curl -X POST -H "Authorization: Bearer $CRON_SECRET" https://jhts.unn.edu.ng/api/cron/revalidate
+```
 
 ## Backups
 

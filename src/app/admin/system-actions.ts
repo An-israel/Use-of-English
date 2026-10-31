@@ -5,11 +5,14 @@ import { dbMessage, staff, type ActionResult } from "@/lib/admin/server";
 import { runJobs } from "@/lib/jobs/worker";
 import { runDaily } from "@/lib/ops/maintenance";
 import { STAFF_ROLES } from "@/lib/workflow";
+import { z } from "zod";
+import { INVALID, validArgs } from "@/lib/validation";
 
 const SA = ["super_admin"] as const;
 const notSa: ActionResult = { ok: false, message: "Only a Super Admin can do that." };
 
 export async function retryDeadLetter(id: number): Promise<ActionResult> {
+  if (!validArgs(z.number().int().positive(), id)) return INVALID;
   const s = await staff([...SA]);
   if (!s) return notSa;
   const { error } = await s.db.rpc("retry_dead_letter", { p_id: id });
@@ -23,6 +26,7 @@ export async function retryDeadLetter(id: number): Promise<ActionResult> {
 }
 
 export async function discardDeadLetter(id: number): Promise<ActionResult> {
+  if (!validArgs(z.number().int().positive(), id)) return INVALID;
   const s = await staff([...SA]);
   if (!s) return notSa;
   const { error } = await s.db.from("dead_letter_jobs").delete().eq("id", id);

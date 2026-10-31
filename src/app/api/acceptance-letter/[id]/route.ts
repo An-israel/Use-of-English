@@ -5,6 +5,7 @@ import { formatDate } from "@/lib/format";
 import { renderAcceptanceLetter } from "@/lib/pdf/documents";
 import { userClient } from "@/lib/supabase/clients";
 import { ARTICLE_TYPE_LABEL, type ArticleType } from "@/lib/types";
+import { Id } from "@/lib/validation";
 
 /** Acceptance letter PDF, available once the publication fee is paid or waived (section 5.18). */
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -12,6 +13,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const viewer = await getViewer();
   if (!viewer) return NextResponse.json({ error: "signed_out" }, { status: 401 });
   const { id } = await params;
+  if (!Id.safeParse(id).success) return NextResponse.json({ error: "not_found" }, { status: 404 });
   const supabase = await userClient();
   const { data: s } = await supabase
     .from("submissions")

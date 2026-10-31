@@ -38,6 +38,7 @@
   --brand-hover: var(--jhts-forest-700);
   --brand-fg: var(--jhts-paper);
   --accent: var(--jhts-terracotta);
+  --accent-text: #9a3b22; /* terracotta, darkened for small text on accent tints */
   --thread: var(--jhts-ochre);
   /* ochre for text: the raw ochre is decorative only (2.6:1) */
   --thread-text: #86621a;
@@ -66,6 +67,7 @@
     --brand-hover: #8cc8ab;
     --brand-fg: #0c1a14;
     --accent: #e08466;
+    --accent-text: var(--accent);
     --thread: #d9ab4c;
     --thread-text: #d9ab4c;
     --chart-views: #33a06c;
@@ -99,6 +101,7 @@
   --brand-hover: #8cc8ab;
   --brand-fg: #0c1a14;
   --accent: #e08466;
+  --accent-text: var(--accent);
   --thread: #d9ab4c;
   --thread-text: #d9ab4c;
   --chart-views: #33a06c;
@@ -242,10 +245,7 @@
 
   /* High-contrast display setting for huge headings */
   .display-tight {
-    font-variation-settings:
-      "opsz" 144,
-      "SOFT" 0,
-      "WONK" 0;
+    font-variation-settings: "opsz" 144;
     letter-spacing: -0.035em;
     line-height: 0.95;
   }
@@ -310,6 +310,27 @@
 @keyframes weave-fade {
   to {
     opacity: 1;
+  }
+}
+
+/* Scroll-driven reveal (<Reveal />): rises into place as an element enters the viewport.
+   Elements already in view at load are past the range, so they paint at once. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--reveal-i, 0) * 4%) entry calc(30% + var(--reveal-i, 0) * 4%);
+    }
+  }
+}
+/* Movement only, no fade: text keeps full contrast at every point of the animation. */
+@keyframes reveal {
+  from {
+    transform: translateY(18px);
+  }
+  to {
+    transform: none;
   }
 }
 
@@ -412,8 +433,8 @@
   color: var(--fg-muted);
 }
 .prose-jhts mark.to-confirm {
-  background: color-mix(in oklab, var(--accent) 12%, transparent);
-  color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 10%, transparent);
+  color: var(--accent-text);
   font-family: var(--font-sans);
   font-size: 0.78em;
   letter-spacing: 0.04em;
@@ -527,8 +548,8 @@
 mark.to-confirm-inline {
   display: inline-block;
   margin-top: 0.25rem;
-  background: color-mix(in oklab, var(--accent) 12%, transparent);
-  color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 10%, transparent);
+  color: var(--accent-text);
   font-size: 0.75rem;
   letter-spacing: 0.04em;
   padding: 0.1em 0.35em;

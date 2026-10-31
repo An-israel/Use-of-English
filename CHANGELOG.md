@@ -2,6 +2,42 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.0] - Milestone 10: Polish and launch
+
+- Editor's Handbook: publishing an issue, handling a submission, waivers, refunds, payments and what to do when something goes wrong. It is in the admin (Handbook, for all staff) and in `docs/EDITORS_HANDBOOK.md`, generated from one source.
+- Launch tooling:
+  - `npm run launch:check` checks the production settings: live Paystack keys, https address, secrets, no SAMPLE content, a Super Admin, and any [TO CONFIRM] text left.
+  - `npm run samples:delete` now also removes the samples' files, asks for confirmation and refreshes the live pages.
+  - `docs/LAUNCH.md` gives the go-live order, including a ₦100 live payment test.
+  - `docs/DNS_FOR_UNN_ICT.md` gives UNN ICT the DNS records and how to check them.
+- Launch-day pages: with no issue published yet, the home page points to the Call for Papers, the archive says the first issue is in preparation, and subject pages say no articles yet, instead of showing empty filters.
+- Accessibility: automated WCAG 2.2 AA scans of every public, author and admin page in light and dark mode, all passing.
+  - Visible labels are now part of buttons' accessible names.
+  - [TO CONFIRM] marks have stronger contrast.
+  - The fees table can be scrolled with the keyboard.
+  - The contact details are a valid definition list.
+  - Heading order is fixed on Articles in Press.
+- Performance (Lighthouse, mobile): public pages are 40–50% smaller and score 92–95 (simulated 4G) or 93–98 (applied throttling), with no layout shift.
+  - Scroll reveals are CSS instead of JavaScript.
+  - Weaves and cover lattices are cached SVG files.
+  - The search index loads only when the palette opens.
+  - Only Latin font files are preloaded.
+  - Covers are rendered on the server.
+- Security:
+  - Every server action and API route validates its input with zod, and a test enforces that each action checks its input and its caller.
+  - The admin page preview is sanitised.
+  - Citation links are escaped.
+  - `upgrade-insecure-requests` applies only when the site is on https.
+- Fixes:
+  - **Production build:** it failed whenever there were no issues or articles (it would have broken the first deploy after deleting the samples).
+  - **Search:** robots.txt hid the author guidelines from search engines.
+  - **First Super Admin:** `npm run admin:create` couldn't run.
+  - **Stale content:** Supabase reads were held in an untagged 15-minute fetch cache that outlived publishing and builds.
+  - **LCP:** a scroll-snap rail stopped Chrome measuring LCP on the home page.
+  - **Favicon:** the site now has one.
+- The brief's Framer Motion: its only use (scroll reveals) is now CSS, so the package was removed (see DECISIONS.md).
+- Tests: accessibility scans, server-action and robots unit tests, handbook checks. 88 end-to-end, 285 unit and 38 database tests pass.
+
 ## [0.9.0] - Milestone 9: Reliability and operations
 
 - System screen (Super Admin): database and storage health, queue size, failed jobs with retry and discard, scheduled jobs and their last result, off-site backups, email failures and suppressions, schema version. Audit log screen with filters.

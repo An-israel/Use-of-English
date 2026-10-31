@@ -1,10 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { z } from "zod";
 import { verifyWebhook } from "@/lib/email/webhook";
 import { serverEnv } from "@/lib/env.server";
 import { logger } from "@/lib/log";
 import { adminClient } from "@/lib/supabase/clients";
 
-type EmailEvent = { type?: string; data?: { email_id?: string; to?: string[] } };
+const EmailEvent = z.object({
+  type: z.string().max(100),
+  data: z.object({ email_id: z.string().max(200).optional(), to: z.array(z.email()).max(100).optional() }).optional(),
+});
 
 /**
  * Bounces and complaints from the email provider (item 101). Signed and
@@ -26,9 +30,9 @@ export async function POST(req: NextRequest) {
   );
   if (!ok) return NextResponse.json({ ok: false }, { status: 401 });
 
-  let event: EmailEvent;
+  let event: z.infer<typeof EmailEvent>;
   try {
-    event = JSON.parse(raw);
+    event = EmailEvent.parse(JSON.parse(raw));
   } catch {
     return NextResponse.json({ ok: false }, { status: 400 });
   }

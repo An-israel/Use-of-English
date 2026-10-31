@@ -5,6 +5,8 @@ import { getViewer } from "@/lib/auth";
 import { kickJobs } from "@/lib/jobs/kick";
 import { adminClient, userClient } from "@/lib/supabase/clients";
 import { FILE_KINDS, MAX_FILE_BYTES, safeFileName } from "@/lib/submission";
+import { z } from "zod";
+import { fields, Id, INVALID, StoragePath, UploadFile, validArgs } from "@/lib/validation";
 
 type Result = { ok: true; message?: string } | { ok: false; message: string };
 
@@ -18,6 +20,7 @@ async function own(id: string) {
 }
 
 export async function requestRevisionUpload(id: string, file: { name: string; size: number; type: string }) {
+  if (!validArgs(z.tuple([Id, UploadFile]), [id, file])) return INVALID;
   const o = await own(id);
   if (!o) return { ok: false as const, message: "Submission not found." };
   if (o.submission.status !== "revisions_requested")
@@ -41,6 +44,8 @@ export async function requestRevisionUpload(id: string, file: { name: string; si
 }
 
 export async function registerRevision(id: string, path: string, originalName: string, note: string): Promise<Result> {
+  if (!validArgs(z.tuple([Id, StoragePath, z.string().max(255), z.string().max(4000)]), [id, path, originalName, note]))
+    return INVALID;
   const o = await own(id);
   if (!o) return { ok: false, message: "Submission not found." };
   if (!path.startsWith(`${id}/revision/v`)) return { ok: false, message: "Unexpected file path." };
@@ -68,6 +73,7 @@ export async function registerRevision(id: string, path: string, originalName: s
 }
 
 export async function sendMessage(_: Result | null, form: FormData): Promise<Result> {
+  if (!validArgs(z.object({ id: Id, message: z.string().max(10_000) }), fields(form))) return INVALID;
   const id = String(form.get("id") ?? "");
   const message = String(form.get("message") ?? "").trim();
   const o = await own(id);
@@ -82,6 +88,7 @@ export async function sendMessage(_: Result | null, form: FormData): Promise<Res
 }
 
 export async function withdraw(_: Result | null, form: FormData): Promise<Result> {
+  if (!validArgs(z.object({ id: Id, reason: z.string().max(4000).optional() }), fields(form))) return INVALID;
   const id = String(form.get("id") ?? "");
   const o = await own(id);
   if (!o) return { ok: false, message: "Submission not found." };

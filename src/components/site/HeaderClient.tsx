@@ -99,11 +99,7 @@ export function HeaderClient({ nav, features, journalName, shortName, submission
           scrolled ? "h-16" : "h-20 lg:h-24",
         )}
       >
-        <Link
-          href="/"
-          className="group mr-auto flex flex-col leading-none"
-          aria-label={`${shortName}, ${journalName}, home`}
-        >
+        <Link href="/" className="group mr-auto flex flex-col leading-none">
           <span
             className={clsx(
               "font-display text-fg font-semibold tracking-[-0.02em] transition-[font-size] duration-300",
@@ -118,8 +114,10 @@ export function HeaderClient({ nav, features, journalName, shortName, submission
               scrolled ? "pointer-events-none -mt-1 h-0 opacity-0" : "opacity-100",
             )}
           >
+            {" "}
             {journalName}
           </span>
+          <span className="sr-only"> (home)</span>
         </Link>
 
         <nav aria-label="Main" className="hidden lg:block">
@@ -176,12 +174,16 @@ export function HeaderClient({ nav, features, journalName, shortName, submission
             type="button"
             onClick={() => openCommandPalette()}
             className="text-muted hover:text-fg flex items-center gap-2 rounded-sm px-2 py-2 transition-colors"
-            aria-label="Search the journal"
             aria-keyshortcuts="Control+K Meta+K"
           >
             <SearchIcon />
-            <span className="hidden text-[0.9rem] xl:inline">Search</span>
-            <kbd className="border-rule text-muted hidden rounded-[3px] border px-1.5 py-0.5 font-sans text-[0.7rem] xl:inline">
+            {/* The visible word starts the accessible name (WCAG 2.5.3, label in name). */}
+            <span className="sr-only text-[0.9rem] xl:not-sr-only">Search</span>
+            <span className="sr-only"> the journal</span>
+            <kbd
+              aria-hidden="true"
+              className="border-rule text-muted hidden rounded-[3px] border px-1.5 py-0.5 font-sans text-[0.7rem] xl:inline"
+            >
               Ctrl K
             </kbd>
           </button>

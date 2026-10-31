@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const isDev = process.env.NODE_ENV !== "production";
 const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const supabaseWs = supabase.replace(/^http/, "ws");
+// Only upgrade requests when the site itself is served over HTTPS; a local
+// production build on http://localhost would otherwise break its own links.
+const https = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://").startsWith("https://");
 
 /**
  * Content Security Policy (items 71, 79). Public pages are statically
@@ -23,7 +26,7 @@ const csp = [
   "base-uri 'self'",
   "form-action 'self' https://checkout.paystack.com",
   "frame-ancestors 'none'",
-  isDev ? "" : "upgrade-insecure-requests",
+  !isDev && https ? "upgrade-insecure-requests" : "",
 ]
   .filter(Boolean)
   .join("; ")

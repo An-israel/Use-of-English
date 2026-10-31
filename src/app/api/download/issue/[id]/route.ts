@@ -5,15 +5,14 @@ import { downloadName } from "@/lib/downloads";
 import { publicEnv } from "@/lib/env";
 import { recordMetric } from "@/lib/metrics";
 import { publicClient } from "@/lib/supabase/clients";
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+import { Id } from "@/lib/validation";
 
 /** /api/download/issue/[id]?format=pdf|docx: the full issue, counted, under a clean name. Published issues only. */
 export const GET = handler<{ id: string }>(
   async ({ req, params }) => {
     await connection();
     const format = req.nextUrl.searchParams.get("format") === "docx" ? "docx" : "pdf";
-    if (!UUID.test(params.id)) throw new ApiError(404, "not_found", "No such issue.");
+    if (!Id.safeParse(params.id).success) throw new ApiError(404, "not_found", "No such issue.");
     const { data: i } = await publicClient()
       .from("issues")
       .select("id, number, full_pdf_path, full_docx_path, volume:volumes ( number, year )")

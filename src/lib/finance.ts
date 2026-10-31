@@ -3,6 +3,8 @@
  * shared by the admin pages and the export route.
  */
 
+import { z } from "zod";
+
 export const FEE_LABEL = { review: "Review fee", publication: "Publication fee" } as const;
 export const PAYMENT_STATUS_LABEL = {
   pending: "Pending",
@@ -23,17 +25,29 @@ export type FinanceFilters = {
   issue: string | null;
 };
 
-const DATE = /^\d{4}-\d{2}-\d{2}$/;
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+/** Each filter falls back to "any" when missing or malformed, so a bad link still shows the ledger. */
+const Filters = z.object({
+  from: z.iso.date().nullable().catch(null),
+  to: z.iso.date().nullable().catch(null),
+  fee: z
+    .enum(Object.keys(FEE_LABEL) as [FeeType, ...FeeType[]])
+    .nullable()
+    .catch(null),
+  status: z
+    .enum(Object.keys(PAYMENT_STATUS_LABEL) as [PaymentStatus, ...PaymentStatus[]])
+    .nullable()
+    .catch(null),
+  issue: z.uuid().nullable().catch(null),
+});
 
 export function parseFilters(sp: Record<string, string | undefined>): FinanceFilters {
-  return {
-    from: sp.from && DATE.test(sp.from) ? sp.from : null,
-    to: sp.to && DATE.test(sp.to) ? sp.to : null,
-    fee: sp.fee && sp.fee in FEE_LABEL ? (sp.fee as FeeType) : null,
-    status: sp.status && sp.status in PAYMENT_STATUS_LABEL ? (sp.status as PaymentStatus) : null,
-    issue: sp.issue && UUID.test(sp.issue) ? sp.issue : null,
-  };
+  return Filters.parse({
+    from: sp.from ?? null,
+    to: sp.to ?? null,
+    fee: sp.fee ?? null,
+    status: sp.status ?? null,
+    issue: sp.issue ?? null,
+  });
 }
 
 export function filtersToQuery(f: FinanceFilters): string {

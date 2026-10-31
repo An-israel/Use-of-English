@@ -131,3 +131,24 @@ The admin uses the same fonts and tokens in a denser, calmer working layout. Scr
 | --------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------ |
 | With the database down, the admin redirected to the login page              | Broken       | A failed profile read is reported as an outage; the admin shows a clear panel. |
 | A new failed payment or contact message broke event recording (trigger bug) | Broken       | The notification trigger was rewritten and can no longer block an event.       |
+
+# Design self-review: Milestone 10 (polish and launch)
+
+| Screen                                                    | Hierarchy | Typography | Spacing rhythm | Colour restraint | Originality | Mobile |
+| --------------------------------------------------------- | --------- | ---------- | -------------- | ---------------- | ----------- | ------ |
+| Home on launch day (no issue yet)                         | 9         | 9          | 8              | 9                | 9           | 8      |
+| All Issues, before the first issue                        | 9         | 9          | 8              | 9                | 8           | 9      |
+| Subject page with no articles                             | 8         | 9          | 8              | 9                | 8           | 8      |
+| Editor's Handbook (admin)                                 | 9         | 9          | 8              | 9                | 8           | 8      |
+| Public pages after the performance pass (reveals, weaves) | 9         | 9          | 8              | 9                | 9           | 8      |
+
+## Fixed during review
+
+| Issue found                                                                  | Score before | Fix                                                                   |
+| ---------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------- |
+| With no issue, "Read the current issue" led to an empty archive              | Hierarchy 6  | The hero leads with "Read the Call for Papers" until the first issue. |
+| A blank band on the home page where most-read and reviews would be           | Spacing 5    | The section is left out when it has nothing to show.                  |
+| Every subject tile said "0 articles"                                         | Typography 7 | Counts appear once there are articles.                                |
+| Empty archive said "No issues match… clear the filters" with useless filters | Hierarchy 6  | "The first issue is in preparation", with the Call for Papers link.   |
+| [TO CONFIRM] marks were 4.1:1 on ivory                                       | Colour 7     | A darker terracotta for small text (5.3:1).                           |
+| Reveal fades left text partly transparent while scrolling                    | Colour 7     | The reveal is a rise only; text is always at full contrast.           |

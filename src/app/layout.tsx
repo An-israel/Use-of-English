@@ -7,22 +7,24 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 // Self-hosted at build time by next/font (no requests to Google from browsers).
+// Only the Latin files are preloaded; Latin Extended and the other subsets are
+// still declared and download only on pages that use those characters.
 const fraunces = Fraunces({
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   variable: "--font-fraunces",
-  axes: ["opsz", "SOFT", "WONK"],
+  axes: ["opsz"],
   display: "swap",
 });
 
 const literata = Literata({
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   variable: "--font-literata",
   style: ["normal", "italic"],
   display: "swap",
 });
 
 const instrument = Instrument_Sans({
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   variable: "--font-instrument",
   display: "swap",
 });

@@ -7,6 +7,7 @@ import { getViewer } from "@/lib/auth";
 import { kickJobs } from "@/lib/jobs/kick";
 import { adminClient, userClient } from "@/lib/supabase/clients";
 import { MAX_FILE_BYTES, PDF, DOCX, RECOMMENDATION_LABEL, safeFileName } from "@/lib/submission";
+import { Id, INVALID, StoragePath, UploadFile, validArgs } from "@/lib/validation";
 
 /**
  * The reviewer's side of peer review. RLS and the guard_review_update trigger
@@ -27,6 +28,7 @@ async function ownAssignment(id: string) {
 }
 
 export async function respondToInvitation(id: string, accept: boolean): Promise<ActionResult> {
+  if (!validArgs(z.tuple([Id, z.boolean()]), [id, accept])) return INVALID;
   const own = await ownAssignment(id);
   if (!own) return { ok: false, message: "This review request isn’t yours." };
   if (own.a.status !== "invited") return { ok: false, message: "You have already responded to this request." };
@@ -91,6 +93,7 @@ export async function requestReportUpload(
   id: string,
   file: { name: string; size: number; type: string },
 ): Promise<{ ok: true; path: string; token: string } | { ok: false; message: string }> {
+  if (!validArgs(z.tuple([Id, UploadFile]), [id, file])) return INVALID;
   const own = await ownAssignment(id);
   if (!own || own.a.status !== "accepted") return { ok: false, message: "You can upload a report while reviewing." };
   if (!REPORT_TYPES.includes(file.type)) return { ok: false, message: "Upload a PDF or Word (.docx) file." };
@@ -113,6 +116,7 @@ export async function requestReportUpload(
 }
 
 export async function registerReport(id: string, path: string, originalName: string): Promise<ActionResult> {
+  if (!validArgs(z.tuple([Id, StoragePath, z.string().max(255)]), [id, path, originalName])) return INVALID;
   const own = await ownAssignment(id);
   if (!own || own.a.status !== "accepted") return { ok: false, message: "You can upload a report while reviewing." };
   if (!path.startsWith(`${own.a.submission_id}/review_report/v`))

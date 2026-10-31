@@ -17,6 +17,8 @@ import {
   safeFileName,
   type UploadKind,
 } from "@/lib/submission";
+import { z } from "zod";
+import { Id, INVALID, StoragePath, UploadFile, UploadKindSchema, validArgs } from "@/lib/validation";
 
 type Result = { ok: true; message?: string } | { ok: false; message: string; fieldErrors?: Record<string, string> };
 
@@ -41,7 +43,9 @@ export async function createDraft(form: FormData) {
   const limit = await rateLimit({ headers: await headers() }, RATE_LIMITS.submission, `submission:${viewer.id}`);
   if (!limit.allowed) redirect("/submit?limited=1");
 
-  const key = String(form.get("idempotencyKey") ?? "");
+  const parsed = z.string().min(8).max(100).safeParse(form.get("idempotencyKey"));
+  if (!parsed.success) redirect("/submit");
+  const key = parsed.data;
   const supabase = await userClient();
   const { data: existing } = await supabase.from("submissions").select("id").eq("idempotency_key", key).maybeSingle();
   if (existing) redirect(`/submit/${existing.id}`);
@@ -143,6 +147,7 @@ export async function requestUpload(
   kind: UploadKind,
   file: { name: string; size: number; type: string },
 ): Promise<{ ok: true; path: string; token: string } | { ok: false; message: string }> {
+  if (!validArgs(z.tuple([Id, UploadKindSchema, UploadFile]), [id, kind, file])) return INVALID;
   const own = await ownDraft(id);
   if ("error" in own) return { ok: false, message: own.error!.message ?? "Not allowed." };
   const spec = FILE_KINDS[kind];
@@ -176,6 +181,8 @@ export async function registerUpload(
   path: string,
   originalName: string,
 ): Promise<Result> {
+  if (!validArgs(z.tuple([Id, UploadKindSchema, StoragePath, z.string().max(255)]), [id, kind, path, originalName]))
+    return INVALID;
   const own = await ownDraft(id);
   if ("error" in own) return own.error!;
   if (!path.startsWith(`${id}/${kind}/v`)) return fail("Unexpected file path.");
@@ -207,6 +214,7 @@ export async function registerUpload(
 }
 
 export async function saveDeclarations(id: string, checked: string[]): Promise<Result> {
+  if (!validArgs(z.tuple([Id, z.array(z.string().max(60)).max(20)]), [id, checked])) return INVALID;
   const own = await ownDraft(id);
   if ("error" in own) return own.error!;
   const keys: string[] = DECLARATIONS.map(([k]) => k);
@@ -218,6 +226,7 @@ export async function saveDeclarations(id: string, checked: string[]): Promise<R
 
 /** Sends the draft. The database re-checks completeness and decides whether a fee is due. */
 export async function submitDraft(id: string): Promise<Result & { status?: string }> {
+  if (!validArgs(Id, id)) return INVALID;
   const viewer = await getViewer();
   if (!viewer) return fail("Your session has ended. Please sign in again.");
   const { data, error } = await (await userClient()).rpc("submit_submission", { p_submission: id });
@@ -228,6 +237,7 @@ export async function submitDraft(id: string): Promise<Result & { status?: strin
 
 /** Deletes an unsent draft and its files. */
 export async function discardDraft(form: FormData) {
+  if (!validArgs(z.object({ id: Id }), Object.fromEntries(form))) redirect("/submit");
   const id = String(form.get("id") ?? "");
   const own = await ownDraft(id);
   if ("error" in own) redirect("/submit");

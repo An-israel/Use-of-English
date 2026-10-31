@@ -7,6 +7,8 @@ import type { Article, ArticleSummary } from "@/lib/types";
 import { SectionHeading } from "./SectionHeading";
 
 export function MostReadAndReviews({ mostRead, reviews }: { mostRead: ArticleSummary[]; reviews: Article[] }) {
+  // Before the first issue there is nothing to list: leave no empty band.
+  if (!mostRead.length && !reviews.length) return null;
   return (
     <section className="max-w-page mx-auto grid grid-cols-12 gap-x-6 gap-y-20 px-4 py-20 sm:px-6 lg:px-10 lg:py-32">
       {mostRead.length > 0 && (

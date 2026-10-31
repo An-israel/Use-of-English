@@ -9,9 +9,18 @@ import { withTimeout } from "@/lib/resilience";
 
 const DB_TIMEOUT_MS = 8_000;
 
-/** fetch with an explicit timeout for every Supabase call (item 11). */
+/**
+ * fetch with an explicit timeout for every Supabase call (item 11). Never kept
+ * in Next's fetch cache: caching happens in the tagged `use cache` reads in
+ * lib/data, so publishing (or deleting) is visible as soon as those tags
+ * expire. Untagged fetch-cache copies outlived tag invalidation and builds.
+ */
 const timedFetch: typeof fetch = (input, init) =>
-  withTimeout((signal) => fetch(input, { ...init, signal }), DB_TIMEOUT_MS, init?.signal ?? undefined);
+  withTimeout(
+    (signal) => fetch(input, { ...init, cache: "no-store", signal }),
+    DB_TIMEOUT_MS,
+    init?.signal ?? undefined,
+  );
 
 function requirePublic() {
   const url = publicEnv.NEXT_PUBLIC_SUPABASE_URL;

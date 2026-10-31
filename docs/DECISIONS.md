@@ -101,3 +101,12 @@ Answers given before Milestone 1, plus changes to the brief's data model and why
 - **An outage is not "signed out".** If the profile can't be read, the admin shows "The editorial office can't reach the database" instead of redirecting to the login page.
 - **Production costs about $45 a month** (Vercel Pro and Supabase Pro), because Vercel's free plan is for non-commercial use and Supabase's free projects pause and have no backups. The free tiers are fine until launch. Details in `docs/ENGINEERING.md`.
 - **The public API is read-only and versioned** (`/api/v1`, `X-API-Version: 1`), returns only published content and is open to any origin.
+
+## Milestone 10: polish and launch
+
+- **Scroll reveals are CSS, not Framer Motion.** The brief names Framer Motion for small animations, but its reveal kept content invisible until JavaScript loaded. That was the largest cost to LCP on 4G (5.0 s down to about 3 s from this change alone). A CSS scroll-driven animation gives the same rise with no JavaScript, and it does nothing where unsupported or when reduced motion is preferred. Motion had no other use, so the package was removed. The hero's thread-drawing animation stays as the brief asks.
+- **Decorative weaves are cached files, drawn as masks.** Inline SVG was sent twice per page (in the HTML and in React's payload). Each colour is now a rectangle masked by an immutable SVG file, so themes still apply and the paths download once.
+- **Lighthouse is measured over HTTP/2.** The default simulation treats the local HTTP/1.1 server far more harshly than Vercel's CDN, so the recorded figures use a local HTTP/2 + Brotli proxy, with applied-throttling runs as a cross-check. The real check is PageSpeed Insights on the production domain at launch.
+- **Validation is enforced by a test, not a convention.** `tests/unit/server-actions.test.ts` fails if any server action skips zod or a caller check, so new actions can't drift.
+- **Supabase reads are never fetch-cached.** Caching lives in the tagged `use cache` reads only, so publishing, deleting and builds always see current data.
+- **Launch-day content.** The site is designed to look complete with no issue published: the Call for Papers leads, and empty pages explain what will appear.

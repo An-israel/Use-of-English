@@ -1,6 +1,6 @@
 import { useId, type CSSProperties } from "react";
 import clsx from "clsx";
-import { diamondPath, weaveGeometry } from "@/lib/weave";
+import { diamondPath, weaveGeometry, weaveMaskFile } from "@/lib/weave";
 
 const DENSITY = { loose: 72, regular: 48, dense: 28 } as const;
 
@@ -23,6 +23,8 @@ export type WeaveProps = {
   className?: string;
   /** Fade the pattern out towards an edge */
   fade?: "none" | "bottom" | "left" | "right" | "radial";
+  /** Draw the paths inline (for OG images); otherwise static weaves use cached mask files */
+  inline?: boolean;
 };
 
 /**
@@ -41,8 +43,50 @@ export function Weave({
   seed = 7,
   className,
   fade = "none",
+  inline = false,
 }: WeaveProps) {
   const uid = useId().replace(/:/g, "");
+  if (!animate && !inline) {
+    // Each colour is a plain rectangle masked by a cached file of its threads, so the page doesn't carry
+    // hundreds of paths twice (HTML and React payload) and colours still follow the theme.
+    const fadeId = `wf-${uid}`;
+    return (
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        className={clsx("pointer-events-none select-none", className)}
+        viewBox={`0 0 ${width} ${height}`}
+        preserveAspectRatio="xMidYMid slice"
+        style={{ opacity }}
+      >
+        <defs>
+          {fade !== "none" && (
+            <>
+              <FadeGradient id={`${fadeId}-g`} fade={fade} />
+              <mask id={fadeId} maskUnits="userSpaceOnUse" x="0" y="0" width={width} height={height}>
+                <rect width={width} height={height} fill={`url(#${fadeId}-g)`} />
+              </mask>
+            </>
+          )}
+          {colours.map((_, ci) => (
+            <mask key={ci} id={`${fadeId}-${ci}`} maskUnits="userSpaceOnUse" x="0" y="0" width={width} height={height}>
+              <image
+                href={`/weave/${weaveMaskFile({ width, height, cell: DENSITY[density], colours: colours.length, lozenges, strokeWidth, seed, colour: ci })}`}
+                width={width}
+                height={height}
+              />
+            </mask>
+          ))}
+        </defs>
+        <g mask={fade !== "none" ? `url(#${fadeId})` : undefined}>
+          {colours.map((colour, ci) => (
+            <rect key={ci} width={width} height={height} fill={colour} mask={`url(#${fadeId}-${ci})`} />
+          ))}
+        </g>
+      </svg>
+    );
+  }
+
   const geo = weaveGeometry({
     width,
     height,

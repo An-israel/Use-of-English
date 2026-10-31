@@ -111,6 +111,7 @@ test("an author submits a manuscript and pays the review fee", async ({ page }) 
   await page.getByRole("button", { name: "Save and continue" }).click();
 
   // Step 4: declarations
+  await expect(page.getByRole("heading", { name: "Declarations" })).toBeVisible();
   for (const box of await page.getByRole("checkbox").all()) await box.check();
   await page.getByRole("button", { name: "Save and continue" }).click();
 

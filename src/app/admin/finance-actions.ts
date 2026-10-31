@@ -5,6 +5,7 @@ import { z } from "zod";
 import { dbMessage, staff, type ActionResult } from "@/lib/admin/server";
 import { kickJobs } from "@/lib/jobs/kick";
 import { runReconciliation } from "@/lib/payments/reconcile-run";
+import { fields, Id, INVALID, validArgs } from "@/lib/validation";
 
 /**
  * Finance Officer and Super Admin actions. Refunds are recorded, not sent:
@@ -45,6 +46,7 @@ export async function recordRefund(form: FormData): Promise<ActionResult> {
 }
 
 export async function resolveFlag(form: FormData): Promise<ActionResult> {
+  if (!validArgs(z.object({ id: Id, note: z.string().max(4000).optional() }), fields(form))) return INVALID;
   const s = await staff([...FINANCE]);
   if (!s) return notFinance;
   const id = String(form.get("id") ?? "");
@@ -63,6 +65,8 @@ export async function resolveFlag(form: FormData): Promise<ActionResult> {
 }
 
 export async function reconcileNow(form: FormData): Promise<ActionResult> {
+  if (!validArgs(z.object({ date: z.iso.date() }), fields(form)))
+    return { ok: false, message: "Choose a date to check." };
   const s = await staff([...FINANCE]);
   if (!s) return notFinance;
   const date = String(form.get("date") ?? "");
@@ -91,6 +95,7 @@ export async function reconcileNow(form: FormData): Promise<ActionResult> {
  * Paystack now and apply it exactly as the webhook would (idempotent).
  */
 export async function recheckPayment(paymentId: string): Promise<ActionResult> {
+  if (!validArgs(Id, paymentId)) return INVALID;
   const s = await staff([...FINANCE]);
   if (!s) return notFinance;
   const { data: p } = await s.db.from("payments").select("reference, status").eq("id", paymentId).maybeSingle();

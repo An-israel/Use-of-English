@@ -21,11 +21,15 @@ import { issueLabel, issueLabelShort, issuePath, pageRange } from "@/lib/issues"
 import { sanitizeWithToc } from "@/lib/sanitize";
 import type { Citable } from "@/lib/citations";
 import { ARTICLE_TYPE_LABEL, type Article, type SiteSettings } from "@/lib/types";
+import { atLeastOne } from "@/lib/static-params";
 
 type Params = { slug: string };
 
 export async function generateStaticParams(): Promise<Params[]> {
-  return (await getArticles()).map((a) => ({ slug: a.slug }));
+  return atLeastOne(
+    (await getArticles()).map((a) => ({ slug: a.slug })),
+    { slug: "none" },
+  );
 }
 
 function citable(a: Article, s: SiteSettings): Citable {

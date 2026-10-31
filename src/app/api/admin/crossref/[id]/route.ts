@@ -4,6 +4,7 @@ import { crossrefDeposit, suggestDoi } from "@/lib/crossref";
 import { getSettings } from "@/lib/data";
 import { siteUrl } from "@/lib/env";
 import { userClient } from "@/lib/supabase/clients";
+import { Id } from "@/lib/validation";
 
 /**
  * Crossref deposit XML for one issue (editors). Articles without a DOI get
@@ -15,6 +16,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   if (!viewer || !["super_admin", "editor"].includes(viewer.role))
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   const { id } = await params;
+  if (!Id.safeParse(id).success) return NextResponse.json({ error: "not_found" }, { status: 404 });
   const settings = await getSettings();
   if (!settings.doiPrefix)
     return NextResponse.json(

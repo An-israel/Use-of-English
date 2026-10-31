@@ -1,17 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import clsx from "clsx";
-import { IssueCover } from "@/components/weave/IssueCover";
 import { EmptyState } from "@/components/journal/EmptyState";
 import { issueLabelShort, issuePath, monthName } from "@/lib/issues";
 import type { Category, IssueSummary } from "@/lib/types";
 
 export type ArchiveIssue = IssueSummary & { articleCount: number; categories: string[] };
 
-/** All issues by year, with a filter bar and a sticky year index on desktop. */
-export function ArchiveBrowser({ issues, categories }: { issues: ArchiveIssue[]; categories: Category[] }) {
+/**
+ * All issues by year, with a filter bar and a sticky year index on desktop.
+ * Covers arrive already rendered on the server (`covers`, by issue id), so the
+ * browser never recomputes the weave geometry while hydrating.
+ */
+export function ArchiveBrowser({
+  issues,
+  categories,
+  covers,
+}: {
+  issues: ArchiveIssue[];
+  categories: Category[];
+  covers: Record<string, ReactNode>;
+}) {
   const [year, setYear] = useState<number | "all">("all");
   const [category, setCategory] = useState<string>("all");
   const years = useMemo(() => [...new Set(issues.map((i) => i.year))].sort((a, b) => b - a), [issues]);
@@ -27,6 +38,20 @@ export function ArchiveBrowser({ issues, categories }: { issues: ArchiveIssue[];
     .filter((g) => g.issues.length);
 
   const select = "rounded-sm border border-rule bg-surface px-3 py-2.5 text-[0.92rem] text-fg";
+
+  // Before the first issue: no filters, just where the first issue will come from.
+  if (!issues.length)
+    return (
+      <div className="max-w-page mx-auto px-4 py-12 sm:px-6 lg:px-10 lg:py-16">
+        <EmptyState title="The first issue is in preparation">
+          Every issue will be listed here as it is published. Submissions for the first issue are open: read the{" "}
+          <Link href="/call-for-papers" className="text-brand decoration-thread underline underline-offset-4">
+            Call for Papers
+          </Link>
+          .
+        </EmptyState>
+      </div>
+    );
 
   return (
     <div className="max-w-page mx-auto grid grid-cols-12 gap-x-6 px-4 py-12 sm:px-6 lg:px-10 lg:py-16">
@@ -102,14 +127,7 @@ export function ArchiveBrowser({ issues, categories }: { issues: ArchiveIssue[];
               {g.issues.map((i) => (
                 <li key={i.id}>
                   <Link href={issuePath(i)} className="group block">
-                    <IssueCover
-                      volume={i.volume}
-                      issue={i.number}
-                      month={i.month}
-                      year={i.year}
-                      coverUrl={i.coverUrl}
-                      className="ease-weave shadow-[0_18px_30px_-22px_rgb(21_19_15/0.7)] transition-transform duration-300 group-hover:-translate-y-0.5"
-                    />
+                    {covers[i.id]}
                     <span className="font-display group-hover:decoration-thread mt-4 block text-[1.15rem] group-hover:underline group-hover:underline-offset-4">
                       Issue {i.number} · {monthName(i.month)}
                     </span>

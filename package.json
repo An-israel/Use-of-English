@@ -1,6 +1,6 @@
 {
   "name": "jhts",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -13,14 +13,16 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "seed:generate": "tsx scripts/generate-seed.ts",
-    "samples:delete": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f scripts/db/delete-samples.sql",
+    "samples:delete": "tsx scripts/delete-samples.mts",
     "db:test": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -o /dev/null -f supabase/tests/rls_smoke.sql",
     "screenshots": "node scripts/screenshots.mjs",
-    "admin:create": "tsx scripts/create-super-admin.ts",
+    "admin:create": "tsx scripts/create-super-admin.mts",
     "predev": "node scripts/copy-pdf-worker.mjs",
     "prebuild": "node scripts/copy-pdf-worker.mjs",
     "db:rollback-test": "scripts/test-rollbacks.sh",
-    "db:restore-drill": "scripts/restore-test.sh"
+    "db:restore-drill": "scripts/restore-test.sh",
+    "handbook:generate": "tsx scripts/generate-handbook.ts",
+    "launch:check": "tsx scripts/launch-check.mts"
   },
   "dependencies": {
     "@opentelemetry/api": "^1.9.1",
@@ -38,7 +40,6 @@
     "@vercel/otel": "^2.2.0",
     "@vercel/speed-insights": "^2.0.0",
     "clsx": "^2.1.1",
-    "motion": "^14.8.0",
     "next": "16.4.3",
     "pino": "^10.4.0",
     "react": "19.3.0",
@@ -50,6 +51,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "1.63.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^22.20.5",

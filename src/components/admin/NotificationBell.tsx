@@ -64,6 +64,7 @@ export function NotificationBell() {
     };
   }, [load, toast]);
 
+  const badge = unread > 99 ? "99+" : String(unread);
   return (
     <Dialog.Root
       onOpenChange={(open) => {
@@ -77,7 +78,7 @@ export function NotificationBell() {
         <button
           type="button"
           className="text-muted hover:text-fg relative rounded-sm p-2"
-          aria-label={unread ? `Notifications, ${unread} new` : "Notifications"}
+          aria-label={unread ? `Notifications, ${badge} new` : "Notifications"}
           title={
             live === "live"
               ? "Notifications (live)"
@@ -99,8 +100,11 @@ export function NotificationBell() {
             <path d="M10 20a2.2 2.2 0 0 0 4 0" strokeLinecap="round" />
           </svg>
           {unread > 0 && (
-            <span className="bg-accent text-paper tabular absolute -top-0.5 -right-0.5 min-w-4 rounded-full px-1 text-center text-[0.62rem] leading-4">
-              {unread > 9 ? "9+" : unread}
+            <span
+              aria-hidden="true"
+              className="bg-accent text-bg tabular absolute -top-0.5 -right-0.5 min-w-4 rounded-full px-1 text-center text-[0.62rem] leading-4"
+            >
+              {badge}
             </span>
           )}
         </button>

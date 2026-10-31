@@ -199,3 +199,121 @@ export function coverDesign(volume: number, issue: number): CoverDesign {
     bandY: 0.62 + rand() * 0.06,
   };
 }
+
+/* ------------------------------------------------------------------ */
+/* Cover lattice as a standalone SVG file                              */
+/* ------------------------------------------------------------------ */
+
+export const COVER_W = 600;
+export const COVER_H = 800;
+/** Bump when the lattice design changes, so cached files are replaced. */
+export const COVER_LATTICE_VERSION = 1;
+
+/** Path of the cached lattice file for a cover (served by app/covers/[file]). */
+export const coverLatticePath = (volume: number, issue: number, month: number) =>
+  `/covers/lattice-v${COVER_LATTICE_VERSION}-${volume}-${issue}-${month}.svg`;
+
+/**
+ * The cover's woven lattice (hundreds of paths) as an SVG document. Covers
+ * reference it as an image instead of inlining it, so pages stay small, the
+ * browser caches it, and the cover's lettering still uses the site's fonts.
+ */
+export function coverLatticeSvg(volume: number, issue: number, month: number): string {
+  const season = seasonFor(month);
+  const design = coverDesign(volume, issue);
+  const geo = weaveGeometry({
+    width: COVER_W,
+    height: COVER_H,
+    cell: design.cell,
+    colours: 2,
+    lozengeDensity: 0.08,
+    seed: design.seed,
+  });
+  const colours = [season.thread, season.accent];
+  const groups = colours
+    .map(
+      (c, ci) =>
+        `<g stroke="${c}" opacity="${ci === 0 ? 1 : 0.55}">${geo.lines
+          .filter((l) => l.colour === ci)
+          .map((l) => `<path d="${l.d}" stroke-dasharray="${l.dash}"/>`)
+          .join("")}</g>`,
+    )
+    .join("");
+  const lozenges = geo.lozenges
+    .map((z) => `<path d="${diamondPath(z.cx, z.cy, z.r)}" stroke="${season.accent}" opacity="0.7"/>`)
+    .join("");
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${COVER_W} ${COVER_H}" width="${COVER_W}" height="${COVER_H}"><g opacity="0.42" fill="none" stroke-width="1.25">${groups}${lozenges}</g></svg>`;
+}
+
+/* ------------------------------------------------------------------ */
+/* Static weaves as cached mask files                                  */
+/* ------------------------------------------------------------------ */
+
+export type WeaveMaskSpec = {
+  width: number;
+  height: number;
+  cell: number;
+  colours: number;
+  /** Lozenge density 0–1 */
+  lozenges: number;
+  strokeWidth: number;
+  seed: number;
+  /** Which colour's threads this file holds */
+  colour: number;
+};
+
+const MASK_FILE = /^w(\d{2,4})-h(\d{2,4})-c(\d{1,3})-n(\d)-l(\d{1,3})-s(\d{1,3})-r(\d{1,6})-k(\d)\.svg$/;
+
+/** File name for one colour layer of a static weave (served by app/weave/[file]). */
+export function weaveMaskFile(s: WeaveMaskSpec): string {
+  return `w${s.width}-h${s.height}-c${s.cell}-n${s.colours}-l${Math.round(s.lozenges * 100)}-s${Math.round(s.strokeWidth * 100)}-r${s.seed}-k${s.colour}.svg`;
+}
+
+/** Parse and bound-check a mask file name; null if it isn't one we'd generate. */
+export function parseWeaveMaskFile(file: string): WeaveMaskSpec | null {
+  const m = MASK_FILE.exec(file);
+  if (!m) return null;
+  const [width, height, cell, colours, loz, stroke, seed, colour] = m.slice(1).map(Number);
+  const ok =
+    width >= 100 &&
+    width <= 2400 &&
+    height >= 100 &&
+    height <= 2400 &&
+    cell >= 12 &&
+    cell <= 200 &&
+    colours >= 1 &&
+    colours <= 4 &&
+    colour < colours &&
+    loz <= 100 &&
+    stroke >= 25 &&
+    stroke <= 400;
+  return ok ? { width, height, cell, colours, lozenges: loz / 100, strokeWidth: stroke / 100, seed, colour } : null;
+}
+
+/**
+ * One colour's threads (and lozenges) of a weave, drawn in white as an SVG
+ * document for <Weave /> to use as a mask. The page paints the colour, so
+ * themes and CSS variables still apply, while the paths are fetched once and
+ * cached.
+ */
+export function weaveMaskSvg(s: WeaveMaskSpec): string {
+  const geo = weaveGeometry({
+    width: s.width,
+    height: s.height,
+    cell: s.cell,
+    colours: s.colours,
+    lozengeDensity: s.lozenges,
+    seed: s.seed,
+  });
+  const lines = geo.lines
+    .filter((l) => l.colour === s.colour)
+    .map((l) => `<path d="${l.d}" stroke-dasharray="${l.dash}"/>`)
+    .join("");
+  const lozenges = geo.lozenges
+    .filter((z) => z.colour === s.colour)
+    .flatMap((z) =>
+      Array.from({ length: z.rings }, (_, r) => `<path d="${diamondPath(z.cx, z.cy, z.r * (1 - r * 0.45))}"/>`),
+    )
+    .join("");
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${s.width} ${s.height}" width="${s.width}" height="${s.height}"><g fill="none" stroke="#fff" stroke-width="${s.strokeWidth}">${lines}${lozenges}</g></svg>`;
+}

@@ -52,6 +52,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin/system", label: "System", short: "Sys", group: "Office", roles: ["super_admin"] },
   { href: "/admin/audit", label: "Audit log", short: "Aud", group: "Office", roles: ["super_admin"] },
   { href: "/admin/settings", label: "Settings", short: "Set", group: "Office", roles: ["super_admin"] },
+  { href: "/admin/handbook", label: "Handbook", short: "?", group: "Office", roles: STAFF },
 ];
 
 const CREATE: (QuickAction & { roles: Role[] })[] = [

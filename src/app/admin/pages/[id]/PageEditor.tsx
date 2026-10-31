@@ -4,10 +4,12 @@ import { useState } from "react";
 import { ACheck, AdminForm, AField } from "@/components/admin/AdminForm";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { savePage } from "../../journal-actions";
+import { sanitize } from "@/lib/sanitize";
 
 /**
  * Page editor with a live preview in the site's reading style. The preview
- * shows the editor's own output; the server sanitises it again on save.
+ * is sanitised exactly as the public page will be, so pasted markup can't run
+ * script in the editor's session; the server sanitises it again on save.
  */
 export function PageEditor({
   id,
@@ -49,7 +51,7 @@ export function PageEditor({
           <div
             className="prose-jhts font-reading mt-6 text-[1.02rem] leading-relaxed"
             // The editor's own serialised output; sanitised on the server when saved.
-            dangerouslySetInnerHTML={{ __html: preview }}
+            dangerouslySetInnerHTML={{ __html: sanitize(preview) }}
           />
         </div>
       </section>

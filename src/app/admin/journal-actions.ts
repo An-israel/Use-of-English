@@ -15,6 +15,7 @@ import { TAGS } from "@/lib/data";
 import { sanitize } from "@/lib/sanitize";
 import { adminClient } from "@/lib/supabase/clients";
 import { FEATURE_FLAG_DESCRIPTIONS } from "@/content/journal";
+import { fields, Id, INVALID, validArgs } from "@/lib/validation";
 
 /**
  * The journal's own content: categories, the Call for Papers, pages and
@@ -68,6 +69,7 @@ export async function saveCategory(form: FormData): Promise<ActionResult> {
 }
 
 export async function archiveCategory(id: string, archived: boolean): Promise<ActionResult> {
+  if (!validArgs(z.tuple([Id, z.boolean()]), [id, archived])) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { error } = await s.db.from("categories").update({ is_archived: archived }).eq("id", id);
@@ -169,6 +171,7 @@ export async function savePage(form: FormData): Promise<ActionResult> {
 }
 
 export async function restorePageVersion(pageId: string, versionId: string): Promise<ActionResult> {
+  if (!validArgs(z.tuple([Id, Id]), [pageId, versionId])) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { data: v } = await s.db
@@ -187,6 +190,8 @@ export async function restorePageVersion(pageId: string, versionId: string): Pro
 }
 
 export async function createPage(form: FormData): Promise<ActionResult> {
+  if (!validArgs(z.object({ title: z.string().max(200), kind: z.enum(["page", "policy"]).optional() }), fields(form)))
+    return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const title = String(form.get("title") ?? "").trim();
@@ -269,6 +274,7 @@ export async function saveBoardMember(form: FormData): Promise<ActionResult> {
 }
 
 export async function removeBoardMember(id: string, restore = false): Promise<ActionResult> {
+  if (!validArgs(z.tuple([Id, z.boolean()]), [id, restore])) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { error } = await s.db
@@ -289,6 +295,7 @@ export async function markMessage(
   id: string,
   change: "read" | "unread" | "archive" | "unarchive",
 ): Promise<ActionResult> {
+  if (!validArgs(z.tuple([Id, z.enum(["read", "unread", "archive", "unarchive"])]), [id, change])) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const patch =
@@ -401,6 +408,7 @@ export async function saveSettings(form: FormData): Promise<ActionResult> {
 }
 
 export async function setFlag(key: string, enabled: boolean): Promise<ActionResult> {
+  if (!validArgs(z.tuple([z.string().max(60), z.boolean()]), [key, enabled])) return INVALID;
   const s = await staff(["super_admin"]);
   if (!s) return { ok: false, message: "Only a Super Admin can change feature flags." };
   if (!(key in FEATURE_FLAG_DESCRIPTIONS)) return { ok: false, message: "Unknown flag." };

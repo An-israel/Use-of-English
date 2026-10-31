@@ -14,6 +14,7 @@ import {
 import { TAGS } from "@/lib/data";
 import { withDbRetry } from "@/lib/resilience";
 import { sanitize } from "@/lib/sanitize";
+import { fields, Id, INVALID, validArgs } from "@/lib/validation";
 
 /**
  * Issues: create the next quarterly issue, edit the editorial, order the
@@ -27,6 +28,7 @@ const done = (message: string, id?: string): ActionResult => {
 };
 
 export async function createNextIssue(year?: number): Promise<ActionResult> {
+  if (!validArgs(z.number().int().min(2026).max(2200).optional(), year)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { data, error } = await s.db.rpc("create_next_issue", { p_year: year ?? null });
@@ -36,6 +38,8 @@ export async function createNextIssue(year?: number): Promise<ActionResult> {
 }
 
 export async function createVolumeYear(form: FormData): Promise<ActionResult> {
+  if (!validArgs(z.object({ year: z.coerce.number().int().min(2026).max(2200) }), fields(form)))
+    return { ok: false, message: "Enter a year such as 2028." };
   const year = Number(form.get("year"));
   if (!Number.isInteger(year) || year < 2026 || year > 2200)
     return { ok: false, message: "Enter a year such as 2028." };
@@ -65,6 +69,7 @@ export async function saveIssue(form: FormData): Promise<ActionResult> {
 }
 
 export async function publishIssue(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { error } = await withDbRetry(() => s.db.rpc("publish_issue", { p_issue: id }));
@@ -73,6 +78,7 @@ export async function publishIssue(id: string): Promise<ActionResult> {
 }
 
 export async function unpublishIssue(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { error } = await s.db.rpc("unpublish_issue", { p_issue: id });
@@ -97,6 +103,7 @@ export async function scheduleIssue(form: FormData): Promise<ActionResult> {
 }
 
 export async function unscheduleIssue(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { error } = await s.db
@@ -109,6 +116,7 @@ export async function unscheduleIssue(id: string): Promise<ActionResult> {
 }
 
 export async function deleteIssue(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { count } = await s.db
@@ -127,6 +135,7 @@ export async function deleteIssue(id: string): Promise<ActionResult> {
 }
 
 export async function restoreIssue(id: string): Promise<ActionResult> {
+  if (!validArgs(Id, id)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { error } = await s.db.from("issues").update({ deleted_at: null }).eq("id", id);
@@ -150,6 +159,7 @@ export async function reorderArticles(ids: string[]): Promise<ActionResult> {
  * Press stays online until the issue appears.
  */
 export async function assignToIssue(articleId: string, issueId: string | null): Promise<ActionResult> {
+  if (!validArgs(z.tuple([Id, Id.nullable()]), [articleId, issueId])) return INVALID;
   const s = await staff(CONTENT_EDITORS);
   if (!s) return denied;
   const { data: a } = await s.db.from("articles").select("status").eq("id", articleId).maybeSingle();
@@ -182,6 +192,7 @@ export async function assignToIssue(articleId: string, issueId: string | null): 
 
 /** Give every article in the issue without a DOI the suggested one (Settings → DOI prefix). */
 export async function assignDois(issueId: string): Promise<ActionResult> {
+  if (!validArgs(Id, issueId)) return INVALID;
   const s = await staff(EDITORS);
   if (!s) return denied;
   const { getSettings } = await import("@/lib/data");
