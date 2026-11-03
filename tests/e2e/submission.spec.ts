@@ -134,6 +134,26 @@ test("an author submits a manuscript and pays the review fee", async ({ page }) 
   await waitFor(async () => {
     await page.reload();
     return (await page.getByRole("link", { name: /Receipt JHTS-R-/ }).count()) > 0;
+  }).catch(async (err) => {
+    // Say which step is missing: the receipt row, the job, or the page.
+    const subId = submissionUrl.split("/").pop()!;
+    const { data: pays } = await sb()
+      .from("payments")
+      .select("status, receipt_number, receipt_path, updated_at")
+      .eq("submission_id", subId);
+    const { data: jobs } = await sb()
+      .from("jobs")
+      .select("kind, status, attempts, last_error, priority")
+      .like("dedupe_key", "receipt%")
+      .order("id", { ascending: false })
+      .limit(3);
+    const shown = await page
+      .getByRole("region", { name: "Payments and receipts" })
+      .innerText()
+      .catch(() => "(no payments section)");
+    throw new Error(
+      `${(err as Error).message}\npayments: ${JSON.stringify(pays)}\nreceipt jobs: ${JSON.stringify(jobs)}\npage: ${shown}\nurl: ${page.url()}`,
+    );
   });
   const receipt = await page.request.get(
     await page
