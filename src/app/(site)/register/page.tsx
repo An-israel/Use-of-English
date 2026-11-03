@@ -32,7 +32,7 @@ async function Register({ searchParams }: { searchParams: Promise<Record<string,
             "Follow screening, review and decisions from your dashboard",
           ].map((s, i) => (
             <li key={s} className="flex gap-4">
-              <span className="tabular font-display text-[1.4rem] text-[#C8962E]">0{i + 1}</span>
+              <span className="tabular font-display text-[1.4rem] text-[#E1B521]">0{i + 1}</span>
               <span className="pt-1 text-[1.05rem] leading-snug">{s}</span>
             </li>
           ))}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Emblem } from "@/components/brand/Emblem";
 import { Weave } from "@/components/weave/Weave";
 import { ArrowRightIcon } from "@/components/ui/icons";
 import { formatDate } from "@/lib/format";
@@ -25,7 +26,7 @@ export function Hero({ settings, cfp, current, submissionsOpen }: Props) {
         strokeWidth={1.1}
         className="absolute inset-y-0 right-0 -z-10 h-full w-full md:w-[78%]"
       />
-      <div className="max-w-page mx-auto grid grid-cols-12 gap-x-6 px-4 pt-14 pb-20 sm:px-6 md:pt-20 md:pb-28 lg:px-10 lg:pt-28 lg:pb-36">
+      <div className="max-w-page relative mx-auto grid grid-cols-12 gap-x-6 px-4 pt-14 pb-20 sm:px-6 md:pt-20 md:pb-28 lg:px-10 lg:pt-28 lg:pb-36">
         <div className="col-span-12 lg:col-span-9">
           <p className="smallcaps text-muted text-[0.85rem]">
             Est. {settings.foundedYear} · {settings.publisherShort}
@@ -36,6 +37,11 @@ export function Hero({ settings, cfp, current, submissionsOpen }: Props) {
           >
             Journal of Humanities <span className="text-brand pr-[0.06em] italic">and</span> Transcultural Studies
           </h1>
+          {settings.motto && (
+            <p className="smallcaps text-thread-text mt-6 text-[0.9rem] tracking-[0.14em] xl:hidden">
+              {settings.motto}
+            </p>
+          )}
           <p className="font-reading text-muted mt-8 max-w-[34rem] text-[1.2rem] leading-relaxed md:text-[1.3rem]">
             {settings.tagline}.
           </p>
@@ -67,6 +73,17 @@ export function Hero({ settings, cfp, current, submissionsOpen }: Props) {
             </p>
           )}
         </div>
+        {/* The emblem: a carved mask between the leaves of an open book, under a rising quill. */}
+        <figure className="pointer-events-none absolute top-1/2 right-10 hidden -translate-y-1/2 flex-col items-center xl:flex">
+          <div className="bg-bg/70 rounded-full p-3 shadow-[0_30px_60px_-30px_rgb(20_69_47/0.45)] backdrop-blur-[2px]">
+            <Emblem title="" className="size-[17rem]" />
+          </div>
+          {settings.motto && (
+            <figcaption className="smallcaps text-thread-text mt-6 text-[0.85rem] tracking-[0.16em]">
+              {settings.motto}
+            </figcaption>
+          )}
+        </figure>
       </div>
     </section>
   );

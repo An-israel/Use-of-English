@@ -101,6 +101,10 @@ Refunds are made in Paystack and then recorded on the website, so the journal’
 - [Messages](https://jhts.unn.edu.ng/admin/messages): the contact form inbox. Mark messages read and archive them once answered.
 - [Book reviews](https://jhts.unn.edu.ng/admin/book-reviews): reviews with the book’s details and cover.
 - [Users](https://jhts.unn.edu.ng/admin/users): **Invite someone** to join as an editor, reviewer or finance officer. Authors register themselves.
+- [Email previews](https://jhts.unn.edu.ng/admin/emails): every email the site sends (receipts, decisions, reviewer invitations and reminders), shown with example details, so you can see what authors and reviewers receive.
+- [Settings](https://jhts.unn.edu.ng/admin/settings): the motto and the **Enquiry contacts** (one per line: Name | Role | Phone) shown on the Contact page.
+
+Authors and reviewers can download their data or delete their account from **My account → Your data**. Their drafts are deleted; submitted manuscripts, reviews and payments stay, with the name and contact details removed. To close a staff account, a Super Admin deactivates it in [Users](https://jhts.unn.edu.ng/admin/users).
 
 Text marked **[TO CONFIRM]** on the public site is waiting for the committee’s wording. Replace it in Pages or Settings before launch.
 

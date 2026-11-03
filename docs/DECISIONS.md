@@ -91,7 +91,7 @@ Answers given before Milestone 1, plus changes to the brief's data model and why
 - **Chart colours were validated** with the dataviz checks (lightness band, chroma, colour-blind separation, contrast) in light and dark. Views and downloads also differ by mark shape (line and columns), with a legend, an end label and a table view, so colour is never the only cue.
 - **Crossref is export-only** until JHTS is a member: DOIs follow `prefix/jhts.YEAR.VOL.ISSUE.NN` in contents order; "Assign DOIs" writes them to articles that lack one.
 - **OAI-PMH** offers `oai_dc` only, no sets, day granularity and resumption tokens of 100 records; it returns 404 while the flag is off.
-- **Open Graph images** use the OFL-licensed Fraunces and Instrument Sans files in `assets/fonts` (licences included), read from disk as the Next.js documentation shows.
+- **Open Graph images** use the OFL-licensed Playfair Display and Source Sans 3 files in `assets/fonts` (licences included), read from disk as the Next.js documentation shows.
 
 ## Milestone 9: reliability and operations
 
@@ -110,3 +110,12 @@ Answers given before Milestone 1, plus changes to the brief's data model and why
 - **Validation is enforced by a test, not a convention.** `tests/unit/server-actions.test.ts` fails if any server action skips zod or a caller check, so new actions can't drift.
 - **Supabase reads are never fetch-cached.** Caching lives in the tagged `use cache` reads only, so publishing, deleting and builds always see current data.
 - **Launch-day content.** The site is designed to look complete with no issue published: the Call for Papers leads, and empty pages explain what will appear.
+
+## Version 1.1 (audit follow-up)
+
+- **Real 404s from the proxy.** Content pages stream, so by the time a page finds an item missing the 200 status has been sent. Following the Next.js guidance, `src/proxy.ts` asks `src/lib/route-exists.ts` first: one PostgREST request with the public key, a ten-minute memory of items that exist, and "fail open" if the database can't be reached.
+- **Queue priority.** Jobs have a `priority`; payment events and receipts are claimed first, and the webhook drains the queue for up to 20 seconds, so a receipt never waits for the next cron run.
+- **Retention.** `prune_housekeeping()` (service role only) runs in the daily maintenance; it never touches payments, refunds, submissions, reviews, files, the audit log or dead-letter jobs.
+- **Account deletion.** Authors and reviewers delete their own account. With nothing to keep, the auth user is deleted (the profile follows). With submissions, reviews or payments, which must be kept, the profile is anonymised, the login email replaced and sign-in blocked. Staff accounts are closed by a Super Admin so the office is never left without one.
+- **Manuscript template.** Written as Office Open XML by `scripts/manuscript-template.mts` with a tiny zip writer, to avoid a new dependency for one static file.
+- **Category ids reused.** The flyer's nine areas reuse the eight launch ids where the meaning carries over; Literature and Translation fold into "Language, Literature and Linguistics". The migration only renames rows that still have their launch slug.

@@ -53,7 +53,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "code-switching-and-authority-in-nsukka-classrooms",
         type: "research_article",
-        category: "language-and-linguistics",
+        category: "education-and-pedagogy",
         title: "Code-Switching and Classroom Authority in Nsukka Secondary Schools",
         authors: [
           {
@@ -99,7 +99,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "the-weaver-and-the-word-akwete-cloth-in-igbo-poetry",
         type: "critical_review",
-        category: "literature-and-literary-studies",
+        category: "language-literature-and-linguistics",
         title: "The Weaver and the Word: Akwete Cloth as Metaphor in Modern Igbo Poetry",
         authors: [
           {
@@ -119,7 +119,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "translating-proverbs-loss-and-gain",
         type: "research_article",
-        category: "translation-studies",
+        category: "language-literature-and-linguistics",
         title: "Loss and Gain in Translating Igbo Proverbs into English",
         authors: [
           { name: "Emeka J. Nwosu", affiliation: dept("Department of Foreign Languages"), corresponding: true },
@@ -137,7 +137,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "radio-call-in-programmes-and-public-reason",
         type: "theoretical_paper",
-        category: "communication-and-media-studies",
+        category: "politics-governance-and-development",
         title: "Radio Call-In Programmes and the Making of Public Reason in Nigeria",
         authors: [
           { name: "Ibrahim K. Musa", affiliation: dept("Department of Mass Communication"), corresponding: true },
@@ -165,7 +165,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "oral-history-and-the-nigerian-civil-war-archive",
         type: "research_article",
-        category: "philosophy-history-and-the-arts",
+        category: "humanities-and-social-sciences",
         title: "Oral Testimony and the Nigerian Civil War Archive",
         authors: [
           {
@@ -185,7 +185,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "ubuntu-and-the-ethics-of-scholarly-collaboration",
         type: "theoretical_paper",
-        category: "philosophy-history-and-the-arts",
+        category: "philosophy-ethics-and-religion",
         title: "Ubuntu and the Ethics of Scholarly Collaboration",
         authors: [
           { name: "Samuel A. Okonkwo", affiliation: dept("Department of Philosophy"), corresponding: true },
@@ -202,7 +202,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "museum-labels-and-the-language-of-restitution",
         type: "research_article",
-        category: "cultural-and-transcultural-studies",
+        category: "culture-identity-and-transcultural-studies",
         title: "Museum Labels and the Language of Restitution",
         authors: [
           { name: "Kelechi Anyanwu", affiliation: dept("Department of Fine and Applied Arts"), corresponding: true },
@@ -218,7 +218,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "general-studies-english-and-student-voice",
         type: "research_article",
-        category: "education-and-society",
+        category: "education-and-pedagogy",
         title: "Student Voice in the General Studies English Classroom",
         authors: [
           { name: "Blessing C. Nnamdi", affiliation: dept("School of General Studies"), corresponding: true },
@@ -267,7 +267,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "the-novel-of-return-in-nigerian-diaspora-fiction",
         type: "critical_review",
-        category: "literature-and-literary-studies",
+        category: "culture-identity-and-transcultural-studies",
         title: "Coming Home Changed: The Novel of Return in Nigerian Diaspora Fiction",
         authors: [
           {
@@ -287,7 +287,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "reading-on-phones-among-undergraduates",
         type: "research_article",
-        category: "education-and-society",
+        category: "technology-innovation-and-digital-cultures",
         title: "Reading on Phones: Undergraduate Reading Habits in a Mobile Age",
         authors: [
           {
@@ -308,7 +308,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "review-of-languages-of-the-market",
         type: "book_review",
-        category: "language-and-linguistics",
+        category: "language-literature-and-linguistics",
         title: "Review of Languages of the Market: Trade Talk in West Africa",
         authors: [{ name: "Daniel O. Agu", affiliation: dept("Department of Linguistics"), corresponding: true }],
         abstract:
@@ -342,7 +342,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "masquerade-performance-and-the-urban-crowd",
         type: "research_article",
-        category: "cultural-and-transcultural-studies",
+        category: "culture-identity-and-transcultural-studies",
         title: "Masquerade Performance and the Urban Crowd",
         authors: [{ name: "Obinna T. Nweke", affiliation: dept("Department of Theatre Arts"), corresponding: true }],
         abstract:
@@ -356,7 +356,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "translating-the-sacred-bible-translation-in-igbo",
         type: "research_article",
-        category: "translation-studies",
+        category: "philosophy-ethics-and-religion",
         title: "Translating the Sacred: Key Terms in Igbo Bible Translation",
         authors: [
           {
@@ -377,7 +377,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "highlife-lyrics-and-the-poetics-of-advice",
         type: "critical_review",
-        category: "philosophy-history-and-the-arts",
+        category: "humanities-and-social-sciences",
         title: "Highlife Lyrics and the Poetics of Advice",
         authors: [{ name: "Ebuka Nnaji", affiliation: dept("Department of Music"), corresponding: true }],
         abstract:
@@ -391,7 +391,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "review-of-the-translators-house",
         type: "book_review",
-        category: "translation-studies",
+        category: "language-literature-and-linguistics",
         title: "Review of The Translator’s House: Essays on Language and Belonging",
         authors: [{ name: "Ruth A. Okoro", affiliation: dept("Department of Foreign Languages"), corresponding: true }],
         abstract:
@@ -425,7 +425,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "linguistic-landscape-of-enugu-signboards",
         type: "research_article",
-        category: "language-and-linguistics",
+        category: "language-literature-and-linguistics",
         title: "The Linguistic Landscape of Enugu: Signboards, Prestige and Play",
         authors: [
           {
@@ -447,7 +447,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "hashtags-and-the-grammar-of-protest",
         type: "research_article",
-        category: "communication-and-media-studies",
+        category: "technology-innovation-and-digital-cultures",
         title: "Hashtags and the Grammar of Protest",
         authors: [
           { name: "Zainab O. Lawal", affiliation: dept("Department of Mass Communication"), corresponding: true },
@@ -463,7 +463,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "multilingualism-in-the-national-assembly",
         type: "theoretical_paper",
-        category: "cultural-and-transcultural-studies",
+        category: "politics-governance-and-development",
         title: "Rethinking Multilingualism in the National Assembly",
         authors: [
           { name: "Oluwaseun T. Bakare", affiliation: dept("Department of Political Science"), corresponding: true },
@@ -479,7 +479,7 @@ export const sampleIssues: SampleIssue[] = [
       {
         slug: "review-of-writing-in-two-tongues",
         type: "book_review",
-        category: "literature-and-literary-studies",
+        category: "language-literature-and-linguistics",
         title: "Review of Writing in Two Tongues: Bilingual African Authors",
         authors: [
           {
@@ -527,7 +527,7 @@ export const sampleInPress: (SampleArticle & { onlineAt: string })[] = [
   {
     slug: "achebe-and-the-ethics-of-translation",
     type: "critical_review",
-    category: "literature-and-literary-studies",
+    category: "language-literature-and-linguistics",
     title: "Achebe’s English and the Ethics of Translation",
     authors: [
       { name: "Chukwudi E. Onu", affiliation: dept("Department of English and Literary Studies"), corresponding: true },
@@ -544,7 +544,7 @@ export const sampleInPress: (SampleArticle & { onlineAt: string })[] = [
   {
     slug: "indigenous-knowledge-in-the-humanities-curriculum",
     type: "theoretical_paper",
-    category: "education-and-society",
+    category: "interdisciplinary-and-applied-research",
     title: "Indigenous Knowledge in the Humanities Curriculum",
     authors: [{ name: "Ada U. Okwuosa", affiliation: dept("Department of Arts Education"), corresponding: true }],
     abstract:

@@ -1,6 +1,10 @@
+import { readdirSync } from "node:fs";
 import { createClient } from "@supabase/supabase-js";
 import { createHmac } from "node:crypto";
 import { expect, test, type Page } from "@playwright/test";
+
+// The System screen shows the newest migration applied.
+const latestMigration = readdirSync("supabase/migrations").sort().at(-1)!.split("_")[0];
 
 /**
  * Milestone 9: the System and audit screens, failed-job handling, live
@@ -89,7 +93,7 @@ test("the System screen: health, failed jobs (retry and discard), schema version
   await signIn(page, "admin");
   await page.goto("/admin/system");
   await expect(page.getByText("OK ·").first()).toBeVisible();
-  await expect(page.getByText(/20261030001800/)).toBeVisible();
+  await expect(page.getByText(new RegExp(latestMigration))).toBeVisible();
   const retryRow = page.getByRole("listitem").filter({ hasText: `simulated ${run}` });
   await retryRow.getByRole("button", { name: "Retry" }).click();
   await expect(page.getByText(/Job retried and completed|queued again/)).toBeVisible();

@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { seedFrom } from "@/lib/weave";
 import type { BookDetails } from "@/lib/types";
 
-const GROUNDS = ["#2D3561", "#0F3B2E", "#7A2F1D", "#5B3A63", "#15130F", "#2F5563"];
+const GROUNDS = ["#2D3561", "#14452F", "#7A2F1D", "#5B3A63", "#1C211D", "#2F5563"];
 
 /** The reviewed book's cover, or a typographic placeholder in a seeded colour. */
 export function BookCover({ book, className }: { book: BookDetails; className?: string }) {
@@ -21,16 +21,16 @@ export function BookCover({ book, className }: { book: BookDetails; className?: 
       role="img"
       aria-label={`Cover of ${book.bookTitle} by ${book.bookAuthor}`}
       className={clsx(
-        "relative flex aspect-[2/3] flex-col justify-between overflow-hidden p-[9%] text-[#F1E8D6]",
+        "relative flex aspect-[2/3] flex-col justify-between overflow-hidden p-[9%] text-[#FAF7EE]",
         className,
       )}
       style={{ backgroundColor: ground }}
     >
-      <span aria-hidden="true" className="absolute inset-y-0 left-[7%] w-px bg-[#C8962E]/60" />
+      <span aria-hidden="true" className="absolute inset-y-0 left-[7%] w-px bg-[#E1B521]/60" />
       <span className="font-display pl-[8%] text-[clamp(0.85rem,1.2vw,1.1rem)] leading-tight">{title}</span>
       <span className="pl-[8%]">
-        <span aria-hidden="true" className="mb-2 block size-2 rotate-45 bg-[#C8962E]" />
-        <span className="smallcaps block text-[0.68rem] text-[#F1E8D6]">{book.bookAuthor}</span>
+        <span aria-hidden="true" className="mb-2 block size-2 rotate-45 bg-[#E1B521]" />
+        <span className="smallcaps block text-[0.68rem] text-[#FAF7EE]">{book.bookAuthor}</span>
       </span>
     </div>
   );

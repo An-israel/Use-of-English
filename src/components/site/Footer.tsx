@@ -1,3 +1,4 @@
+import { Emblem } from "@/components/brand/Emblem";
 import Link from "next/link";
 import { cacheLife } from "next/cache";
 import { FEE_INTEGRITY_STATEMENT } from "@/content/journal";
@@ -30,29 +31,50 @@ export async function Footer() {
 
       <div className="max-w-page mx-auto grid grid-cols-1 gap-12 px-4 py-16 sm:px-6 md:grid-cols-12 lg:px-10 lg:py-20">
         <div className="md:col-span-5">
-          <h2 id="footer-title" className="font-display text-[2.4rem] leading-none font-semibold tracking-[-0.02em]">
-            {settings.shortName}
-          </h2>
-          <p className="font-display text-inverse-fg mt-3 max-w-[26rem] text-[1.15rem] leading-snug">
+          <div className="flex items-center gap-4">
+            <Emblem title="" wordmark={false} className="size-20 shrink-0" />
+            <div>
+              <h2 id="footer-title" className="font-display text-[2.4rem] leading-none font-extrabold">
+                {settings.shortName}
+              </h2>
+              <p className="smallcaps text-ochre mt-2 text-[0.8rem] tracking-[0.12em]">{settings.motto}</p>
+            </div>
+          </div>
+          <p className="font-display text-inverse-fg mt-5 max-w-[26rem] text-[1.15rem] leading-snug">
             {settings.journalName}
           </p>
           <p className="text-inverse-muted mt-5 max-w-[28rem] text-[0.92rem] leading-relaxed">{settings.publisher}</p>
           <dl className="mt-6 grid grid-cols-[auto_1fr] gap-x-5 gap-y-1.5 text-[0.9rem]">
             <dt className="smallcaps text-inverse-muted">ISSN</dt>
             <dd className="tabular">{settings.issn ?? "In process"}</dd>
-            <dt className="smallcaps text-inverse-muted">Email</dt>
-            <dd>
-              {emailIsPlaceholder ? (
-                <span>{email}</span>
-              ) : (
-                <a
-                  href={`mailto:${email}`}
-                  className="decoration-ochre/60 hover:decoration-ochre underline underline-offset-4"
-                >
-                  {email}
-                </a>
-              )}
-            </dd>
+            {emailIsPlaceholder ? (
+              <>
+                {/* No journal email yet: show the Editor-in-Chief's number from the flyer instead of a placeholder. */}
+                <dt className="smallcaps text-inverse-muted">Enquiries</dt>
+                <dd>
+                  <Link
+                    href="/contact"
+                    className="decoration-ochre/60 hover:decoration-ochre underline underline-offset-4"
+                  >
+                    {settings.enquiries[0]?.phone ?? "Contact the editorial office"}
+                  </Link>
+                </dd>
+              </>
+            ) : (
+              <>
+                <dt className="smallcaps text-inverse-muted">Email</dt>
+                <dd>
+                  {
+                    <a
+                      href={`mailto:${email}`}
+                      className="decoration-ochre/60 hover:decoration-ochre underline underline-offset-4"
+                    >
+                      {email}
+                    </a>
+                  }
+                </dd>
+              </>
+            )}
             <dt className="smallcaps text-inverse-muted">Published</dt>
             <dd>{settings.frequency.replace("Quarterly: ", "Quarterly · ")}</dd>
           </dl>

@@ -234,7 +234,7 @@ test("issues: create a volume, edit the editorial, schedule, preview", async ({ 
   await page.getByRole("button", { name: "Cancel the schedule" }).click();
   await expect(page.getByText("Schedule cancelled; the issue is a draft again.")).toBeVisible();
 
-  await page.getByRole("link", { name: "Preview" }).click();
+  await page.getByRole("link", { name: "Preview", exact: true }).click();
   await expect(page.getByRole("heading", { name: `Language and Belonging ${run}` })).toBeVisible();
   await expect(page.getByText("Welcome to this issue of the journal.")).toBeVisible();
 });

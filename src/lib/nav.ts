@@ -13,7 +13,7 @@ export const NAV: NavGroup[] = [
       {
         label: "Browse by Subject",
         href: "/subjects",
-        description: "Eight subject areas, from linguistics to education",
+        description: "Nine areas of interest, from the humanities to digital cultures",
       },
     ],
   },
@@ -43,6 +43,7 @@ export const NAV: NavGroup[] = [
         description: "Preparing and formatting your manuscript",
       },
       { label: "Fees and Payment", href: "/fees", description: "Two transparent fees and how to pay" },
+      { label: "Questions and Timeline", href: "/faq", description: "Common questions and how long review takes" },
       { label: "Submit a Manuscript", href: "/submit", description: "Start a new submission" },
       { label: "Track My Submission", href: "/account", description: "Follow your submission’s progress" },
     ],

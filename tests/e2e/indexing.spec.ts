@@ -1,3 +1,4 @@
+import { formatDate } from "@/lib/format";
 import { createClient } from "@supabase/supabase-js";
 import { expect, test, type Page } from "@playwright/test";
 
@@ -121,8 +122,15 @@ test("article views are counted, and analytics shows them", async ({ page }) => 
   await page.goto("/admin/analytics?range=30");
   await expect(page.getByRole("img", { name: /Views and downloads per day/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Code-Switching/ })).toBeVisible();
-  await page.getByText("Show as a table").click();
-  await expect(page.getByRole("cell", { name: "1" }).first()).toBeVisible();
+  // Open the table (retrying until the page has hydrated); other tests view
+  // articles too, so check today's row counts at least this view.
+  await expect(async () => {
+    if (!(await page.getByRole("table").isVisible())) await page.getByText("Show as a table").click();
+    await expect(page.getByRole("table")).toBeVisible({ timeout: 1000 });
+  }).toPass();
+  const today = page.getByRole("row").filter({ hasText: formatDate(new Date().toISOString()) });
+  const views = Number((await today.getByRole("cell").nth(1).innerText()).replace(/\D/g, ""));
+  expect(views).toBeGreaterThanOrEqual(1);
 });
 
 /** The generated image URL as the page advertises it (Next adds a content hash). */

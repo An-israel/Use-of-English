@@ -1,12 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { routeCheckFor, routeExists } from "@/lib/route-exists";
 
 /**
  * Runs before every non-static request. It is kept small for fast cold
  * starts (item 89):
  *  - gives each request an id that flows into every log line;
  *  - refreshes the Supabase session cookie on signed-in areas;
- *  - sends visitors without a session away from /admin, /account, /submit and /review.
+ *  - sends visitors without a session away from /admin, /account, /submit and /review;
+ *  - answers 404 for articles, subjects, policies and issues that don't exist,
+ *    which the streamed pages can no longer do themselves (B1).
  * Role checks happen on the server in each area's layout and in RLS.
  */
 
@@ -24,6 +27,17 @@ export async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  const check = url && key && req.method === "GET" ? routeCheckFor(path) : null;
+  if (check && (await routeExists(check, url!, key!)) === false) {
+    // No route matches this internal address, so Next renders the site's
+    // not-found page with a real 404 status.
+    const missing = req.nextUrl.clone();
+    missing.pathname = "/_missing";
+    const notFound = NextResponse.rewrite(missing, { request: { headers } });
+    notFound.headers.set("x-request-id", requestId);
+    return notFound;
+  }
   if (!url || !key || !SESSION_AREAS.some((p) => path === p || path.startsWith(p + "/"))) {
     return res;
   }

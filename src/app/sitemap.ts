@@ -17,6 +17,7 @@ const STATIC = [
   "/call-for-papers",
   "/author-guidelines",
   "/fees",
+  "/faq",
   "/policies",
   "/contact",
 ];

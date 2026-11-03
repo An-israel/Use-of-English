@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Emblem } from "@/components/brand/Emblem";
 import type { ReactNode } from "react";
 import { Weave } from "@/components/weave/Weave";
 
@@ -20,11 +21,11 @@ export function AuthShell({
     <div className="max-w-page mx-auto grid grid-cols-12 lg:min-h-[calc(100dvh-6rem)]">
       {/* No negative z-index here: Chrome can paint an animated negative-z layer under a
           parent's own background, which hid the weave on this solid panel. */}
-      <div className="bg-forest relative col-span-12 hidden overflow-hidden text-[#EFE8DA] lg:col-span-5 lg:flex lg:flex-col lg:justify-end">
+      <div className="bg-forest relative col-span-12 hidden overflow-hidden text-[#FAF7EE] lg:col-span-5 lg:flex lg:flex-col lg:justify-end">
         <Weave
           animate
           density="regular"
-          colours={["#C8962E", "#E9DCC0"]}
+          colours={["#E1B521", "#E9E2C8"]}
           lozenges={0.06}
           opacity={0.28}
           width={700}
@@ -35,10 +36,11 @@ export function AuthShell({
         <div className="relative p-12">
           {aside ?? (
             <>
+              <Emblem title="" className="mb-8 size-28 drop-shadow-lg" />
               <p className="font-display text-[1.6rem] leading-snug">
                 “A platform for original research across the humanities, and for ideas that cross borders.”
               </p>
-              <p className="smallcaps mt-4 text-[0.82rem] text-[#EFE8DA]/70">
+              <p className="smallcaps mt-4 text-[0.82rem] text-[#FAF7EE]/70">
                 Journal of Humanities and Transcultural Studies
               </p>
             </>

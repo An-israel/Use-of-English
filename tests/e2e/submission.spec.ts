@@ -79,7 +79,7 @@ test("an author submits a manuscript and pays the review fee", async ({ page }) 
   await page.getByRole("button", { name: "Save and continue" }).click();
   await expect(page.getByText("Please complete the highlighted fields.")).toBeVisible();
   await page.getByLabel("Title").fill("Proverbs, Pidgin and the Making of Meaning in Nsukka Markets");
-  await page.getByLabel("Subject area").selectOption({ label: "Language and Linguistics" });
+  await page.getByLabel("Subject area").selectOption({ label: "Language, Literature and Linguistics" });
   await page.getByLabel(/Abstract/).fill(ABSTRACT);
   await expect(page.getByText("160 / 150–250 words")).toBeVisible();
   for (const k of ["proverbs", "Nigerian Pidgin", "markets"]) {
@@ -131,9 +131,35 @@ test("an author submits a manuscript and pays the review fee", async ({ page }) 
   ).toBeVisible();
   await expect(page.getByText(/JHTS-\d{4}-\d{4}/).first()).toBeVisible();
   // The receipt is made by the job queue moments after the webhook.
+  // After each reload, give React a moment to reveal the streamed part of the
+  // page: until then it sits hidden, and a role query finds nothing.
   await waitFor(async () => {
     await page.reload();
-    return (await page.getByRole("link", { name: /Receipt JHTS-R-/ }).count()) > 0;
+    return page
+      .getByRole("link", { name: /Receipt JHTS-R-/ })
+      .waitFor({ state: "visible", timeout: 3_000 })
+      .then(() => true)
+      .catch(() => false);
+  }).catch(async (err) => {
+    // Say which step is missing: the receipt row, the job, or the page.
+    const subId = submissionUrl.split("/").pop()!;
+    const { data: pays } = await sb()
+      .from("payments")
+      .select("status, receipt_number, receipt_path, updated_at")
+      .eq("submission_id", subId);
+    const { data: jobs } = await sb()
+      .from("jobs")
+      .select("kind, status, attempts, last_error, priority")
+      .like("dedupe_key", "receipt%")
+      .order("id", { ascending: false })
+      .limit(3);
+    const shown = await page
+      .getByRole("region", { name: "Payments and receipts" })
+      .innerText()
+      .catch(() => "(no payments section)");
+    throw new Error(
+      `${(err as Error).message}\npayments: ${JSON.stringify(pays)}\nreceipt jobs: ${JSON.stringify(jobs)}\npage: ${shown}\nurl: ${page.url()}`,
+    );
   });
   const receipt = await page.request.get(
     await page
