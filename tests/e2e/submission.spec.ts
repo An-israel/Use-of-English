@@ -131,9 +131,15 @@ test("an author submits a manuscript and pays the review fee", async ({ page }) 
   ).toBeVisible();
   await expect(page.getByText(/JHTS-\d{4}-\d{4}/).first()).toBeVisible();
   // The receipt is made by the job queue moments after the webhook.
+  // After each reload, give React a moment to reveal the streamed part of the
+  // page: until then it sits hidden, and a role query finds nothing.
   await waitFor(async () => {
     await page.reload();
-    return (await page.getByRole("link", { name: /Receipt JHTS-R-/ }).count()) > 0;
+    return page
+      .getByRole("link", { name: /Receipt JHTS-R-/ })
+      .waitFor({ state: "visible", timeout: 3_000 })
+      .then(() => true)
+      .catch(() => false);
   }).catch(async (err) => {
     // Say which step is missing: the receipt row, the job, or the page.
     const subId = submissionUrl.split("/").pop()!;

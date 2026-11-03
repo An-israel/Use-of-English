@@ -18,7 +18,7 @@ Everything the committee selected in the audit report.
   - Broader Aims and Scope, and a Call for Papers for the inaugural and forthcoming issues.
 - **Fixes:**
   - Missing articles, subjects, policies and issues now answer with a real 404 status, so search engines don't index them (B1).
-  - Receipts no longer wait behind other emails in the background queue: payment work goes first, and the queue keeps running after a payment until it is empty (B4).
+  - Receipts no longer wait behind other emails in the background queue: payment work goes first, and the queue keeps running after a payment until it is empty (B4). CI then showed the receipt was always ready within a second: the late receipt was the test counting the link before React revealed the streamed part of the page, so the test now waits for it.
   - Housekeeping data is cleared by the daily maintenance run: finished jobs after 30 days, rate-limit counters after a day, events and sent emails after a year, staff notifications after six months. Payments, submissions, reviews and the audit log are never pruned (B7).
   - The Editor's Handbook fits on phones (B8), and the analytics chart no longer starts too wide (B9).
   - A dropped connection while a page loads now retries once by itself and says what happened, instead of showing the "loom has jammed" error (B3).
