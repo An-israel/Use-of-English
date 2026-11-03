@@ -62,7 +62,10 @@ async function main() {
         `<body style="margin:0;background:${background}"><div style="width:${size}px;height:${size}px">${source.replace(/<\?xml[^>]*>/, "").replace("<svg ", `<svg width="${size}" height="${size}" `)}</div></body></html>`,
       { waitUntil: "networkidle" },
     );
-    return page.screenshot({ omitBackground: background === "transparent", clip: { x: 0, y: 0, width: size, height: size } });
+    return page.screenshot({
+      omitBackground: background === "transparent",
+      clip: { x: 0, y: 0, width: size, height: size },
+    });
   };
   writeFileSync("public/brand/emblem-512.png", await render(full, 512));
   writeFileSync("public/brand/icon-512.png", await render(mark, 512, "#faf7ee"));
