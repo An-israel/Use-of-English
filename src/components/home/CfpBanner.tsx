@@ -7,11 +7,16 @@ import { Countdown } from "./Countdown";
 export function CfpBanner({ cfp }: { cfp: CallForPapers }) {
   return (
     <section aria-labelledby="cfp-title" className="max-w-page mx-auto px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
-      <div className="border-rule bg-surface relative overflow-hidden rounded-[3px] border">
-        <span aria-hidden="true" className="bg-accent absolute inset-y-0 left-0 w-1.5" />
-        <div className="grid grid-cols-12 gap-x-6 gap-y-10 p-8 sm:p-12 lg:p-16">
+      <div className="sec-gold-solid relative overflow-hidden rounded-[3px] shadow-[0_30px_60px_-40px_rgb(20_69_47/0.6)]">
+        {/* Lozenges from the woven border, faint on the gold. */}
+        <span
+          aria-hidden="true"
+          className="absolute -top-16 -right-16 size-64 rotate-45 border-[3px] border-[#14452f]/15"
+        />
+        <span aria-hidden="true" className="absolute top-6 right-6 size-28 rotate-45 border-2 border-[#14452f]/10" />
+        <div className="relative grid grid-cols-12 gap-x-6 gap-y-10 p-8 sm:p-12 lg:p-16">
           <div className="col-span-12 lg:col-span-6">
-            <p className="smallcaps text-accent text-[0.85rem]">Call for papers</p>
+            <p className="smallcaps text-[0.85rem] text-[#14452f]">Call for papers</p>
             <h2 id="cfp-title" className="font-display mt-3 text-[clamp(1.9rem,1.5rem+1.4vw,2.6rem)] leading-[1.08]">
               {cfp.targetLabel}
             </h2>

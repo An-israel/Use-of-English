@@ -2,6 +2,18 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.1.1] - Distinct home-page sections
+
+- Each home-page section has its own tone from the flyer palette, in light and dark mode, so the page no longer reads as one long cream band:
+  - current issue on sage green;
+  - Articles in Press on a gold wash, with gold-topped cards;
+  - subject tiles tinted in each area's own colour;
+  - most read and new books on a bronze wash;
+  - "Why publish" stays deep forest;
+  - the Call for Papers is a solid gold card;
+  - the editorial board on cream under a forest rule.
+- The new colours are tokens (`--sec-sage`, `--sec-gold`, `--sec-bronze`) and pass WCAG AA contrast.
+
 ## [1.1.0] - Flyer brand, fixes and improvements from the audit
 
 Everything the committee selected in the audit report.

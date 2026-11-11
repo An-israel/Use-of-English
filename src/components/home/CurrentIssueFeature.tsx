@@ -22,7 +22,7 @@ export function CurrentIssueFeature({
   categories: Map<string, Category>;
 }) {
   return (
-    <section aria-labelledby="current-title" className="border-rule bg-surface border-b">
+    <section aria-labelledby="current-title" className="border-rule bg-sec-sage border-b">
       <div className="max-w-page mx-auto grid grid-cols-12 gap-x-6 gap-y-12 px-4 py-20 sm:px-6 lg:px-10 lg:py-32">
         <div className="col-span-12 md:col-span-5 lg:col-span-4">
           <div className="md:sticky md:top-28">

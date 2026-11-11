@@ -21,11 +21,13 @@ export function SubjectTiles({ categories, counts }: { categories: Category[]; c
               <Reveal as="li" index={i} key={c.slug} className="bg-surface last:odd:col-span-2 sm:last:odd:col-span-1">
                 <Link
                   href={`/subjects/${c.slug}`}
-                  className="group hover:bg-bg relative flex h-full flex-col p-4 transition-colors sm:p-6 lg:min-h-[15rem]"
+                  className="group relative flex h-full flex-col p-4 transition-[background-color] sm:p-6 lg:min-h-[15rem]"
+                  // Each area is tinted with its own thread colour.
+                  style={{ backgroundColor: `color-mix(in oklab, ${colour} 6%, var(--surface))` }}
                 >
                   <span
                     aria-hidden="true"
-                    className="ease-weave absolute inset-x-0 top-0 h-[3px] origin-left scale-x-[0.18] transition-transform duration-500 group-hover:scale-x-100"
+                    className="ease-weave absolute inset-x-0 top-0 h-1 origin-left scale-x-[0.35] transition-transform duration-500 group-hover:scale-x-100"
                     style={{ backgroundColor: colour }}
                   />
                   <span className="flex items-center justify-between">

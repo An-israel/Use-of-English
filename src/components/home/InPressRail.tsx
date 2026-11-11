@@ -12,7 +12,8 @@ export function InPressRail({
 }) {
   if (articles.length === 0) return null;
   return (
-    <section aria-labelledby="inpress-title" className="py-20 lg:py-28">
+    <section aria-labelledby="inpress-title" className="bg-sec-gold border-rule relative border-b py-20 lg:py-28">
+      <span aria-hidden="true" className="bg-thread absolute inset-x-0 top-0 h-1" />
       <div className="max-w-page mx-auto px-4 sm:px-6 lg:px-10">
         <SectionHeading
           eyebrow="Published ahead of issue"
@@ -36,6 +37,7 @@ export function InPressRail({
                 article={a}
                 category={a.categorySlug ? categories.get(a.categorySlug) : undefined}
                 meta="online"
+                className="border-t-thread border-t-[3px]"
               />
             </Reveal>
           ))}
