@@ -171,11 +171,23 @@ export async function checkAlerts(now = Date.now()): Promise<string[]> {
   return raised;
 }
 
+/**
+ * Housekeeping retention (B7): finished jobs after 30 days, rate-limit counters
+ * after a day, events and sent emails after a year, staff notifications after
+ * six months. Financial and editorial records are never pruned.
+ */
+export async function pruneHousekeeping(): Promise<Record<string, number>> {
+  const { data, error } = await adminClient().rpc("prune_housekeeping");
+  if (error) throw new Error(error.message);
+  return data as Record<string, number>;
+}
+
 export async function runDaily() {
   const steps = {
     reminders: reviewerReminders,
     orphans: cleanOrphanedUploads,
     drafts: expireDrafts,
+    retention: pruneHousekeeping,
     alerts: checkAlerts,
   };
   const result: Record<string, unknown> = {};

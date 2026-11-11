@@ -1,6 +1,6 @@
 "use client";
-
 import Link from "next/link";
+import { Emblem } from "@/components/brand/Emblem";
 import { useSyncExternalStore, type ReactNode } from "react";
 import clsx from "clsx";
 import { ThemeToggle } from "@/components/site/ThemeToggle";
@@ -60,20 +60,16 @@ export function AdminFrame({
         )}
       >
         <div className={clsx("flex items-center justify-between gap-2 px-5 py-5", collapsed && "lg:flex-col lg:px-2")}>
-          <Link href="/admin" className="block leading-none">
-            <span className="font-display text-[1.5rem] font-semibold tracking-[-0.02em]">
-              {collapsed ? (
-                <>
-                  <span aria-hidden="true" className="lg:text-[1.1rem]">
-                    J
-                  </span>
-                  <span className="sr-only">JHTS editorial office</span>
-                </>
-              ) : (
-                "JHTS"
-              )}
-            </span>
-            {!collapsed && <span className="smallcaps text-muted mt-1 block text-[0.72rem]"> Editorial office</span>}
+          <Link href="/admin" className="flex items-center gap-2.5 leading-none">
+            <Emblem title="" wordmark={false} className={collapsed ? "size-9" : "size-10"} />
+            {collapsed ? (
+              <span className="sr-only">JHTS editorial office</span>
+            ) : (
+              <span className="flex flex-col">
+                <span className="font-display text-brand text-[1.35rem] font-extrabold">JHTS</span>
+                <span className="smallcaps text-muted mt-0.5 block text-[0.72rem]"> Editorial office</span>
+              </span>
+            )}
           </Link>
           <div className={clsx("flex items-center gap-1", collapsed && "lg:flex-col")}>
             <button

@@ -98,7 +98,7 @@ export function StatusChanged({
       {message && (
         <blockquote
           style={{
-            borderLeft: "2px solid #C8962E",
+            borderLeft: "2px solid #E1B521",
             margin: "16px 0",
             padding: "4px 0 4px 16px",
             fontStyle: "italic",
@@ -163,7 +163,7 @@ export function ReviewInvitation({
       </P>
       <blockquote
         style={{
-          borderLeft: "2px solid #C8962E",
+          borderLeft: "2px solid #E1B521",
           margin: "16px 0",
           padding: "4px 0 4px 16px",
           color: "#3a352d",

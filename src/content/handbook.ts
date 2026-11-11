@@ -156,7 +156,12 @@ export const HANDBOOK: HandbookSection[] = [
           "[Messages](/admin/messages): the contact form inbox. Mark messages read and archive them once answered.",
           "[Book reviews](/admin/book-reviews): reviews with the book’s details and cover.",
           "[Users](/admin/users): **Invite someone** to join as an editor, reviewer or finance officer. Authors register themselves.",
+          "[Email previews](/admin/emails): every email the site sends (receipts, decisions, reviewer invitations and reminders), shown with example details, so you can see what authors and reviewers receive.",
+          "[Settings](/admin/settings): the motto and the **Enquiry contacts** (one per line: Name | Role | Phone) shown on the Contact page.",
         ],
+      },
+      {
+        p: "Authors and reviewers can download their data or delete their account from **My account → Your data**. Their drafts are deleted; submitted manuscripts, reviews and payments stay, with the name and contact details removed. To close a staff account, a Super Admin deactivates it in [Users](/admin/users).",
       },
       {
         p: "Text marked **[TO CONFIRM]** on the public site is waiting for the committee’s wording. Replace it in Pages or Settings before launch.",

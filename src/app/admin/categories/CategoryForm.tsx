@@ -5,6 +5,7 @@ import { AdminForm, AField, AText } from "@/components/admin/AdminForm";
 import { saveCategory } from "../journal-actions";
 
 export const THREADS = [
+  "humanities",
   "language",
   "literature",
   "culture",
@@ -12,6 +13,9 @@ export const THREADS = [
   "translation",
   "philosophy",
   "education",
+  "technology",
+  "politics",
+  "interdisciplinary",
   "other",
 ];
 
@@ -79,7 +83,7 @@ export function CategoryForm({ values }: { values?: CategoryValues }) {
           />
         </div>
         <p className="text-muted mt-1.5 text-[0.78rem]">
-          The eight thread colours meet contrast rules in light and dark mode; custom hex values may not.
+          The thread colours meet contrast rules in light and dark mode; custom hex values may not.
         </p>
       </fieldset>
     </AdminForm>

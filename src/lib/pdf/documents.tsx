@@ -1,12 +1,21 @@
 import "server-only";
-import { Document, Page, StyleSheet, Svg, Path, Text, View, renderToBuffer } from "@react-pdf/renderer";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { Document, Image, Page, StyleSheet, Svg, Path, Text, View, renderToBuffer } from "@react-pdf/renderer";
 
 /*
  * Receipts and acceptance letters (brief sections 5.18 and 7.1). Built-in
  * PDF fonts (Times and Helvetica) keep files small and always embeddable.
  */
 
-const C = { ink: "#15130F", forest: "#0F3B2E", ochre: "#C8962E", stone: "#6F675C", line: "#E4DCCD", paper: "#FFFDF8" };
+const C = { ink: "#1C211D", forest: "#14452F", ochre: "#E1B521", stone: "#6A6A5C", line: "#E5DFCD", paper: "#FFFDF7" };
+
+/** The emblem drawn by `npm run brand:generate`, read once. */
+let emblem: Buffer | null = null;
+function emblemPng() {
+  emblem ??= readFileSync(join(process.cwd(), "public/brand/emblem-512.png"));
+  return emblem;
+}
 
 const s = StyleSheet.create({
   page: { padding: 48, fontFamily: "Times-Roman", fontSize: 11, color: C.ink, backgroundColor: C.paper },
@@ -20,8 +29,8 @@ const s = StyleSheet.create({
     borderBottomColor: C.ochre,
     marginBottom: 32,
   },
-  mast: { fontFamily: "Times-Bold", fontSize: 24, color: "#F1E8D6" },
-  sub: { fontFamily: "Helvetica", fontSize: 7.5, letterSpacing: 1.6, color: "#E9DCC0", marginTop: 4 },
+  mast: { fontFamily: "Times-Bold", fontSize: 24, color: "#FAF7EE" },
+  sub: { fontFamily: "Helvetica", fontSize: 7.5, letterSpacing: 1.6, color: "#E9E2C8", marginTop: 4 },
   h1: { fontSize: 20, marginBottom: 6 },
   muted: { color: C.stone, fontFamily: "Helvetica", fontSize: 9 },
   row: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: C.line, paddingVertical: 7 },
@@ -49,9 +58,13 @@ const STATEMENT =
 
 function Masthead() {
   return (
-    <View style={s.band}>
-      <Text style={s.mast}>JHTS</Text>
-      <Text style={s.sub}>JOURNAL OF HUMANITIES AND TRANSCULTURAL STUDIES</Text>
+    <View style={[s.band, { flexDirection: "row", alignItems: "center" }]}>
+      {/* eslint-disable-next-line jsx-a11y/alt-text -- react-pdf Image has no alt */}
+      <Image src={{ data: emblemPng(), format: "png" }} style={{ width: 46, height: 46, marginRight: 14 }} />
+      <View>
+        <Text style={s.mast}>JHTS</Text>
+        <Text style={s.sub}>JOURNAL OF HUMANITIES AND TRANSCULTURAL STUDIES</Text>
+      </View>
     </View>
   );
 }

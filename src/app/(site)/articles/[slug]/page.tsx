@@ -248,7 +248,7 @@ async function ArticleContent({ params }: { params: Promise<Params> }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
       <header className="border-rule border-b">
-        <div className="max-w-page mx-auto px-4 pt-8 sm:px-6 lg:px-10">
+        <div className="max-w-page mx-auto px-4 pt-8 sm:px-6 lg:px-10 print:hidden">
           <Breadcrumbs
             items={[
               { label: "Home", href: "/" },
@@ -297,7 +297,10 @@ async function ArticleContent({ params }: { params: Promise<Params> }) {
       </header>
 
       <div className="max-w-page mx-auto grid grid-cols-12 gap-x-6 px-4 py-14 sm:px-6 lg:px-10 lg:py-20">
-        <aside className="order-last col-span-12 mt-16 lg:order-first lg:col-span-3 lg:mt-0" aria-label="Article tools">
+        <aside
+          className="order-last col-span-12 mt-16 lg:order-first lg:col-span-3 lg:mt-0 print:hidden"
+          aria-label="Article tools"
+        >
           <div className="space-y-8 lg:sticky lg:top-24">
             {(article.hasPdf || article.hasDocx) && (
               <div className="flex flex-col gap-2">
@@ -436,8 +439,12 @@ async function ArticleContent({ params }: { params: Promise<Params> }) {
             </section>
           )}
 
+          <p className="border-rule mt-12 hidden border-t pt-4 text-[0.85rem] print:block">
+            {settings.journalName} · Read and cite online at {url}
+          </p>
+
           {article.pdfUrl && (
-            <section aria-labelledby="pdf-title" className="mt-16">
+            <section aria-labelledby="pdf-title" className="mt-16 print:hidden">
               <h2 id="pdf-title" className="font-display text-[1.6rem]">
                 {full ? "The typeset PDF" : "Read the article"}
               </h2>
@@ -454,7 +461,7 @@ async function ArticleContent({ params }: { params: Promise<Params> }) {
       </div>
 
       {(fromIssue.length > 0 || inCategory.length > 0) && (
-        <aside aria-label="Related articles" className="border-rule bg-surface border-t">
+        <aside aria-label="Related articles" className="border-rule bg-surface border-t print:hidden">
           <div className="max-w-page mx-auto space-y-16 px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
             {fromIssue.length > 0 && article.issue && (
               <div>

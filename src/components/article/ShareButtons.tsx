@@ -2,7 +2,7 @@
 
 import { useToast } from "@/components/ui/Toaster";
 
-/** Native share where available; otherwise copy link, email, WhatsApp and LinkedIn. */
+/** Native share where available; otherwise copy link, email, WhatsApp, LinkedIn, X and Facebook (plain links, no scripts). */
 export function ShareButtons({ url, title }: { url: string; title: string }) {
   const toast = useToast();
   const enc = encodeURIComponent;
@@ -52,6 +52,22 @@ export function ShareButtons({ url, title }: { url: string; title: string }) {
           target="_blank"
         >
           LinkedIn
+        </a>
+        <a
+          className={link}
+          href={`https://x.com/intent/post?text=${enc(title)}&url=${enc(url)}`}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          X
+        </a>
+        <a
+          className={link}
+          href={`https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Facebook
         </a>
       </p>
     </div>

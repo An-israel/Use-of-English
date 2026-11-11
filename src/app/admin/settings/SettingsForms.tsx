@@ -24,7 +24,10 @@ export function SettingsForm({ s }: { s: SiteSettings }) {
           />
           <AField label="Short name" name="shortName" defaultValue={s.shortName} required />
         </div>
-        <AField label="Tagline" name="tagline" defaultValue={s.tagline} />
+        <div className="grid gap-3 sm:grid-cols-2">
+          <AField label="Tagline" name="tagline" defaultValue={s.tagline} />
+          <AField label="Motto" name="motto" defaultValue={s.motto} hint="Shown under the emblem." />
+        </div>
         <AField label="Publisher" name="publisher" defaultValue={s.publisher} />
         <div className="grid gap-3 sm:grid-cols-2">
           <AField label="Publisher (short)" name="publisherShort" defaultValue={s.publisherShort} />
@@ -33,6 +36,13 @@ export function SettingsForm({ s }: { s: SiteSettings }) {
           <AField label="Office hours" name="officeHours" defaultValue={s.officeHours} />
         </div>
         <AText label="Postal address" name="postalAddress" rows={2} defaultValue={s.postalAddress} />
+        <AText
+          label="Enquiry contacts"
+          name="enquiries"
+          rows={4}
+          defaultValue={s.enquiries.map((e) => `${e.name} | ${e.role} | ${e.phone}`).join("\n")}
+          hint="One per line: Name | Role | Phone. Shown on the Contact page and, while the office email is not set, in the footer."
+        />
       </fieldset>
       <fieldset className="admin-box space-y-4">
         <legend className={h}>Identifiers</legend>

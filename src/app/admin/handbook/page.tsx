@@ -76,8 +76,8 @@ export default async function HandbookPage() {
         title="Editor’s Handbook"
         description={HANDBOOK_INTRO}
       />
-      <div className="grid grid-cols-12 gap-x-10 gap-y-8 px-5 py-8 lg:px-10">
-        <nav aria-label="Handbook contents" className="col-span-12 lg:col-span-3">
+      <div className="grid grid-cols-1 gap-y-8 px-5 py-8 lg:grid-cols-12 lg:gap-x-10 lg:px-10">
+        <nav aria-label="Handbook contents" className="lg:col-span-3">
           <ol className="text-muted space-y-1.5 text-[0.9rem] lg:sticky lg:top-8">
             {HANDBOOK.map((s) => (
               <li key={s.id}>
@@ -88,7 +88,7 @@ export default async function HandbookPage() {
             ))}
           </ol>
         </nav>
-        <div className="col-span-12 max-w-[44rem] space-y-12 lg:col-span-9">
+        <div className="max-w-[44rem] min-w-0 space-y-12 lg:col-span-9">
           {HANDBOOK.map((s) => (
             <section key={s.id} id={s.id} aria-labelledby={`${s.id}-h`} className="scroll-mt-8">
               <h2 id={`${s.id}-h`} className="font-display text-[1.45rem] leading-tight">

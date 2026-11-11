@@ -1,6 +1,6 @@
 {
   "name": "jhts",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -22,7 +22,9 @@
     "db:rollback-test": "scripts/test-rollbacks.sh",
     "db:restore-drill": "scripts/restore-test.sh",
     "handbook:generate": "tsx scripts/generate-handbook.ts",
-    "launch:check": "tsx scripts/launch-check.mts"
+    "launch:check": "tsx scripts/launch-check.mts",
+    "brand:generate": "tsx scripts/brand-assets.tsx",
+    "template:generate": "tsx scripts/manuscript-template.mts"
   },
   "dependencies": {
     "@opentelemetry/api": "^1.9.1",

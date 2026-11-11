@@ -57,7 +57,7 @@ export function ReadingSurface({ html }: { html: string }) {
   return (
     <div data-reading-theme={prefs.theme} className="reading-surface rounded-[3px]">
       <div
-        className="border-rule sticky top-16 z-10 flex flex-wrap items-center justify-between gap-3 border-b bg-[var(--rs-bg)] px-1 py-3"
+        className="border-rule sticky top-16 z-10 flex flex-wrap items-center justify-between gap-3 border-b bg-[var(--rs-bg)] px-1 py-3 print:hidden"
         role="toolbar"
         aria-label="Reading comfort"
       >
@@ -97,7 +97,7 @@ export function ReadingSurface({ html }: { html: string }) {
                   prefs.theme === t ? "ring-thread ring-2 ring-offset-2 ring-offset-[var(--rs-bg)]" : "",
                 )}
                 style={{
-                  background: t === "paper" ? "#FFFDF8" : t === "sepia" ? "#F3E7CF" : "#1B1915",
+                  background: t === "paper" ? "#FFFDF7" : t === "sepia" ? "#F3E7CF" : "#1B1915",
                   borderColor: "#CFC5B3",
                 }}
               />
