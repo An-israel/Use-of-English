@@ -11,7 +11,8 @@ export function BoardStrip({ board }: { board: BoardMember[] }) {
     members: board.filter((m) => m.group === g),
   }));
   return (
-    <section aria-labelledby="board-title" className="border-rule border-t">
+    <section aria-labelledby="board-title" className="bg-bg relative">
+      <span aria-hidden="true" className="bg-forest absolute inset-x-0 top-0 h-1" />
       <div className="max-w-page mx-auto px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
         <SectionHeading
           eyebrow="Editorial board"

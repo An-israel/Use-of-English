@@ -32,6 +32,11 @@
   --thread-politics: #7a3b2a; /* burnt sienna */
   --thread-interdisciplinary: #3f5a24; /* palm olive */
 
+  /* Home-page section tones (light): sage, gold and bronze washes from the flyer. */
+  --sec-sage: #e8f0e5;
+  --sec-gold: #fbf1d2;
+  --sec-bronze: #f5e8dc;
+
   /* Semantic tokens — light */
   --bg: var(--jhts-ivory);
   --surface: var(--jhts-paper);
@@ -95,6 +100,9 @@
     --thread-technology: #c39ccc;
     --thread-politics: #e0997f;
     --thread-interdisciplinary: #a9c98a;
+    --sec-sage: #122019;
+    --sec-gold: #1c1a10;
+    --sec-bronze: #1f1712;
 
     color-scheme: dark;
   }
@@ -133,6 +141,9 @@
   --thread-technology: #c39ccc;
   --thread-politics: #e0997f;
   --thread-interdisciplinary: #a9c98a;
+  --sec-sage: #122019;
+  --sec-gold: #1c1a10;
+  --sec-bronze: #1f1712;
 
   color-scheme: dark;
 }
@@ -166,6 +177,9 @@
   --color-inverse: var(--inverse-bg);
   --color-inverse-fg: var(--inverse-fg);
   --color-inverse-muted: var(--inverse-muted);
+  --color-sec-sage: var(--sec-sage);
+  --color-sec-gold: var(--sec-gold);
+  --color-sec-bronze: var(--sec-bronze);
 
   /* The flyer's faces: Playfair Display for headings, Source Sans 3 for everything else, reading text included */
   --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
@@ -761,4 +775,19 @@ mark.to-confirm-inline {
   blockquote {
     break-inside: avoid;
   }
+}
+
+/* Solid flyer-gold block (the home page's Call for Papers): dark text and a
+   forest button in both themes, since gold stays gold. */
+.sec-gold-solid {
+  --fg: #1c211d;
+  --fg-muted: #3a3a2c;
+  --rule: rgb(20 69 47 / 0.28);
+  --accent: #14452f;
+  --brand: #14452f;
+  --brand-hover: #1f5a3d;
+  --brand-fg: #faf7ee;
+  --focus: #14452f;
+  background: #e1b521;
+  color: var(--fg);
 }
