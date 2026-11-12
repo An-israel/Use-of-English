@@ -64,50 +64,9 @@
   color-scheme: light;
 }
 
-/* Dark mode is a re-tuned palette, not an inversion: warm charcoal ground,
-   paper-toned text, forest lifted so it still reads as the brand colour. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #101511;
-    --surface: #171d18;
-    --fg: #ece8dc;
-    --fg-muted: #a8ad9f;
-    --rule: #2b332c;
-    --brand: #7fc79f;
-    --brand-hover: #9ad6b4;
-    --brand-fg: #0b1a12;
-    --accent: #e3946b;
-    --accent-text: var(--accent);
-    --thread: #e1b521;
-    --thread-text: #e1b521;
-    --chart-views: #33a06c;
-    --chart-downloads: #c4871f;
-    --info: #9aa6dd;
-    --focus: #e1b521;
-    --inverse-bg: #0c2a1c;
-    --inverse-fg: #ece8dc;
-    --inverse-muted: #b5c6b6;
-
-    --thread-language: #9aa6dd;
-    --thread-literature: #e0997f;
-    --thread-culture: #6fb595;
-    --thread-communication: #d9ab4c;
-    --thread-translation: #c39ccc;
-    --thread-philosophy: #c9b392;
-    --thread-education: #8fbccc;
-    --thread-other: #d1a491;
-    --thread-humanities: #e39bb5;
-    --thread-technology: #c39ccc;
-    --thread-politics: #e0997f;
-    --thread-interdisciplinary: #a9c98a;
-    --sec-sage: #122019;
-    --sec-gold: #1c1a10;
-    --sec-bronze: #1f1712;
-
-    color-scheme: dark;
-  }
-}
-
+/* Light is always the default. Dark mode is a re-tuned palette, not an inversion
+   (warm charcoal ground, paper-toned text, forest lifted so it still reads as the
+   brand colour), and only applies when a reader chooses it with the theme toggle. */
 :root[data-theme="dark"] {
   --bg: #101511;
   --surface: #171d18;

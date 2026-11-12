@@ -10,18 +10,15 @@ type Theme = "light" | "dark";
 
 function read(): Theme {
   const attr = document.documentElement.dataset.theme;
-  if (attr === "light" || attr === "dark") return attr;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  // Light unless the reader has chosen dark; the device setting is not followed.
+  return attr === "dark" ? "dark" : "light";
 }
 
 const listeners = new Set<() => void>();
 function subscribe(cb: () => void) {
   listeners.add(cb);
-  const mq = window.matchMedia("(prefers-color-scheme: dark)");
-  mq.addEventListener("change", cb);
   return () => {
     listeners.delete(cb);
-    mq.removeEventListener("change", cb);
   };
 }
 

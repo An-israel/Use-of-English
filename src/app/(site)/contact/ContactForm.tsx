@@ -115,7 +115,7 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
       {turnstileSiteKey && (
         <>
           <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
-          <div className="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="auto" />
+          <div className="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="light" />
         </>
       )}
       <div aria-live="polite" role="status" className="text-accent min-h-6 text-[0.92rem]">
