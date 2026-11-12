@@ -20,7 +20,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   if (!data?.receipt_path) return NextResponse.json({ error: "not_found" }, { status: 404 });
   const { data: signed } = await adminClient()
     .storage.from("finance")
-    .createSignedUrl(data.receipt_path, 60, { download: `JHTS_Receipt_${data.receipt_number}.pdf` });
+    .createSignedUrl(data.receipt_path, 60, { download: `JHTCS_Receipt_${data.receipt_number}.pdf` });
   if (!signed) return NextResponse.json({ error: "unavailable" }, { status: 503 });
   return NextResponse.redirect(signed.signedUrl, { headers: { "Cache-Control": "no-store" } });
 }

@@ -21,7 +21,7 @@ const users = {
   author: { email: `m7.author.${run.toLowerCase()}@example.test`, role: "author" },
 } as const;
 const ids: Record<string, string> = {};
-const ref = (n: string) => `JHTS-T${run}-${n}`;
+const ref = (n: string) => `JHTCS-T${run}-${n}`;
 const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Lagos" }).format(new Date());
 
 async function signIn(page: Page, who: keyof typeof users) {
@@ -54,7 +54,7 @@ test.beforeAll(async () => {
           type: "research_article",
           title: `Finance test ${n} ${run}`,
           status: "submitted",
-          public_id: `JHTS-F${run}-${n}`,
+          public_id: `JHTCS-F${run}-${n}`,
         })
         .select("id")
         .single()
@@ -122,7 +122,7 @@ test("the Finance Officer filters payments and exports CSV and PDF", async ({ pa
   const csv = await page.request.get(`/api/finance/export?format=csv&from=${today}&to=${today}&fee=review`);
   expect(csv.status()).toBe(200);
   expect(csv.headers()["content-type"]).toContain("text/csv");
-  expect(csv.headers()["content-disposition"]).toMatch(/attachment; filename="JHTS_payments_.*\.csv"/);
+  expect(csv.headers()["content-disposition"]).toMatch(/attachment; filename="JHTCS_payments_.*\.csv"/);
   const text = await csv.text();
   expect(text.startsWith("﻿Reference,Fee,Status,Amount (NGN)")).toBe(true);
   expect(text).toContain(`${ref("OK")},Review fee,Paid,5000.00,0.00,5000.00`);
@@ -201,7 +201,7 @@ test("a payment whose webhook was missed is confirmed with Paystack from the adm
   });
   const { data } = await sb().from("payments").select("status, receipt_number").eq("id", ids[ref("MISSED")]).single();
   expect(data?.status).toBe("success");
-  expect(data?.receipt_number).toMatch(/^JHTS-R-/);
+  expect(data?.receipt_number).toMatch(/^JHTCS-R-/);
 });
 
 test("editors view finance but cannot export or refund; authors are kept out", async ({ page }) => {

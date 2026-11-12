@@ -52,7 +52,7 @@ test("an author downloads their data, then deletes an account with nothing to ke
     page.waitForEvent("download"),
     page.getByRole("link", { name: "Download my data" }).click(),
   ]);
-  expect(download.suggestedFilename()).toMatch(/^jhts-my-data-\d{4}-\d{2}-\d{2}\.json$/);
+  expect(download.suggestedFilename()).toMatch(/^jhtcs-my-data-\d{4}-\d{2}-\d{2}\.json$/);
   const data = JSON.parse(readFileSync((await download.path())!, "utf8"));
   expect(data.profile.email).toBe(email);
   expect(data.submissions.map((s: { title: string }) => s.title)).toContain(`Draft ${run}`);

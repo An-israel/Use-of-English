@@ -48,7 +48,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     month: issue.month,
     depositor: { name: `${settings.shortName} Editorial Office`, email: settings.contactEmail },
     registrant: settings.publisher,
-    batchId: `jhts-v${v.number}n${issue.number}-${now.getTime()}`,
+    batchId: `jhtcs-v${v.number}n${issue.number}-${now.getTime()}`,
     timestamp: now.toISOString().replace(/\D/g, "").slice(0, 14),
     articles: (articles ?? []).map((a, i) => ({
       title: a.title,
@@ -66,7 +66,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   return new NextResponse(xml, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
-      "Content-Disposition": `attachment; filename="JHTS_Vol${v.number}_No${issue.number}_${v.year}_crossref.xml"`,
+      "Content-Disposition": `attachment; filename="JHTCS_Vol${v.number}_No${issue.number}_${v.year}_crossref.xml"`,
       "Cache-Control": "no-store",
     },
   });

@@ -7,7 +7,7 @@ import { getPage } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Questions and Timeline",
-  description: "Common questions about submitting to JHTS, and how long each editorial stage usually takes.",
+  description: "Common questions about submitting to JHTCS, and how long each editorial stage usually takes.",
   alternates: { canonical: "/faq" },
 };
 
@@ -32,7 +32,7 @@ export default async function FaqPage() {
             <p className="smallcaps text-muted text-[0.78rem]">Manuscript template</p>
             <p className="mt-2 text-[0.95rem]">Times New Roman 12 pt, double-spaced, with the recommended headings.</p>
             <a
-              href="/templates/JHTS-manuscript-template.docx"
+              href="/templates/JHTCS-manuscript-template.docx"
               download
               className="bg-brand text-brand-fg hover:bg-brand-hover mt-4 inline-block rounded-sm px-4 py-2.5 text-[0.92rem] font-medium"
             >

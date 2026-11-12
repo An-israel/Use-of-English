@@ -11,7 +11,7 @@ export const contentType = "image/png";
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const a = await getArticle(slug);
-  if (!a) return ogCard({ kicker: "JHTS", title: "Journal of Humanities and Transcultural Studies" });
+  if (!a) return ogCard({ kicker: "JHTCS", title: "Journal of Humanities and Transcultural Studies" });
   const names = a.authors.map((x) => x.name);
   return ogCard({
     kicker: `${ARTICLE_TYPE_LABEL[a.type]} · ${a.issue ? issueLabelShort(a.issue) : "Article in Press"}`,

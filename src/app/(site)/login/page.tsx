@@ -28,7 +28,7 @@ async function Login({ searchParams }: { searchParams: Promise<Record<string, st
   if (await getViewer()) redirect(next);
   const flags = await getFlags();
   return (
-    <AuthShell eyebrow="Welcome back" title="Sign in to JHTS" intro="Authors, reviewers and editors sign in here.">
+    <AuthShell eyebrow="Welcome back" title="Sign in to JHTCS" intro="Authors, reviewers and editors sign in here.">
       <LoginForm next={next} notice={sp.error ? NOTICES[sp.error] : undefined} google={flags.google_sign_in} />
     </AuthShell>
   );

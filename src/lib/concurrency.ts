@@ -33,7 +33,7 @@ export function matchByName<T extends { slug: string; title: string }>(fileName:
         .replace(/[̀-ͯ]/g, "")
         .replace(/\.[a-z0-9]+$/, "")
         .split(/[^a-z0-9]+/)
-        .filter((w) => w.length > 2 && !["the", "and", "jhts", "pdf", "final", "vol"].includes(w)),
+        .filter((w) => w.length > 2 && !["the", "and", "jhts", "jhtcs", "pdf", "final", "vol"].includes(w)),
     );
   const file = words(fileName);
   let best: T | null = null;

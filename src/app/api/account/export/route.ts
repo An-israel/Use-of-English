@@ -74,7 +74,7 @@ export async function GET() {
   const body = {
     exportedAt: new Date().toISOString(),
     journal: "Journal of Humanities and Transcultural Studies",
-    note: "Your personal data held by JHTS. Amounts are in kobo (₦1 = 100 kobo). Write to the editorial office if anything is missing or wrong.",
+    note: "Your personal data held by JHTCS. Amounts are in kobo (₦1 = 100 kobo). Write to the editorial office if anything is missing or wrong.",
     profile,
     submissions,
     submissionAuthors: authors,
@@ -87,7 +87,7 @@ export async function GET() {
   return new NextResponse(JSON.stringify(body, null, 2), {
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Content-Disposition": `attachment; filename="jhts-my-data-${day}.json"`,
+      "Content-Disposition": `attachment; filename="jhtcs-my-data-${day}.json"`,
       "Cache-Control": "no-store",
     },
   });

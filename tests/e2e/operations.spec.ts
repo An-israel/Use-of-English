@@ -193,7 +193,7 @@ test("daily maintenance reminds reviewers and clears orphaned uploads", async ({
 test("backup reports, the email webhook and the public API", async ({ page, request }) => {
   const report = await request.post("/api/cron/backup-report", {
     headers: cron,
-    data: { status: "ok", location: `gdrive:JHTS-backups/test-${run}`, details: { test: true } },
+    data: { status: "ok", location: `gdrive:JHTCS-backups/test-${run}`, details: { test: true } },
   });
   expect(report.status()).toBe(200);
   await signIn(page, "admin");

@@ -14,7 +14,7 @@ export function HeaderFallback() {
           <Emblem title="" wordmark={false} className="size-12 shrink-0 lg:size-16" />
           <span className="flex flex-col">
             <span className="font-display text-brand text-[1.7rem] font-extrabold tracking-[-0.01em] lg:text-[1.95rem]">
-              JHTS
+              JHTCS
             </span>
             <span className="smallcaps text-muted mt-1 hidden text-[0.78rem] sm:block">
               Journal of Humanities and Transcultural Studies

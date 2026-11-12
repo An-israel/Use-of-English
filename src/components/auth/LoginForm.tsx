@@ -70,7 +70,7 @@ export function LoginForm({ next, notice, google }: { next: string; notice?: str
         </form>
       )}
       <p className="text-[0.95rem]">
-        New to JHTS?{" "}
+        New to JHTCS?{" "}
         <Link
           href={`/register?next=${encodeURIComponent(next)}`}
           className="text-brand decoration-thread underline underline-offset-4"

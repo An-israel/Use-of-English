@@ -1,4 +1,4 @@
-// WCAG contrast check for the JHTS palette (brief 3.2). Run: node scripts/contrast.mjs
+// WCAG contrast check for the JHTCS palette (brief 3.2). Run: node scripts/contrast.mjs
 const hex = (h) =>
   h
     .replace("#", "")

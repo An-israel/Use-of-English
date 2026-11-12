@@ -1,6 +1,6 @@
-# JHTS: Journal of Humanities and Transcultural Studies
+# JHTCS: Journal of Humanities and Transcultural Studies
 
-The website, submissions system, payments and admin dashboard for JHTS, published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka. Suggested domain: `jhts.unn.edu.ng`.
+The website, submissions system, payments and admin dashboard for JHTCS, published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka. Domain: `www.jhtcs.org`.
 
 > **Status: 1.0.0, ready to launch** once the committee confirms the items marked [TO CONFIRM] and the production accounts exist. Follow [`docs/LAUNCH.md`](docs/LAUNCH.md).
 
@@ -10,13 +10,13 @@ The website, submissions system, payments and admin dashboard for JHTS, publishe
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Editors and staff     | [Editor's Handbook](docs/EDITORS_HANDBOOK.md) (also in the admin under **Handbook**)                                                                                          |
 | Going live            | [LAUNCH.md](docs/LAUNCH.md)                                                                                                                                                   |
-| UNN ICT               | [DNS_FOR_UNN_ICT.md](docs/DNS_FOR_UNN_ICT.md)                                                                                                                                 |
+| DNS manager           | [DNS.md](docs/DNS.md)                                                                                                                                                         |
 | Whoever runs the site | [RUNBOOK.md](docs/RUNBOOK.md) and [POSTMORTEM_TEMPLATE.md](docs/POSTMORTEM_TEMPLATE.md)                                                                                       |
 | Developers            | [ENGINEERING.md](docs/ENGINEERING.md) (all 111 engineering items), [DECISIONS.md](docs/DECISIONS.md), [DESIGN_REVIEW.md](docs/DESIGN_REVIEW.md), [CHANGELOG.md](CHANGELOG.md) |
 
 ## Stack
 
-Next.js 16 (App Router, Cache Components, TypeScript strict) · Supabase (Postgres, Auth, Storage, Realtime) · Tailwind CSS 4 with JHTS design tokens · Paystack · Resend · Vercel.
+Next.js 16 (App Router, Cache Components, TypeScript strict) · Supabase (Postgres, Auth, Storage, Realtime) · Tailwind CSS 4 with JHTCS design tokens · Paystack · Resend · Vercel.
 
 ## Run it locally
 
@@ -43,7 +43,7 @@ Copy `.env.example` to `.env.local` for development; in production set them in V
 
 | Variable                                                    | What it is                                                                    |
 | ----------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`                                      | The site's address, e.g. `https://jhts.unn.edu.ng`                            |
+| `NEXT_PUBLIC_SITE_URL`                                      | The site's address, e.g. `https://www.jhtcs.org`                              |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Project Settings → API                                             |
 | `SUPABASE_SERVICE_ROLE_KEY`                                 | Same page. **Server only**: never in client code or a `NEXT_PUBLIC_` variable |
 | `DATABASE_URL`                                              | Session-pooler connection string, for scripts (`samples:delete`, `db:test`)   |
@@ -62,9 +62,9 @@ Copy `.env.example` to `.env.local` for development; in production set them in V
 
 In the Supabase dashboard for the live project:
 
-1. **Authentication → URL configuration**: Site URL `https://jhts.unn.edu.ng`; add `https://jhts.unn.edu.ng/auth/callback` and `https://jhts.unn.edu.ng/auth/confirm` to the redirect URLs.
+1. **Authentication → URL configuration**: Site URL `https://www.jhtcs.org`; add `https://www.jhtcs.org/auth/callback` and `https://www.jhtcs.org/auth/confirm` to the redirect URLs.
 2. **Authentication → Email templates**: paste the four files from `supabase/templates` (confirm signup, invite, reset password, change email). Their links point at `/auth/confirm`.
-3. **Authentication → SMTP**: use Resend's SMTP details so auth emails come from the journal's domain (DNS records: [DNS_FOR_UNN_ICT.md](docs/DNS_FOR_UNN_ICT.md)).
+3. **Authentication → SMTP**: use Resend's SMTP details so auth emails come from the journal's domain (DNS records: [DNS.md](docs/DNS.md)).
 4. **Authentication → Providers → Email**: keep "Confirm email" on; minimum password length 10.
 5. Optional: enable Google under Providers, then switch on the `google_sign_in` feature flag.
 6. Create the first Super Admin with `npm run admin:create` (with `SUPER_ADMIN_EMAIL`, `SUPER_ADMIN_NAME` and the Supabase URL and service role key set). They receive an invitation email to choose a password, then invite everyone else from Admin → Users.
@@ -73,14 +73,14 @@ In the Supabase dashboard for the live project:
 
 All other email (receipts, decisions, reviewer invitations and reminders) is sent through Resend from the address in Admin → Settings.
 
-1. Resend → Domains → add `jhts.unn.edu.ng` and send the records it shows to UNN ICT ([DNS_FOR_UNN_ICT.md](docs/DNS_FOR_UNN_ICT.md)). Emails go out once the domain is verified.
+1. Resend → Domains → add `jhtcs.org` and add the records it shows to the domain's DNS ([DNS.md](docs/DNS.md)). Emails go out once the domain is verified.
 2. Resend → API keys → create a sending key for `RESEND_API_KEY`.
-3. Resend → Webhooks → `https://jhts.unn.edu.ng/api/webhooks/email` for `email.bounced` and `email.complained`; its signing secret is `RESEND_WEBHOOK_SECRET`. Addresses that bounce are not emailed again.
+3. Resend → Webhooks → `https://www.jhtcs.org/api/webhooks/email` for `email.bounced` and `email.complained`; its signing secret is `RESEND_WEBHOOK_SECRET`. Addresses that bounce are not emailed again.
 
 ## Payments (Paystack)
 
 1. In the Paystack dashboard (Settings → API keys and webhooks), copy the **test** keys into `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` and `PAYSTACK_SECRET_KEY`. The receipts and the admin show "TEST MODE" until live keys (`sk_live_…`) are used.
-2. Set the webhook URL to `https://jhts.unn.edu.ng/api/webhooks/paystack`. The callback URL is set per payment by the site.
+2. Set the webhook URL to `https://www.jhtcs.org/api/webhooks/paystack`. The callback URL is set per payment by the site.
 3. Without keys, set `PAYSTACK_MODE=mock` locally to use the simulated checkout. It is refused in production.
 4. **Going live:** the Unit completes Paystack's business verification ("Go live" in the dashboard), then the live keys (`pk_live_…`, `sk_live_…`) replace the test keys in Vercel. The TEST MODE banner disappears. [LAUNCH.md](docs/LAUNCH.md) describes a ₦100 live test payment and refund.
 5. Reconciliation runs daily at `/api/cron/reconcile` (yesterday in Lagos time; `?date=YYYY-MM-DD` for another day), from Vercel Cron and the GitHub workflow. Mismatches appear under Admin → Reconciliation and are emailed to the Finance Officers. Nothing is changed automatically.
@@ -111,7 +111,7 @@ Reviewers find their requests on `/account` and review at `/review/<id>`.
 
 - `sitemap.xml`, `robots.txt` and `rss.xml` are generated from the published content. Submit the sitemap in Google Search Console.
 - Google Scholar tags, Dublin Core and JSON-LD are on every article; Open Graph images are generated for the journal, issues and articles.
-- Crossref: set the DOI prefix in Settings once JHTS is a member, then use "Assign DOIs" and "Crossref XML" on each issue and upload the file at Crossref. Nothing is sent automatically.
+- Crossref: set the DOI prefix in Settings once JHTCS is a member, then use "Assign DOIs" and "Crossref XML" on each issue and upload the file at Crossref. Nothing is sent automatically.
 - OAI-PMH: switch on the `oai_pmh` flag in Settings; the base URL is `/api/oai`.
 - Views and downloads appear under Admin → Analytics. Set `METRICS_SALT` (16+ random characters) in production.
 
@@ -123,7 +123,7 @@ Production runs on Vercel (Pro plan, region `lhr1`, London) with Supabase in Lon
 2. Apply the database schema to the production project: `npx supabase link --project-ref <ref>` then `npx supabase db push`. Later migrations go the same way, before the deploy that needs them; every migration has a tested rollback in `supabase/rollbacks`.
 3. Every push to the main branch deploys; pull requests get preview deployments. CI (`.github/workflows/ci.yml`) runs lint, types, unit, database, rollback and end-to-end tests first.
 4. Scheduled jobs are in `vercel.json` (Vercel Cron) with `.github/workflows/cron.yml` as a backup caller.
-5. Add the domain in Vercel → Domains, and ask UNN ICT for the records in [DNS_FOR_UNN_ICT.md](docs/DNS_FOR_UNN_ICT.md). Vercel issues the HTTPS certificate.
+5. Add the domain in Vercel → Domains, and add the records in [DNS.md](docs/DNS.md). Vercel issues the HTTPS certificate.
 
 The full go-live sequence, including deleting the SAMPLE content and a live test payment, is [LAUNCH.md](docs/LAUNCH.md).
 
@@ -163,4 +163,4 @@ supabase/rollbacks    reversal for each migration                  supabase/test
 
 ## Docker
 
-`Dockerfile` builds a standalone production image; `docker-compose.yml` runs it against a local Supabase stack. Vercel deployments don't use them; they are there for development and in case UNN ICT ever self-hosts the site.
+`Dockerfile` builds a standalone production image; `docker-compose.yml` runs it against a local Supabase stack. Vercel deployments don't use them; they are there for development and in case the university ever self-hosts the site.

@@ -91,12 +91,12 @@ test("security.txt, manifest and icons are served", async ({ request }) => {
   expect(sec.status()).toBe(200);
   expect(await sec.text()).toMatch(/^Contact: \S+\nExpires: \d{4}-/m);
   const manifest = await (await request.get("/manifest.webmanifest")).json();
-  expect(manifest.short_name).toBe("JHTS");
+  expect(manifest.short_name).toBe("JHTCS");
   for (const path of [
     "/favicon.ico",
     "/apple-icon.png",
     "/brand/icon-512.png",
-    "/templates/JHTS-manuscript-template.docx",
+    "/templates/JHTCS-manuscript-template.docx",
   ])
     expect((await request.get(path)).status(), path).toBe(200);
 });
@@ -114,24 +114,23 @@ test.describe("theme", () => {
   test.use({ colorScheme: "dark" });
 
   test("light mode always loads first; dark is the reader's choice and is remembered", async ({ page }) => {
-    // On phones the toggle sits in the menu.
-    const toggle = async (name: string) => {
-      const button = page.getByRole("button", { name }).locator("visible=true");
-      if (!(await button.count())) await page.getByRole("button", { name: "Menu" }).locator("visible=true").click();
-      await button.first().click();
-    };
     const bg = () =>
       page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--bg").trim().toLowerCase());
+    // Clicks the theme toggle (in the menu on phones) and checks the result. Retried, because until the page
+    // has hydrated the toggle shows its default label and does nothing.
+    const toggleTo = (name: string, expected: string) =>
+      expect(async () => {
+        const button = page.getByRole("button", { name }).locator("visible=true");
+        const menu = page.getByRole("button", { name: "Menu" }).locator("visible=true");
+        if (!(await button.count()) && (await menu.count())) await menu.click({ timeout: 2000 });
+        await button.first().click({ timeout: 2000 });
+        expect(await bg()).toBe(expected);
+      }).toPass();
     await page.goto("/");
     await expect.poll(bg).toBe("#faf7ee");
-    // Retried until the page has hydrated and the toggle responds.
-    await expect(async () => {
-      await toggle("Switch to dark theme");
-      expect(await bg()).toBe("#101511");
-    }).toPass();
+    await toggleTo("Switch to dark theme", "#101511");
     await page.reload();
     await expect.poll(bg).toBe("#101511");
-    await toggle("Switch to light theme");
-    await expect.poll(bg).toBe("#faf7ee");
+    await toggleTo("Switch to light theme", "#faf7ee");
   });
 });

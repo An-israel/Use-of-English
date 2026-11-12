@@ -82,7 +82,7 @@ export default async function EditorialBoardPage() {
           <p className="smallcaps text-muted text-[0.85rem]">About the journal</p>
           <h1 className="display-tight font-display mt-4 text-[clamp(2.6rem,1.8rem+3.4vw,4.8rem)]">Editorial Board</h1>
           <p className="font-reading text-muted mt-6 max-w-[38rem] text-[1.15rem] leading-relaxed">
-            JHTS is edited by scholars of the University of Nigeria, Nsukka, with associate editors and consultants in
+            JHTCS is edited by scholars of the University of Nigeria, Nsukka, with associate editors and consultants in
             Nigeria, Cameroon, Malaysia and the United Kingdom. Members serve five-year terms and may be reappointed.
           </p>
         </div>

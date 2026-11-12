@@ -2,6 +2,15 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - JHTCS and www.jhtcs.org
+
+- The journal's abbreviation is now **JHTCS** everywhere: the logo and icons, page titles, emails, PDFs (receipts, acceptance letters, fund statements), file names, the manuscript template (`/templates/JHTCS-manuscript-template.docx`) and the admin.
+- The site's address is **https://www.jhtcs.org**, and emails are sent from `editorial@jhtcs.org`.
+- New submission IDs, payment references and receipt numbers start with `JHTCS-` (for example JHTCS-2027-0042). Ones already issued keep their `JHTS-` prefix so they stay traceable.
+- Migration `20261112000100_jhtcs_name` updates the stored pages, area descriptions and settings, and the ID functions; it has a tested rollback.
+- `docs/DNS.md` replaces the UNN ICT DNS note with the records for `jhtcs.org` (apex A record, `www` CNAME, and the Resend email records).
+- Backups now go to the `JHTCS-backups` folder on Google Drive.
+
 ## [1.1.2] - Light mode first
 
 - The site always opens in light mode, even when the device is set to dark. Dark mode is used only after a reader chooses it with the theme toggle, and that choice is remembered.

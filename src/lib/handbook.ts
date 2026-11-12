@@ -38,7 +38,7 @@ const githubSlug = (title: string) =>
     .replace(/\s/g, "-");
 
 /** docs/EDITORS_HANDBOOK.md, generated from src/content/handbook.ts. */
-export function handbookMarkdown(origin = "https://jhts.unn.edu.ng"): string {
+export function handbookMarkdown(origin = "https://www.jhtcs.org"): string {
   const parts = [
     "# Editor’s Handbook",
     "<!-- Generated from src/content/handbook.ts by `npm run handbook:generate`. Edit that file, not this one. -->",

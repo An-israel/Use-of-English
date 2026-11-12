@@ -217,7 +217,7 @@ async function ArticleContent({ params }: { params: Promise<Params> }) {
           {article.doi}
         </a>
       ) : (
-        <span className="text-muted">Assigned once JHTS joins Crossref</span>
+        <span className="text-muted">Assigned once JHTCS joins Crossref</span>
       ),
     ],
     [

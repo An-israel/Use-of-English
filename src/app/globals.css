@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
- * JHTS design tokens.
+ * JHTCS design tokens.
  * Raw palette values live on :root; semantic tokens (bg, fg, surface…) are what
  * components use, so dark mode only has to redefine the semantic layer.
  */

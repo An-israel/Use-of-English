@@ -99,7 +99,7 @@ reset role;
 select pg_temp.as_user('00000000-0000-4000-a000-00000000000a');
 do $$ begin
   insert into public.payments (reference, submission_id, author_id, fee_type, amount_kobo, status)
-  values ('JHTS-RF-X', '11111111-0000-4000-a000-000000000001', '00000000-0000-4000-a000-00000000000a', 'review', 500000, 'success');
+  values ('JHTCS-RF-X', '11111111-0000-4000-a000-000000000001', '00000000-0000-4000-a000-00000000000a', 'review', 500000, 'success');
   raise exception 'FAILED: author wrote a payment';
 exception when insufficient_privilege then raise notice 'ok - authors cannot write payments';
 end $$;
@@ -173,7 +173,7 @@ select set_config('request.jwt.claims', '', true), set_config('request.jwt.claim
 insert into auth.users (id, email, raw_app_meta_data, raw_user_meta_data) values
   ('00000000-0000-4000-a000-000000000010', 'finance@example.test', '{"jhts_role":"finance_officer"}', '{"full_name":"Finance F"}');
 insert into public.payments (id, reference, submission_id, author_id, fee_type, amount_kobo, status, paid_at)
-values ('44444444-0000-4000-a000-000000000001', 'JHTS-RF-TEST-1', '11111111-0000-4000-a000-000000000001',
+values ('44444444-0000-4000-a000-000000000001', 'JHTCS-RF-TEST-1', '11111111-0000-4000-a000-000000000001',
         '00000000-0000-4000-a000-00000000000a', 'review', 500000, 'success', now());
 
 select pg_temp.as_user('00000000-0000-4000-a000-00000000000a');
@@ -181,7 +181,7 @@ select pg_temp.check((select count(*) from public.payment_ledger) = 0, 'authors 
 reset role;
 
 select pg_temp.as_user('00000000-0000-4000-a000-00000000000d');
-select pg_temp.check((select count(*) from public.payment_ledger where reference = 'JHTS-RF-TEST-1') = 1, 'editors can view the ledger');
+select pg_temp.check((select count(*) from public.payment_ledger where reference = 'JHTCS-RF-TEST-1') = 1, 'editors can view the ledger');
 do $$ begin
   insert into public.refunds (payment_id, amount_kobo, reason, refunded_on, recorded_by)
   values ('44444444-0000-4000-a000-000000000001', 100, 'x', current_date, '00000000-0000-4000-a000-00000000000d');
@@ -207,7 +207,7 @@ insert into public.refunds (payment_id, amount_kobo, reason, refunded_on, record
 values ('44444444-0000-4000-a000-000000000001', 300000, 'Rest of it', current_date, '00000000-0000-4000-a000-000000000010');
 select pg_temp.check((select status from public.payments where id = '44444444-0000-4000-a000-000000000001') = 'refunded',
   'the finance officer records refunds; a full refund marks the payment refunded');
-select pg_temp.check((select net_kobo from public.payment_ledger where reference = 'JHTS-RF-TEST-1') = 0, 'the ledger nets refunds');
+select pg_temp.check((select net_kobo from public.payment_ledger where reference = 'JHTCS-RF-TEST-1') = 0, 'the ledger nets refunds');
 reset role;
 
 -- Live notifications (milestone 9)
@@ -216,11 +216,11 @@ insert into public.contact_messages (name, email, subject, message) values ('N',
 update public.payments set status = 'failed' where id = '44444444-0000-4000-a000-000000000001';
 select pg_temp.as_user('00000000-0000-4000-a000-00000000000d');
 select pg_temp.check(exists (select 1 from public.staff_notifications where body = 'RLS notify'), 'editors are notified of contact messages');
-select pg_temp.check(not exists (select 1 from public.staff_notifications where kind = 'payment' and body = 'JHTS-RF-TEST-1'),
+select pg_temp.check(not exists (select 1 from public.staff_notifications where kind = 'payment' and body = 'JHTCS-RF-TEST-1'),
   'editors do not get payment notifications');
 reset role;
 select pg_temp.as_user('00000000-0000-4000-a000-000000000010');
-select pg_temp.check(exists (select 1 from public.staff_notifications where kind = 'payment' and body = 'JHTS-RF-TEST-1'),
+select pg_temp.check(exists (select 1 from public.staff_notifications where kind = 'payment' and body = 'JHTCS-RF-TEST-1'),
   'a failed payment notifies the finance officer');
 reset role;
 select pg_temp.as_user('00000000-0000-4000-a000-00000000000a');

@@ -31,9 +31,9 @@ export function surname(name: string | null | undefined): string {
 }
 
 /**
- * Clean file names (brief section 9.3): JHTS_Vol1_No2_2027_Okafor.pdf for an
- * article in an issue, JHTS_InPress_2027_Okafor.pdf before it has one, and
- * JHTS_Vol1_No2_2027.pdf for the full issue.
+ * Clean file names (brief section 9.3): JHTCS_Vol1_No2_2027_Okafor.pdf for an
+ * article in an issue, JHTCS_InPress_2027_Okafor.pdf before it has one, and
+ * JHTCS_Vol1_No2_2027.pdf for the full issue.
  */
 export function downloadName(opts: {
   format: "pdf" | "docx";
@@ -42,7 +42,7 @@ export function downloadName(opts: {
   firstAuthor?: string | null;
   firstPage?: number | null;
 }): string {
-  const parts = ["JHTS"];
+  const parts = ["JHTCS"];
   if (opts.issue) parts.push(`Vol${opts.issue.volume}`, `No${opts.issue.number}`, String(opts.issue.year));
   else parts.push("InPress", String(opts.year ?? new Date().getUTCFullYear()));
   const who = surname(opts.firstAuthor);

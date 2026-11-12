@@ -210,7 +210,7 @@ export default async function IssuePage({ params }: { params: Promise<{ id: stri
                 <Link href="/admin/settings" className="underline underline-offset-4">
                   Settings
                 </Link>{" "}
-                once JHTS joins Crossref; DOIs and the deposit file are then generated here.
+                once JHTCS joins Crossref; DOIs and the deposit file are then generated here.
               </p>
             ) : (
               <>

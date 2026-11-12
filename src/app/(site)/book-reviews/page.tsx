@@ -11,7 +11,7 @@ import { formatDate } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Book Reviews",
-  description: "Reviews of new books in the humanities and transcultural studies, published in JHTS.",
+  description: "Reviews of new books in the humanities and transcultural studies, published in JHTCS.",
   alternates: { canonical: "/book-reviews" },
 };
 

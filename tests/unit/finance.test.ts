@@ -3,7 +3,7 @@ import { csvCell, dateBounds, parseFilters, toCsv, totals, type LedgerRow } from
 
 const row = (p: Partial<LedgerRow>): LedgerRow => ({
   id: "1",
-  reference: "JHTS-RF-2027-0001-1",
+  reference: "JHTCS-RF-2027-0001-1",
   fee_type: "review",
   status: "success",
   amount_kobo: 500_000,
@@ -13,10 +13,10 @@ const row = (p: Partial<LedgerRow>): LedgerRow => ({
   created_at: "2027-03-10T08:59:00Z",
   activity_at: "2027-03-10T09:00:00Z",
   channel: "card",
-  receipt_number: "JHTS-R-2027-000001",
+  receipt_number: "JHTCS-R-2027-000001",
   waiver_reason: null,
   submission_id: "s",
-  public_id: "JHTS-2027-0001",
+  public_id: "JHTCS-2027-0001",
   title: "T",
   payer_name: "P",
   payer_email: "p@example.test",

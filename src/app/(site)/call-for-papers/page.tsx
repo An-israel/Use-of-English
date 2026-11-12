@@ -10,7 +10,7 @@ import { sanitize } from "@/lib/sanitize";
 
 export const metadata: Metadata = {
   title: "Call for Papers",
-  description: "The current JHTS call for papers: the next issue, its deadline and how to submit.",
+  description: "The current JHTCS call for papers: the next issue, its deadline and how to submit.",
   alternates: { canonical: "/call-for-papers" },
 };
 
