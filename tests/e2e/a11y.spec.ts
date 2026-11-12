@@ -59,12 +59,18 @@ async function scan(page: Page, label: string) {
   expect.soft(report, `${label}\n${report.join("\n")}`).toEqual([]);
 }
 
+/** Light is the default; dark mode is the reader's choice, saved by the theme toggle. */
+async function useTheme(page: Page, scheme: "light" | "dark") {
+  if (scheme === "dark") await page.addInitScript(() => localStorage.setItem("jhts-theme", "dark"));
+}
+
 for (const scheme of ["light", "dark"] as const) {
   test.describe(`${scheme} mode`, () => {
     test.use({ colorScheme: scheme });
 
     test("public pages have no WCAG 2.2 AA violations", async ({ page }) => {
       test.setTimeout(180_000);
+      await useTheme(page, scheme);
       for (const path of publicPages) {
         await page.goto(path);
         await scan(page, path);
@@ -127,7 +133,7 @@ test.describe("signed in", () => {
 
   for (const scheme of ["light", "dark"] as const) {
     test(`author pages (${scheme})`, async ({ page }) => {
-      await page.emulateMedia({ colorScheme: scheme });
+      await useTheme(page, scheme);
       await signIn(page, author);
       for (const path of ["/account", "/submit"]) {
         await page.goto(path);
@@ -137,7 +143,7 @@ test.describe("signed in", () => {
 
     test(`admin pages (${scheme})`, async ({ page }) => {
       test.setTimeout(240_000);
-      await page.emulateMedia({ colorScheme: scheme });
+      await useTheme(page, scheme);
       const db = sb();
       const [{ data: sub }, { data: issue }, { data: art }, { data: pay }, { data: pg }] = await Promise.all([
         db.from("submissions").select("id").eq("id", created.submission!).single(),

@@ -109,3 +109,29 @@ test("the contact page lists the enquiry contacts", async ({ page }) => {
   );
   await expect(page.getByRole("main").getByText("Editor-in-Chief", { exact: true })).toBeVisible();
 });
+
+test.describe("theme", () => {
+  test.use({ colorScheme: "dark" });
+
+  test("light mode always loads first; dark is the reader's choice and is remembered", async ({ page }) => {
+    // On phones the toggle sits in the menu.
+    const toggle = async (name: string) => {
+      const button = page.getByRole("button", { name }).locator("visible=true");
+      if (!(await button.count())) await page.getByRole("button", { name: "Menu" }).locator("visible=true").click();
+      await button.first().click();
+    };
+    const bg = () =>
+      page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--bg").trim().toLowerCase());
+    await page.goto("/");
+    await expect.poll(bg).toBe("#faf7ee");
+    // Retried until the page has hydrated and the toggle responds.
+    await expect(async () => {
+      await toggle("Switch to dark theme");
+      expect(await bg()).toBe("#101511");
+    }).toPass();
+    await page.reload();
+    await expect.poll(bg).toBe("#101511");
+    await toggle("Switch to light theme");
+    await expect.poll(bg).toBe("#faf7ee");
+  });
+});

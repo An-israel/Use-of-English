@@ -2,6 +2,11 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.1.2] - Light mode first
+
+- The site always opens in light mode, even when the device is set to dark. Dark mode is used only after a reader chooses it with the theme toggle, and that choice is remembered.
+- The browser theme colour and the contact form's spam check are always light.
+
 ## [1.1.1] - Distinct home-page sections
 
 - Each home-page section has its own tone from the flyer palette, in light and dark mode, so the page no longer reads as one long cream band:
