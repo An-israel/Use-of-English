@@ -1,5 +1,5 @@
 /**
- * Seed content for JHTS. This file is the single source of truth for the
+ * Seed content for JHTCS. This file is the single source of truth for the
  * initial database contents: `npm run seed:generate` turns it into
  * supabase/seed.sql, and the site uses it directly in demo mode (no Supabase).
  *
@@ -12,7 +12,7 @@ export const FEE_INTEGRITY_STATEMENT =
 
 export const settings: SiteSettings = {
   journalName: "Journal of Humanities and Transcultural Studies",
-  shortName: "JHTS",
+  shortName: "JHTCS",
   tagline: "A quarterly journal of humanities and transcultural scholarship",
   motto: "Knowledge · Cultures · Global Voices",
   publisher: "The Use of English Unit, School of General Studies, University of Nigeria, Nsukka",
@@ -22,7 +22,7 @@ export const settings: SiteSettings = {
   issn: null,
   eissn: null,
   doiPrefix: null,
-  contactEmail: "[JHTS_EMAIL]",
+  contactEmail: "[JHTCS_EMAIL]",
   // From the Call for Papers flyer.
   enquiries: [
     { name: "Associate Professor Virginia Eze", role: "Editor-in-Chief", phone: "+234 (0)803 665 9581" },
@@ -30,7 +30,7 @@ export const settings: SiteSettings = {
     { name: "Dr Festus Ngwoke", role: "Book Review Editor", phone: "+234 (0)803 736 7014" },
     { name: "Dr Ifeyinwa David-Ojukwu", role: "Managing Editor", phone: "+234 (0)903 386 6531" },
   ],
-  domain: "jhts.unn.edu.ng",
+  domain: "jhtcs.org",
   postalAddress:
     "Use of English Unit, School of General Studies, University of Nigeria, Nsukka 410001, Enugu State, Nigeria [TO CONFIRM]",
   officeHours: "Monday to Friday, 9:00 to 16:00 WAT [TO CONFIRM]",
@@ -45,9 +45,9 @@ export const settings: SiteSettings = {
   social: [],
   seo: {
     description:
-      "JHTS is a peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka.",
+      "JHTCS is a peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka.",
   },
-  emailSender: "JHTS Editorial Office <editorial@jhts.unn.edu.ng>",
+  emailSender: "JHTCS Editorial Office <editorial@jhtcs.org>",
 };
 
 export const featureFlags: FeatureFlags = {
@@ -85,7 +85,7 @@ export const categories: Category[] = [
     slug: "language-literature-and-linguistics",
     shortDescription: "Language in use and in structure, and literatures in every form, oral and written.",
     description:
-      "Studies of the structure, acquisition, use and change of language, from phonology and syntax to sociolinguistics, discourse analysis and applied linguistics; criticism and scholarship on fiction, poetry, drama, life writing and oral literature; and translation and interpreting as practice and theory. JHTS particularly welcomes work on Nigerian and other African languages and literatures, on Nigerian English and World Englishes, and on multilingual practice.",
+      "Studies of the structure, acquisition, use and change of language, from phonology and syntax to sociolinguistics, discourse analysis and applied linguistics; criticism and scholarship on fiction, poetry, drama, life writing and oral literature; and translation and interpreting as practice and theory. JHTCS particularly welcomes work on Nigerian and other African languages and literatures, on Nigerian English and World Englishes, and on multilingual practice.",
     threadColor: "--thread-language",
     sortOrder: 2,
   },

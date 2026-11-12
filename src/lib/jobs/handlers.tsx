@@ -105,7 +105,7 @@ async function paymentReceipt(payload: Record<string, unknown>) {
 
   await sendEmail({
     to: author.email,
-    subject: `Receipt ${p.receipt_number} · JHTS`,
+    subject: `Receipt ${p.receipt_number} · JHTCS`,
     template: "payment_receipt",
     relatedId: p.id,
     dedupeKey: `receipt-email:${p.id}`,
@@ -141,7 +141,7 @@ async function submissionEmail(payload: Record<string, unknown>, kind: "received
     const reviewKobo = (setting?.value as { reviewKobo?: number } | null)?.reviewKobo ?? 500_000;
     await sendEmail({
       to: author.email,
-      subject: `Submission ${s.public_id} received · JHTS`,
+      subject: `Submission ${s.public_id} received · JHTCS`,
       template: "submission_received",
       relatedId: s.id,
       dedupeKey: `received-email:${s.id}`,
@@ -169,7 +169,7 @@ async function submissionEmail(payload: Record<string, unknown>, kind: "received
     .maybeSingle();
   await sendEmail({
     to: author.email,
-    subject: `${s.public_id}: ${STATUS_LABEL[to]} · JHTS`,
+    subject: `${s.public_id}: ${STATUS_LABEL[to]} · JHTCS`,
     template: "status_changed",
     relatedId: s.id,
     dedupeKey: `status-email:${payload.event_id}`,
@@ -238,7 +238,7 @@ async function reviewEmail(payload: Record<string, unknown>, kind: "invitation" 
     if (r.status === "cancelled") return;
     await sendEmail({
       to: reviewer.email,
-      subject: "Invitation to review for JHTS",
+      subject: "Invitation to review for JHTCS",
       template: "review_invitation",
       relatedId: r.id,
       dedupeKey: `review-invite-email:${r.id}`,
@@ -315,7 +315,7 @@ async function reviewReminder(payload: Record<string, unknown>) {
   const sub = r.submission as unknown as { title: string };
   await sendEmail({
     to: reviewer.email,
-    subject: Date.parse(r.due_at) < Date.now() ? "Your JHTS review is overdue" : "Reminder: your JHTS review",
+    subject: Date.parse(r.due_at) < Date.now() ? "Your JHTCS review is overdue" : "Reminder: your JHTCS review",
     template: "review_reminder",
     relatedId: r.id,
     dedupeKey: `review-reminder:${r.id}:${new Date().toISOString().slice(0, 10)}`,

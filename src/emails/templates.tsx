@@ -155,7 +155,7 @@ export function ReviewInvitation({
   url: string;
 }) {
   return (
-    <Layout preview={`Invitation to review: ${title}`} title="Will you review a manuscript for JHTS?">
+    <Layout preview={`Invitation to review: ${title}`} title="Will you review a manuscript for JHTCS?">
       <P>Dear {name},</P>
       <P>
         The editors of the Journal of Humanities and Transcultural Studies invite you to review the manuscript “{title}

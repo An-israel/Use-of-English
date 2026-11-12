@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { sign, verifySignature } from "@/lib/payments/paystack";
 
 const secret = "sk_test_abc123";
-const body = JSON.stringify({ event: "charge.success", data: { reference: "JHTS-RF-2027-0042-1", amount: 500000 } });
+const body = JSON.stringify({ event: "charge.success", data: { reference: "JHTCS-RF-2027-0042-1", amount: 500000 } });
 
 describe("Paystack webhook signature", () => {
   it("accepts the HMAC SHA-512 of the raw body", () => {

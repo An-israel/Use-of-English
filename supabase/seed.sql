@@ -6,7 +6,7 @@ begin;
 
 -- Site settings
 insert into public.site_settings (key, value, is_public) values ('journalName', '"Journal of Humanities and Transcultural Studies"'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('shortName', '"JHTS"'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('shortName', '"JHTCS"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('tagline', '"A quarterly journal of humanities and transcultural scholarship"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('motto', '"Knowledge · Cultures · Global Voices"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('publisher', '"The Use of English Unit, School of General Studies, University of Nigeria, Nsukka"'::jsonb, true) on conflict (key) do nothing;
@@ -16,17 +16,17 @@ insert into public.site_settings (key, value, is_public) values ('frequency', '"
 insert into public.site_settings (key, value, is_public) values ('issn', 'null'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('eissn', 'null'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('doiPrefix', 'null'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('contactEmail', '"[JHTS_EMAIL]"'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('contactEmail', '"[JHTCS_EMAIL]"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('enquiries', '[{"name":"Associate Professor Virginia Eze","role":"Editor-in-Chief","phone":"+234 (0)803 665 9581"},{"name":"Professor Chinyere Ngonebu","role":"Assistant Editor","phone":"+234 (0)803 618 6242"},{"name":"Dr Festus Ngwoke","role":"Book Review Editor","phone":"+234 (0)803 736 7014"},{"name":"Dr Ifeyinwa David-Ojukwu","role":"Managing Editor","phone":"+234 (0)903 386 6531"}]'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('domain', '"jhts.unn.edu.ng"'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('domain', '"jhtcs.org"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('postalAddress', '"Use of English Unit, School of General Studies, University of Nigeria, Nsukka 410001, Enugu State, Nigeria [TO CONFIRM]"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('officeHours', '"Monday to Friday, 9:00 to 16:00 WAT [TO CONFIRM]"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('licence', '{"name":"CC BY 4.0","url":"https://creativecommons.org/licenses/by/4.0/"}'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('fees', '{"enabled":true,"reviewKobo":500000,"publicationKobo":2000000,"covers":"Review administration, similarity checking, copy-editing, formatting, production and website maintenance."}'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('showBoardTerms', 'false'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('social', '[]'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('seo', '{"description":"JHTS is a peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka."}'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('emailSender', '"JHTS Editorial Office <editorial@jhts.unn.edu.ng>"'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('seo', '{"description":"JHTCS is a peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka."}'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('emailSender', '"JHTCS Editorial Office <editorial@jhtcs.org>"'::jsonb, true) on conflict (key) do nothing;
 
 -- Feature flags
 insert into public.feature_flags (key, enabled, description) values ('submissions_open', true, 'Authors can start new submissions') on conflict (key) do nothing;
@@ -38,7 +38,7 @@ insert into public.feature_flags (key, enabled, description) values ('home_book_
 
 -- Categories
 insert into public.categories (id, name, slug, short_description, description, thread_color, sort_order) values ('c0000000-0000-4000-8000-000000000002', 'Humanities and Social Sciences', 'humanities-and-social-sciences', 'Human life, society and the past, studied through the humanities and social sciences.', 'Scholarship on human experience, society and the past: history, archaeology, the arts, music, theatre and performance, sociology, anthropology, psychology and related fields. We welcome studies of Nigerian and African societies and comparative work that sets them beside other parts of the world.', '--thread-humanities', 1) on conflict (id) do nothing;
-insert into public.categories (id, name, slug, short_description, description, thread_color, sort_order) values ('c0000000-0000-4000-8000-000000000001', 'Language, Literature and Linguistics', 'language-literature-and-linguistics', 'Language in use and in structure, and literatures in every form, oral and written.', 'Studies of the structure, acquisition, use and change of language, from phonology and syntax to sociolinguistics, discourse analysis and applied linguistics; criticism and scholarship on fiction, poetry, drama, life writing and oral literature; and translation and interpreting as practice and theory. JHTS particularly welcomes work on Nigerian and other African languages and literatures, on Nigerian English and World Englishes, and on multilingual practice.', '--thread-language', 2) on conflict (id) do nothing;
+insert into public.categories (id, name, slug, short_description, description, thread_color, sort_order) values ('c0000000-0000-4000-8000-000000000001', 'Language, Literature and Linguistics', 'language-literature-and-linguistics', 'Language in use and in structure, and literatures in every form, oral and written.', 'Studies of the structure, acquisition, use and change of language, from phonology and syntax to sociolinguistics, discourse analysis and applied linguistics; criticism and scholarship on fiction, poetry, drama, life writing and oral literature; and translation and interpreting as practice and theory. JHTCS particularly welcomes work on Nigerian and other African languages and literatures, on Nigerian English and World Englishes, and on multilingual practice.', '--thread-language', 2) on conflict (id) do nothing;
 insert into public.categories (id, name, slug, short_description, description, thread_color, sort_order) values ('c0000000-0000-4000-8000-000000000004', 'Communication and Media Studies', 'communication-and-media-studies', 'Media, rhetoric and communication in print, broadcast and digital cultures.', 'Studies of communication in its social settings: journalism, broadcasting, film, digital and social media, rhetoric, public relations and development communication, including the language and ethics of media in Nigeria and beyond.', '--thread-communication', 3) on conflict (id) do nothing;
 insert into public.categories (id, name, slug, short_description, description, thread_color, sort_order) values ('c0000000-0000-4000-8000-000000000007', 'Education and Pedagogy', 'education-and-pedagogy', 'Teaching, learning and literacy in their social and institutional settings.', 'Research on education as a social practice: language and literacy education, English for academic purposes, the teaching of the general studies curriculum, curriculum and policy, teacher education, assessment, and the place of the humanities in schools and universities.', '--thread-education', 4) on conflict (id) do nothing;
 insert into public.categories (id, name, slug, short_description, description, thread_color, sort_order) values ('c0000000-0000-4000-8000-000000000005', 'Technology, Innovation and Digital Cultures', 'technology-innovation-and-digital-cultures', 'How digital tools and new technologies change language, culture, learning and society.', 'Work on technology as a cultural and social force: digital humanities, computational and corpus approaches, artificial intelligence and language, online communities, digital literacies, e-learning, and innovation in Nigerian and African contexts.', '--thread-technology', 5) on conflict (id) do nothing;
@@ -70,36 +70,36 @@ insert into public.editorial_board_members (id, "group", name, affiliation, term
 
 -- Pages and policies
 insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('d5fc2e54-39ed-520c-ad98-c08044ddf6bb', 'page', 'about', 'About the Journal', 'A peer-reviewed, open-access quarterly of the humanities and transcultural studies, published from Nsukka.', '<h2>A home for humanities scholarship</h2>
-<p>The <em>Journal of Humanities and Transcultural Studies</em> (JHTS) gives scholars a platform for original research across the humanities. It was established in 2026 by the Use of English Unit of the School of General Studies, University of Nigeria, Nsukka (UNN).</p>
-<p>“Transcultural” names the journal’s central interest: ideas crossing borders and being woven together. JHTS publishes work across nine areas of interest, from language, literature and linguistics to culture and identity, communication and media, education, technology and digital cultures, politics and governance, and philosophy, ethics and religion, and it especially welcomes scholarship that moves between languages, cultures and disciplines.</p>
+<p>The <em>Journal of Humanities and Transcultural Studies</em> (JHTCS) gives scholars a platform for original research across the humanities. It was established in 2026 by the Use of English Unit of the School of General Studies, University of Nigeria, Nsukka (UNN).</p>
+<p>“Transcultural” names the journal’s central interest: ideas crossing borders and being woven together. JHTCS publishes work across nine areas of interest, from language, literature and linguistics to culture and identity, communication and media, education, technology and digital cultures, politics and governance, and philosophy, ethics and religion, and it especially welcomes scholarship that moves between languages, cultures and disciplines.</p>
 <h2>Purpose</h2>
 <p>The journal strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and UNN, and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
 <h2>Publisher</h2>
-<p>JHTS is published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka.</p>
+<p>JHTCS is published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka.</p>
 <h2>Frequency and format</h2>
-<p>JHTS is published quarterly, in March, June, September and December, as an electronic-only journal. Accepted articles may appear online as Articles in Press before their issue is complete.</p>
+<p>JHTCS is published quarterly, in March, June, September and December, as an electronic-only journal. Accepted articles may appear online as Articles in Press before their issue is complete.</p>
 <h2>Open access</h2>
-<p>All JHTS content is freely available to read, download and share immediately on publication, with no charge to readers or their institutions. Articles are published under the Creative Commons Attribution 4.0 International licence (CC BY 4.0) <mark class="to-confirm">[TO CONFIRM]</mark>, so others may share and adapt the work provided the authors and the journal are credited.</p>
+<p>All JHTCS content is freely available to read, download and share immediately on publication, with no charge to readers or their institutions. Articles are published under the Creative Commons Attribution 4.0 International licence (CC BY 4.0) <mark class="to-confirm">[TO CONFIRM]</mark>, so others may share and adapt the work provided the authors and the journal are credited.</p>
 <h2>ISSN and DOI</h2>
 <p>The ISSN is in process. Digital Object Identifiers (DOIs) will be assigned to every article once the journal joins Crossref <mark class="to-confirm">[TO CONFIRM]</mark>.</p>
 <h2>Indexing</h2>
 <p>Indexing and abstracting services <mark class="to-confirm">[TO CONFIRM]</mark>.</p>', 0) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('130b3563-3b94-56a5-8fa8-0af99fcbb831', 'page', 'aims-and-scope', 'Aims and Scope', 'Nine areas of interest, four article types, and scholars at every stage of their careers.', '<p>JHTS publishes original, unpublished scholarship across the humanities and social sciences, in language, literature and linguistics, communication and media, education, technology and digital cultures, politics and governance, and philosophy, ethics and religion, with a particular interest in work that crosses borders between languages, cultures and disciplines. Its motto, <em>Knowledge · Cultures · Global Voices</em>, sums up that aim. Every submission is screened by the editors, checked for plagiarism and sent for double-blind peer review.</p>', 0) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('857bf955-8c51-5f86-85d9-6ebdbc317a8e', 'page', 'use-of-english-unit', 'The Use of English Unit', 'The home of JHTS within the School of General Studies, University of Nigeria, Nsukka.', '<p>JHTS is published by the Use of English Unit of the School of General Studies at the University of Nigeria, Nsukka.</p>
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('130b3563-3b94-56a5-8fa8-0af99fcbb831', 'page', 'aims-and-scope', 'Aims and Scope', 'Nine areas of interest, four article types, and scholars at every stage of their careers.', '<p>JHTCS publishes original, unpublished scholarship across the humanities and social sciences, in language, literature and linguistics, communication and media, education, technology and digital cultures, politics and governance, and philosophy, ethics and religion, with a particular interest in work that crosses borders between languages, cultures and disciplines. Its motto, <em>Knowledge · Cultures · Global Voices</em>, sums up that aim. Every submission is screened by the editors, checked for plagiarism and sent for double-blind peer review.</p>', 0) on conflict (kind, slug) do nothing;
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('857bf955-8c51-5f86-85d9-6ebdbc317a8e', 'page', 'use-of-english-unit', 'The Use of English Unit', 'The home of JHTCS within the School of General Studies, University of Nigeria, Nsukka.', '<p>JHTCS is published by the Use of English Unit of the School of General Studies at the University of Nigeria, Nsukka.</p>
 <h2>The Unit</h2>
 <p>History of the Use of English Unit, its founding and its development <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <p>The Unit’s teaching role: courses taught, number of students served each year and the departments involved <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <h2>The School of General Studies</h2>
 <p>The School of General Studies, its mandate within UNN and its relationship to the Unit <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <h2>The Unit and the journal</h2>
-<p>JHTS strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and UNN, and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
+<p>JHTCS strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and UNN, and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
 <p>The Editor-in-Chief serves a five-year term that is separate from the office of the Coordinator of the Use of English Unit.</p>
 <h2>Coordinator</h2>
 <p>Name and title of the current Coordinator of the Unit <mark class="to-confirm">[TO CONFIRM]</mark></p>', 0) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('f25d5f81-0a8a-5e53-b79d-8825b4089ea8', 'page', 'author-guidelines', 'Author Guidelines', 'How to prepare and submit a manuscript to JHTS.', '<h2>Originality</h2>
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('f25d5f81-0a8a-5e53-b79d-8825b4089ea8', 'page', 'author-guidelines', 'Author Guidelines', 'How to prepare and submit a manuscript to JHTCS.', '<h2>Originality</h2>
 <p>Manuscripts must be original and unpublished, and must not be under review elsewhere at the same time.</p>
 <h2>Formatting</h2>
-<p>Prepare your manuscript in Microsoft Word (.docx), set in Times New Roman, 12 point, double-spaced throughout, with page numbers. The <a href="/templates/JHTS-manuscript-template.docx">JHTS manuscript template</a> is set up this way.</p>
+<p>Prepare your manuscript in Microsoft Word (.docx), set in Times New Roman, 12 point, double-spaced throughout, with page numbers. The <a href="/templates/JHTCS-manuscript-template.docx">JHTCS manuscript template</a> is set up this way.</p>
 <h2>Referencing</h2>
 <p>Use either APA 7th edition or MLA 9th edition, consistently throughout the paper. Tell us which style you used when you submit.</p>
 <h2>Recommended structure for research articles</h2>
@@ -123,19 +123,19 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 <li>Book reviews: word limit <mark class="to-confirm">[TO CONFIRM]</mark></li>
 </ul>
 <h2>Double-blind review</h2>
-<p>Review at JHTS is double-blind: reviewers do not know who the authors are, and authors do not know who reviewed their work. Remove all author names, affiliations, acknowledgements and other identifying details from the manuscript file, including from the document properties. Author details go in the submission form and on the separate title page only.</p>
+<p>Review at JHTCS is double-blind: reviewers do not know who the authors are, and authors do not know who reviewed their work. Remove all author names, affiliations, acknowledgements and other identifying details from the manuscript file, including from the document properties. Author details go in the submission form and on the separate title page only.</p>
 <h2>Book reviews</h2>
 <p>Book reviews follow separate guidelines. A review should give the full bibliographic details of the book (author, title, publisher, year, ISBN and number of pages), summarise its argument, assess its contribution and say who will find it useful. Please contact the Book Review Editors before writing an unsolicited review <mark class="to-confirm">[TO CONFIRM]</mark>.</p>
 <h2>The review process</h2>
 <p>Screening → plagiarism check → peer review → decision → revisions → acceptance → publication fee → copy-editing and typesetting → publication.</p>
 <p>You can follow each stage from your author dashboard, and we will email you whenever the status of your submission changes.</p>', 0) on conflict (kind, slug) do nothing;
 insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('8f1f2f81-a5db-5a07-8203-5a7b5a968e7c', 'page', 'fees-and-payment', 'Fees and Payment', 'Two transparent fees, what they cover and how to pay.', '<h2>Payment methods</h2>
-<p>Fees are paid securely online through Paystack by card, bank transfer or USSD. JHTS never sees or stores your card details. You receive an emailed receipt and can download it from your dashboard at any time.</p>
+<p>Fees are paid securely online through Paystack by card, bank transfer or USSD. JHTCS never sees or stores your card details. You receive an emailed receipt and can download it from your dashboard at any time.</p>
 <h2>Refunds</h2>
 <p>Refund policy <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <h2>Waivers</h2>
 <p>Waivers may be granted at the editors’ discretion.</p>', 0) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('7911032b-e51f-516f-bc3e-064a7f14fca9', 'page', 'contact', 'Contact', 'Write to the JHTS editorial office.', '<p>For questions about submissions, reviews, payments or the journal in general, write to the editorial office using the form on this page. We aim to reply within three working days <mark class="to-confirm">[TO CONFIRM]</mark>.</p>', 0) on conflict (kind, slug) do nothing;
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('7911032b-e51f-516f-bc3e-064a7f14fca9', 'page', 'contact', 'Contact', 'Write to the JHTCS editorial office.', '<p>For questions about submissions, reviews, payments or the journal in general, write to the editorial office using the form on this page. We aim to reply within three working days <mark class="to-confirm">[TO CONFIRM]</mark>.</p>', 0) on conflict (kind, slug) do nothing;
 insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('12b4363c-f68f-50f1-b6f5-4b6daa1e05bb', 'page', 'faq', 'Questions and Timeline', 'Answers to common questions, and how long each stage usually takes.', '<h2>How long does it take?</h2>
 <p>Typical times for each stage <mark class="to-confirm">[TO CONFIRM]</mark>:</p>
 <ul>
@@ -150,14 +150,14 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 <h2>What can I submit?</h2>
 <p>Original research articles, theoretical papers, critical reviews and book reviews in any of the journal’s nine areas of interest. See the Aims and Scope.</p>
 <h2>Is there a template?</h2>
-<p>Yes: download the <a href="/templates/JHTS-manuscript-template.docx">JHTS manuscript template</a> (Word). It is set up in Times New Roman 12 point, double-spaced, with page numbers and the recommended headings.</p>
+<p>Yes: download the <a href="/templates/JHTCS-manuscript-template.docx">JHTCS manuscript template</a> (Word). It is set up in Times New Roman 12 point, double-spaced, with page numbers and the recommended headings.</p>
 <h2>What does it cost?</h2>
 <p>A review fee at submission and a publication fee only if your manuscript is accepted. See Fees and Payment. Payment of fees does not guarantee acceptance.</p>
 <h2>Can I follow my submission?</h2>
 <p>Yes. Your author dashboard shows each stage, and we email you whenever the status changes.</p>
 <h2>What if I disagree with a decision?</h2>
 <p>You may appeal. See the Complaints and Appeals policy.</p>', 0) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('fe3f30bd-afe7-5194-838b-cd03a84cf3d3', 'policy', 'publication-ethics', 'Publication Ethics and Malpractice', 'Our commitments, and what we expect of authors, reviewers and editors.', '<p>JHTS follows the Core Practices of the Committee on Publication Ethics (COPE). This statement sets out the duties of everyone involved in publishing with the journal. <mark class="to-confirm">[TO CONFIRM]</mark></p>
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('fe3f30bd-afe7-5194-838b-cd03a84cf3d3', 'policy', 'publication-ethics', 'Publication Ethics and Malpractice', 'Our commitments, and what we expect of authors, reviewers and editors.', '<p>JHTCS follows the Core Practices of the Committee on Publication Ethics (COPE). This statement sets out the duties of everyone involved in publishing with the journal. <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <h2>Editors</h2>
 <ul>
 <li>Judge manuscripts only on their scholarly merit, originality, clarity and relevance to the journal’s scope, without regard to the authors’ race, sex, religion, ethnic origin, citizenship, institution or political views.</li>
@@ -180,7 +180,7 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 </ul>
 <h2>Handling misconduct</h2>
 <p>Allegations of misconduct, including plagiarism, data fabrication, duplicate submission and citation manipulation, are investigated following COPE flowcharts. Outcomes may include rejection, correction, retraction, or notifying the author’s institution.</p>', 1) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('e8b11158-925d-53e0-a642-641f28e44fef', 'policy', 'peer-review', 'Peer Review Policy', 'Every research submission receives double-blind review by independent experts.', '<p>JHTS uses double-blind peer review: reviewers do not know the identity of the authors, and authors do not know the identity of the reviewers. <mark class="to-confirm">[TO CONFIRM]</mark></p>
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('e8b11158-925d-53e0-a642-641f28e44fef', 'policy', 'peer-review', 'Peer Review Policy', 'Every research submission receives double-blind review by independent experts.', '<p>JHTCS uses double-blind peer review: reviewers do not know the identity of the authors, and authors do not know the identity of the reviewers. <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <h2>The process</h2>
 <ol>
 <li><strong>Screening.</strong> The editors check that the manuscript fits the journal’s scope, follows the author guidelines and is properly anonymised.</li>
@@ -214,27 +214,27 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 <li>Plagiarism discovered after publication is handled under the Corrections, Retractions and Expressions of Concern policy.</li>
 </ul>
 <p>The similarity report is kept private to the editors.</p>', 5) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('6f099fdc-d92e-58ca-bb6e-e4b949fee77d', 'policy', 'corrections-and-retractions', 'Corrections, Retractions and Expressions of Concern', 'How the published record is kept accurate.', '<p>JHTS keeps the scholarly record accurate, following COPE guidance. <mark class="to-confirm">[TO CONFIRM]</mark></p>
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('6f099fdc-d92e-58ca-bb6e-e4b949fee77d', 'policy', 'corrections-and-retractions', 'Corrections, Retractions and Expressions of Concern', 'How the published record is kept accurate.', '<p>JHTCS keeps the scholarly record accurate, following COPE guidance. <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <ul>
 <li><strong>Corrections</strong> are published when an error affects part of an article but not its overall findings. The article is updated and a linked correction notice is published.</li>
 <li><strong>Retractions</strong> are published when the findings are unreliable, or in cases of plagiarism, duplicate publication or other serious misconduct. The retracted article stays online, clearly marked as retracted, with a notice giving the reason.</li>
 <li><strong>Expressions of concern</strong> may be published while an investigation is under way.</li>
 </ul>
 <p>Anyone who finds an error in a published article should write to the editorial office.</p>', 6) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('8407d45c-a076-5c18-9443-c5ad0eee0090', 'policy', 'open-access-and-licensing', 'Open Access and Licensing', 'Free to read and share, immediately, under CC BY 4.0.', '<p>JHTS is a fully open-access journal. All articles are free to read, download, copy, distribute and print immediately on publication, with no charge to readers. <mark class="to-confirm">[TO CONFIRM]</mark></p>
-<p>Articles are published under the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International licence (CC BY 4.0)</a>. Anyone may share and adapt the work for any purpose, provided they give appropriate credit to the authors and to JHTS, link to the licence and say whether changes were made.</p>', 7) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('4f65bc19-c159-5436-9e13-420bbac5b491', 'policy', 'copyright', 'Copyright', 'Authors keep the copyright in their work.', '<p>Authors who publish with JHTS keep the copyright in their work and grant the journal the right of first publication under the CC BY 4.0 licence. <mark class="to-confirm">[TO CONFIRM]</mark></p>
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('8407d45c-a076-5c18-9443-c5ad0eee0090', 'policy', 'open-access-and-licensing', 'Open Access and Licensing', 'Free to read and share, immediately, under CC BY 4.0.', '<p>JHTCS is a fully open-access journal. All articles are free to read, download, copy, distribute and print immediately on publication, with no charge to readers. <mark class="to-confirm">[TO CONFIRM]</mark></p>
+<p>Articles are published under the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International licence (CC BY 4.0)</a>. Anyone may share and adapt the work for any purpose, provided they give appropriate credit to the authors and to JHTCS, link to the licence and say whether changes were made.</p>', 7) on conflict (kind, slug) do nothing;
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('4f65bc19-c159-5436-9e13-420bbac5b491', 'policy', 'copyright', 'Copyright', 'Authors keep the copyright in their work.', '<p>Authors who publish with JHTCS keep the copyright in their work and grant the journal the right of first publication under the CC BY 4.0 licence. <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <ul>
-<li>Authors may deposit the published version in institutional or subject repositories and share it on personal websites, with a citation to the original publication in JHTS.</li>
+<li>Authors may deposit the published version in institutional or subject repositories and share it on personal websites, with a citation to the original publication in JHTCS.</li>
 <li>Authors are responsible for obtaining permission to reproduce any material, such as images or long quotations, for which they do not hold the copyright.</li>
 </ul>', 8) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('f1683e1f-ea5a-568c-ac71-b6668b9a1a63', 'policy', 'digital-preservation', 'Digital Preservation and Archiving', 'How JHTS makes sure its articles remain available.', '<p>JHTS is committed to keeping its content permanently available. <mark class="to-confirm">[TO CONFIRM]</mark></p>
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('f1683e1f-ea5a-568c-ac71-b6668b9a1a63', 'policy', 'digital-preservation', 'Digital Preservation and Archiving', 'How JHTCS makes sure its articles remain available.', '<p>JHTCS is committed to keeping its content permanently available. <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <ul>
 <li>The journal will apply to deposit its content with a dedicated preservation service, such as the PKP Preservation Network or LOCKSS <mark class="to-confirm">[TO CONFIRM]</mark>.</li>
 <li>The database is backed up daily by the hosting provider, and a full export of the database and all published files is made every week to separate storage owned by the journal.</li>
 <li>Authors are encouraged to deposit their published articles in their institutional repositories.</li>
 </ul>', 9) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('7e5ed010-33f7-5020-bb4c-8adb23cd05ab', 'policy', 'privacy', 'Privacy Policy', 'What personal data we collect, why, and your rights.', '<p>This policy explains how JHTS handles personal data, in line with the Nigeria Data Protection Act 2023 <mark class="to-confirm">[TO CONFIRM]</mark>.</p>
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('7e5ed010-33f7-5020-bb4c-8adb23cd05ab', 'policy', 'privacy', 'Privacy Policy', 'What personal data we collect, why, and your rights.', '<p>This policy explains how JHTCS handles personal data, in line with the Nigeria Data Protection Act 2023 <mark class="to-confirm">[TO CONFIRM]</mark>.</p>
 <h2>What we collect</h2>
 <ul>
 <li><strong>Account details:</strong> your name, email address, affiliation and, optionally, your ORCID iD.</li>
@@ -261,7 +261,7 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 <p>Refund policy <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <h2>Waivers</h2>
 <p>Waivers may be granted at the editors’ discretion.</p>', 11) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('a6f8411a-382e-5f73-8b2d-e73b8dac9659', 'policy', 'reviewer-guidelines', 'Guidelines for Reviewers', 'What we ask of reviewers, and how to write a useful report.', '<p>Peer reviewers are the heart of JHTS. These guidelines follow the COPE Ethical Guidelines for Peer Reviewers.</p>
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('a6f8411a-382e-5f73-8b2d-e73b8dac9659', 'policy', 'reviewer-guidelines', 'Guidelines for Reviewers', 'What we ask of reviewers, and how to write a useful report.', '<p>Peer reviewers are the heart of JHTCS. These guidelines follow the COPE Ethical Guidelines for Peer Reviewers.</p>
 <h2>Before you accept</h2>
 <ul>
 <li>Accept only if the manuscript is within your expertise and you can return the report by the due date shown in the invitation.</li>
@@ -281,7 +281,7 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 <p>Be specific, constructive and courteous: write as you would wish to be reviewed. Comments to the authors are shared with them anonymously; confidential comments are seen by the editors only.</p>
 <h2>Timing and recognition</h2>
 <p>Reviews are due within the period stated in the invitation <mark class="to-confirm">[TO CONFIRM]</mark>. You will receive reminders before and after the due date. Recognition for reviewers <mark class="to-confirm">[TO CONFIRM]</mark>.</p>', 12) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('a6955617-570c-5e68-a109-bfbfb40f4c02', 'policy', 'generative-ai', 'Generative AI in Writing and Reviewing', 'How authors, reviewers and editors may and may not use AI tools.', '<p>JHTS follows the COPE position on authorship and AI tools. <mark class="to-confirm">[TO CONFIRM]</mark></p>
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('a6955617-570c-5e68-a109-bfbfb40f4c02', 'policy', 'generative-ai', 'Generative AI in Writing and Reviewing', 'How authors, reviewers and editors may and may not use AI tools.', '<p>JHTCS follows the COPE position on authorship and AI tools. <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <h2>Authors</h2>
 <ul>
 <li>AI tools cannot be authors: they cannot take responsibility for the work, approve the final version or answer for its integrity.</li>
@@ -293,10 +293,10 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 <p>Manuscripts under review are confidential. Reviewers must not upload a manuscript, or any part of it, to a generative AI tool, and must not use such tools to write their reports.</p>
 <h2>Editors</h2>
 <p>Editors do not upload submissions to generative AI tools and do not use them to make editorial decisions. Similarity checking is done with the journal’s plagiarism-detection service.</p>', 13) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('f0d8a30b-9cc1-502e-8b13-1b84b4a7f8b3', 'policy', 'complaints-and-appeals', 'Complaints and Appeals', 'How to appeal a decision or complain about the journal, and what happens next.', '<p>JHTS handles complaints and appeals following COPE guidance. We take every complaint seriously and will not treat you differently for making one.</p>
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('f0d8a30b-9cc1-502e-8b13-1b84b4a7f8b3', 'policy', 'complaints-and-appeals', 'Complaints and Appeals', 'How to appeal a decision or complain about the journal, and what happens next.', '<p>JHTCS handles complaints and appeals following COPE guidance. We take every complaint seriously and will not treat you differently for making one.</p>
 <h2>Appealing an editorial decision</h2>
 <ol>
-<li>Write to the Editor-in-Chief within <mark class="to-confirm">[TO CONFIRM]</mark> of the decision, using the contact page and quoting your submission ID (for example JHTS-2027-0042).</li>
+<li>Write to the Editor-in-Chief within <mark class="to-confirm">[TO CONFIRM]</mark> of the decision, using the contact page and quoting your submission ID (for example JHTCS-2027-0042).</li>
 <li>Explain clearly why you think the decision should be reconsidered, responding to the reviewers’ and editors’ comments point by point. New evidence or a clear error in the review is a stronger ground than disagreement alone.</li>
 <li>The appeal is considered by an editor who was not involved in the original decision, who may seek a further review.</li>
 <li>We aim to reply within <mark class="to-confirm">[TO CONFIRM]</mark>. The outcome of an appeal is final.</li>

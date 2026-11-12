@@ -83,7 +83,7 @@ const detailsSchema = z.object({
     z
       .string()
       .trim()
-      .regex(/^10\.\d{4,9}\/\S+$/, "A DOI looks like 10.12345/jhts.2027.001."),
+      .regex(/^10\.\d{4,9}\/\S+$/, "A DOI looks like 10.12345/jhtcs.2027.001."),
     z.literal(""),
   ]),
   licence: z.string().trim().min(2).max(100),

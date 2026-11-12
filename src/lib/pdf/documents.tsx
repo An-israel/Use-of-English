@@ -62,7 +62,7 @@ function Masthead() {
       {/* eslint-disable-next-line jsx-a11y/alt-text -- react-pdf Image has no alt */}
       <Image src={{ data: emblemPng(), format: "png" }} style={{ width: 46, height: 46, marginRight: 14 }} />
       <View>
-        <Text style={s.mast}>JHTS</Text>
+        <Text style={s.mast}>JHTCS</Text>
         <Text style={s.sub}>JOURNAL OF HUMANITIES AND TRANSCULTURAL STUDIES</Text>
       </View>
     </View>
@@ -106,7 +106,7 @@ export type ReceiptData = {
 
 export function renderReceipt(d: ReceiptData) {
   return renderToBuffer(
-    <Document title={`JHTS receipt ${d.receiptNumber}`} author="JHTS" subject="Payment receipt">
+    <Document title={`JHTCS receipt ${d.receiptNumber}`} author="JHTCS" subject="Payment receipt">
       <Page size="A4" style={s.page}>
         <Masthead />
         {d.testMode && (
@@ -152,7 +152,7 @@ export type LetterData = {
 
 export function renderAcceptanceLetter(d: LetterData) {
   return renderToBuffer(
-    <Document title={`JHTS acceptance ${d.publicId}`} author="JHTS" subject="Letter of acceptance">
+    <Document title={`JHTCS acceptance ${d.publicId}`} author="JHTCS" subject="Letter of acceptance">
       <Page size="A4" style={s.page}>
         <Masthead />
         <Text style={[s.muted, { marginBottom: 18 }]}>{d.date}</Text>
@@ -169,7 +169,7 @@ export function renderAcceptanceLetter(d: LetterData) {
           The manuscript will now be copy-edited and typeset. It will be published online as an Article in Press and
           then assigned to a forthcoming issue. You will be notified when it is published.
         </Text>
-        <Text style={s.body}>Thank you for choosing JHTS for your work.</Text>
+        <Text style={s.body}>Thank you for choosing JHTCS for your work.</Text>
         <Lozenge />
         <Text style={s.body}>Yours sincerely,</Text>
         <Text style={[s.body, { fontFamily: "Times-Bold", marginBottom: 2 }]}>{d.editorName}</Text>
@@ -259,7 +259,7 @@ export type PaymentsReportData = {
 /** Payments report (brief section 7.3): totals by month and fee type, then the ledger. Landscape A4. */
 export function renderPaymentsReport(d: PaymentsReportData) {
   return renderToBuffer(
-    <Document title={d.title} author="JHTS" subject="Payments report">
+    <Document title={d.title} author="JHTCS" subject="Payments report">
       <Page size="A4" orientation="landscape" style={t.page}>
         <Text style={t.h1}>{d.title}</Text>
         <Text style={t.muted}>{d.filters}</Text>
@@ -335,7 +335,7 @@ export type FundStatementData = {
 /** The fund statement for transparency: collected, refunds and net, by year. */
 export function renderFundStatement(d: FundStatementData) {
   return renderToBuffer(
-    <Document title="JHTS fund statement" author="JHTS" subject="Fund statement">
+    <Document title="JHTCS fund statement" author="JHTCS" subject="Fund statement">
       <Page size="A4" style={s.page}>
         <Masthead />
         <Text style={s.h1}>Fund statement</Text>

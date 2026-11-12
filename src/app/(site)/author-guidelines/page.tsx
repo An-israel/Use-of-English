@@ -9,7 +9,7 @@ import { formatNaira } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Author Guidelines",
-  description: "How to prepare, format and submit a manuscript to JHTS.",
+  description: "How to prepare, format and submit a manuscript to JHTCS.",
   alternates: { canonical: "/author-guidelines" },
 };
 

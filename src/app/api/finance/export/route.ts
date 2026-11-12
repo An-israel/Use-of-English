@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
           header,
           years.map((y) => [y.year, y.payments, naira(y.collected), naira(y.refunded), naira(y.net), y.waived]),
         ),
-        `JHTS_fund_statement_${stamp}.csv`,
+        `JHTCS_fund_statement_${stamp}.csv`,
         "text/csv; charset=utf-8",
       );
     const pdf = await renderFundStatement({
@@ -97,13 +97,13 @@ export async function GET(req: NextRequest) {
       ]),
       byFee: feeRows(t.byFee),
     });
-    return file(pdf, `JHTS_fund_statement_${stamp}.pdf`, "application/pdf");
+    return file(pdf, `JHTCS_fund_statement_${stamp}.pdf`, "application/pdf");
   }
 
   if (format === "csv")
     return file(
       toCsv(LEDGER_CSV_HEADER, rows.map(ledgerCsvRow)),
-      `JHTS_payments_${stamp}.csv`,
+      `JHTCS_payments_${stamp}.csv`,
       "text/csv; charset=utf-8",
     );
 
@@ -120,7 +120,7 @@ export async function GET(req: NextRequest) {
       .filter(Boolean)
       .join(" · ") + ` · ${rows.length} payment records`;
   const pdf = await renderPaymentsReport({
-    title: "JHTS payments report",
+    title: "JHTCS payments report",
     filters: filterText,
     generated: formatDate(new Date().toISOString()),
     testMode,
@@ -153,7 +153,7 @@ export async function GET(req: NextRequest) {
       ]),
     truncated: Math.max(0, rows.length - PDF_ROWS),
   });
-  return file(pdf, `JHTS_payments_${stamp}.pdf`, "application/pdf");
+  return file(pdf, `JHTCS_payments_${stamp}.pdf`, "application/pdf");
 }
 
 function feeRows(byFee: ReturnType<typeof totals>["byFee"]): string[][] {

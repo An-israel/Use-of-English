@@ -33,7 +33,7 @@ const PREVIEWS: { id: string; label: string; to: string; when: string; element: 
     element: (
       <SubmissionReceived
         name="Ada Okafor"
-        publicId="JHTS-2027-0042"
+        publicId="JHTCS-2027-0042"
         title="Proverbs in Translation (example)"
         url={u("/account")}
         feeDue="₦10,000 review fee"
@@ -48,11 +48,11 @@ const PREVIEWS: { id: string; label: string; to: string; when: string; element: 
     element: (
       <PaymentReceipt
         name="Ada Okafor"
-        receiptNumber="JHTS-R-2027-0007"
+        receiptNumber="JHTCS-R-2027-0007"
         feeLabel="Review fee"
         amount="₦10,000.00"
-        reference="JHTS-EXAMPLE-REF"
-        publicId="JHTS-2027-0042"
+        reference="JHTCS-EXAMPLE-REF"
+        publicId="JHTCS-2027-0042"
         paidAt="15 January 2027"
         url={u("/account")}
       />
@@ -66,7 +66,7 @@ const PREVIEWS: { id: string; label: string; to: string; when: string; element: 
     element: (
       <StatusChanged
         name="Ada Okafor"
-        publicId="JHTS-2027-0042"
+        publicId="JHTCS-2027-0042"
         title="Proverbs in Translation (example)"
         status="Minor revisions"
         nextStep="Upload your revised manuscript from your dashboard within three weeks."
@@ -112,7 +112,7 @@ const PREVIEWS: { id: string; label: string; to: string; when: string; element: 
     when: "A reviewer sends their report.",
     element: (
       <ReviewSubmitted
-        publicId="JHTS-2027-0042"
+        publicId="JHTCS-2027-0042"
         title="Proverbs in Translation (example)"
         reviewer="Reviewer 1"
         recommendation="Minor revisions"

@@ -2,7 +2,7 @@
 import type { ReactNode } from "react";
 import { siteUrl } from "@/lib/env";
 
-/* Email-safe layout: tables and inline styles only, in the JHTS palette (flyer colours). */
+/* Email-safe layout: tables and inline styles only, in the JHTCS palette (flyer colours). */
 const serif = "Georgia, 'Times New Roman', serif";
 const sans = "Arial, Helvetica, sans-serif";
 
@@ -45,12 +45,12 @@ export function Layout({ preview, title, children }: { preview: string; title: s
                                   src={`${siteUrl}/brand/emblem-512.png`}
                                   width={56}
                                   height={56}
-                                  alt="JHTS emblem"
+                                  alt="JHTCS emblem"
                                   style={{ display: "block", border: 0 }}
                                 />
                               </td>
                               <td style={{ verticalAlign: "middle" }}>
-                                <div style={{ fontSize: 26, fontWeight: "bold", color: "#FAF7EE" }}>JHTS</div>
+                                <div style={{ fontSize: 26, fontWeight: "bold", color: "#FAF7EE" }}>JHTCS</div>
                                 <div
                                   style={{
                                     fontFamily: sans,

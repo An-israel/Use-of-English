@@ -6,7 +6,7 @@ import { getCategories, getInPress } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Articles in Press",
-  description: "Accepted, edited articles published online ahead of their JHTS issue.",
+  description: "Accepted, edited articles published online ahead of their JHTCS issue.",
   alternates: { canonical: "/in-press" },
 };
 

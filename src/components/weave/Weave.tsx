@@ -28,7 +28,7 @@ export type WeaveProps = {
 };
 
 /**
- * The JHTS weave: an interlaced diamond lattice after Akwete cloth.
+ * The JHTCS weave: an interlaced diamond lattice after Akwete cloth.
  * Decorative only, so it is hidden from assistive technology.
  */
 export function Weave({

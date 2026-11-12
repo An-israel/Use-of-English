@@ -4,7 +4,7 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Journal of Humanities and Transcultural Studies",
-    short_name: "JHTS",
+    short_name: "JHTCS",
     description: "A peer-reviewed journal of the Use of English Unit, University of Nigeria, Nsukka.",
     start_url: "/",
     display: "standalone",

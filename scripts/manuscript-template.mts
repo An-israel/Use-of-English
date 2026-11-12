@@ -1,5 +1,5 @@
 /**
- * Builds public/templates/JHTS-manuscript-template.docx (I5): an anonymised
+ * Builds public/templates/JHTCS-manuscript-template.docx (I5): an anonymised
  * manuscript template following the Author Guidelines (Times New Roman 12 pt,
  * double-spaced, page numbers, the recommended structure). Run with
  * `npm run template:generate` after changing the guidelines.
@@ -10,7 +10,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
-const OUT = join(process.cwd(), "public/templates/JHTS-manuscript-template.docx");
+const OUT = join(process.cwd(), "public/templates/JHTCS-manuscript-template.docx");
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const para = (text: string, style?: string, opts: { italic?: boolean; center?: boolean } = {}) =>
@@ -56,7 +56,7 @@ const files: Record<string, string> = {
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>`,
   // Blank author fields, so the template doesn't identify anyone.
   "docProps/core.xml": `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>JHTS manuscript</dc:title><dc:creator></dc:creator><cp:lastModifiedBy></cp:lastModifiedBy></cp:coreProperties>`,
+<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>JHTCS manuscript</dc:title><dc:creator></dc:creator><cp:lastModifiedBy></cp:lastModifiedBy></cp:coreProperties>`,
   "word/_rels/document.xml.rels": `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/></Relationships>`,
   "word/styles.xml": `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

@@ -128,7 +128,7 @@ export default async function SubmissionsPage({
             <input
               name="q"
               defaultValue={sp.q}
-              placeholder="Title or ID (JHTS-…)"
+              placeholder="Title or ID (JHTCS-…)"
               className="admin-input"
               type="search"
             />

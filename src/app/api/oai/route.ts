@@ -58,7 +58,7 @@ async function respond(req: NextRequest) {
     baseUrl: `${siteUrl}/api/oai`,
     siteUrl,
     repositoryName: s.journalName,
-    adminEmail: s.contactEmail.startsWith("[") ? "editorial@jhts.unn.edu.ng" : s.contactEmail,
+    adminEmail: s.contactEmail.startsWith("[") ? "editorial@jhtcs.org" : s.contactEmail,
     earliest: first?.updated_at.slice(0, 10) ?? new Date().toISOString().slice(0, 10),
     domain: s.domain,
     async list({ from, until, offset, limit }) {

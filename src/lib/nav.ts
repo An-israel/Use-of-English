@@ -23,7 +23,7 @@ export const NAV: NavGroup[] = [
     links: [
       { label: "About the Journal", href: "/about", description: "Purpose, publisher and open access" },
       { label: "Aims and Scope", href: "/aims-and-scope", description: "What we publish and who may submit" },
-      { label: "Editorial Board", href: "/editorial-board", description: "The editors and consultants of JHTS" },
+      { label: "Editorial Board", href: "/editorial-board", description: "The editors and consultants of JHTCS" },
       {
         label: "The Use of English Unit",
         href: "/use-of-english-unit",

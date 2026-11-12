@@ -26,12 +26,12 @@ const sourceSans = Source_Sans_3({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "JHTS · Journal of Humanities and Transcultural Studies",
-    template: "%s · JHTS",
+    default: "JHTCS · Journal of Humanities and Transcultural Studies",
+    template: "%s · JHTCS",
   },
   description:
     "A peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka.",
-  applicationName: "JHTS",
+  applicationName: "JHTCS",
   openGraph: { siteName: "Journal of Humanities and Transcultural Studies", type: "website", locale: "en_GB" },
   twitter: { card: "summary_large_image" },
   alternates: { types: { "application/rss+xml": "/rss.xml" } },

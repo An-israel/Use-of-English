@@ -37,7 +37,7 @@ export function WhyPublish() {
           <div className="col-span-12 lg:col-span-4">
             <SectionHeading
               eyebrow="For authors"
-              title="Why publish with JHTS"
+              title="Why publish with JHTCS"
               id="why-title"
               inverse
               link={{ href: "/author-guidelines", label: "Author guidelines" }}
