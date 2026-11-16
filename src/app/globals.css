@@ -47,6 +47,7 @@
   --brand-hover: var(--jhts-forest-700);
   --brand-fg: var(--jhts-paper);
   --accent: var(--jhts-terracotta);
+  --accent-fg: var(--jhts-paper);
   --accent-text: #8b3f17; /* bronze, darkened for small text on accent tints */
   --thread: var(--jhts-ochre);
   /* gold for text on cream: the raw gold is decorative there (5.6:1 for this one) */
@@ -77,6 +78,7 @@
   --brand-hover: #9ad6b4;
   --brand-fg: #0b1a12;
   --accent: #e3946b;
+  --accent-fg: #1c120c;
   --accent-text: var(--accent);
   --thread: #e1b521;
   --thread-text: #e1b521;
@@ -130,6 +132,7 @@
   --color-brand-hover: var(--brand-hover);
   --color-brand-fg: var(--brand-fg);
   --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
   --color-thread: var(--thread);
   --color-thread-text: var(--thread-text);
   --color-info: var(--info);

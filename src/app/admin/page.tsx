@@ -162,7 +162,7 @@ export default async function AdminHome() {
                     <span className="group-hover:underline group-hover:underline-offset-4">{a.label}</span>
                     <span
                       className={`tabular min-w-8 rounded-full px-2 py-0.5 text-center text-[0.82rem] ${
-                        a.n === 0 ? "text-muted" : a.tone === "accent" ? "bg-accent text-paper" : "bg-fg text-bg"
+                        a.n === 0 ? "text-muted" : a.tone === "accent" ? "bg-accent text-accent-fg" : "bg-fg text-bg"
                       }`}
                     >
                       {a.n}

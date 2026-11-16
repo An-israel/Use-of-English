@@ -26,7 +26,7 @@ export const pages: Page[] = [
 <h2>Purpose</h2>
 <p>The journal strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and UNN, and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
 <h2>Publisher</h2>
-<p>JHTCS is published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka.</p>
+<p>JHTCS is published by the Use of English Unit, the School of General Studies, University of Nigeria, Nsukka.</p>
 <h2>Frequency and format</h2>
 <p>JHTCS is published quarterly, in March, June, September and December, as an electronic-only journal. Accepted articles may appear online as Articles in Press before their issue is complete.</p>
 <h2>Open access</h2>

@@ -9,8 +9,8 @@ insert into public.site_settings (key, value, is_public) values ('journalName', 
 insert into public.site_settings (key, value, is_public) values ('shortName', '"JHTCS"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('tagline', '"A quarterly journal of humanities and transcultural scholarship"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('motto', '"Knowledge · Cultures · Global Voices"'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('publisher', '"The Use of English Unit, School of General Studies, University of Nigeria, Nsukka"'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('publisherShort', '"Use of English Unit, School of General Studies, UNN"'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('publisher', '"The Use of English Unit, the School of General Studies, University of Nigeria, Nsukka"'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('publisherShort', '"The Use of English Unit, the School of General Studies, UNN"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('foundedYear', '2026'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('frequency', '"Quarterly: March, June, September and December"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('issn', 'null'::jsonb, true) on conflict (key) do nothing;
@@ -19,13 +19,13 @@ insert into public.site_settings (key, value, is_public) values ('doiPrefix', 'n
 insert into public.site_settings (key, value, is_public) values ('contactEmail', '"[JHTCS_EMAIL]"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('enquiries', '[{"name":"Associate Professor Virginia Eze","role":"Editor-in-Chief","phone":"+234 (0)803 665 9581"},{"name":"Professor Chinyere Ngonebu","role":"Assistant Editor","phone":"+234 (0)803 618 6242"},{"name":"Dr Festus Ngwoke","role":"Book Review Editor","phone":"+234 (0)803 736 7014"},{"name":"Dr Ifeyinwa David-Ojukwu","role":"Managing Editor","phone":"+234 (0)903 386 6531"}]'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('domain', '"jhtcs.org"'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('postalAddress', '"Use of English Unit, School of General Studies, University of Nigeria, Nsukka 410001, Enugu State, Nigeria [TO CONFIRM]"'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('postalAddress', '"The Use of English Unit, the School of General Studies, University of Nigeria, Nsukka 410001, Enugu State, Nigeria [TO CONFIRM]"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('officeHours', '"Monday to Friday, 9:00 to 16:00 WAT [TO CONFIRM]"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('licence', '{"name":"CC BY 4.0","url":"https://creativecommons.org/licenses/by/4.0/"}'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('fees', '{"enabled":true,"reviewKobo":500000,"publicationKobo":2000000,"covers":"Review administration, similarity checking, copy-editing, formatting, production and website maintenance."}'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('showBoardTerms', 'false'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('social', '[]'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('seo', '{"description":"JHTCS is a peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka."}'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('seo', '{"description":"JHTCS is a peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, the School of General Studies, University of Nigeria, Nsukka."}'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('emailSender', '"JHTCS Editorial Office <editorial@jhtcs.org>"'::jsonb, true) on conflict (key) do nothing;
 
 -- Feature flags
@@ -75,7 +75,7 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 <h2>Purpose</h2>
 <p>The journal strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and UNN, and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
 <h2>Publisher</h2>
-<p>JHTCS is published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka.</p>
+<p>JHTCS is published by the Use of English Unit, the School of General Studies, University of Nigeria, Nsukka.</p>
 <h2>Frequency and format</h2>
 <p>JHTCS is published quarterly, in March, June, September and December, as an electronic-only journal. Accepted articles may appear online as Articles in Press before their issue is complete.</p>
 <h2>Open access</h2>

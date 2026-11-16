@@ -5,7 +5,8 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Journal of Humanities and Transcultural Studies",
     short_name: "JHTCS",
-    description: "A peer-reviewed journal of the Use of English Unit, University of Nigeria, Nsukka.",
+    description:
+      "A peer-reviewed journal of the Use of English Unit, the School of General Studies, University of Nigeria, Nsukka.",
     start_url: "/",
     display: "standalone",
     background_color: "#faf7ee",

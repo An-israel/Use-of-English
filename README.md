@@ -1,6 +1,6 @@
 # JHTCS: Journal of Humanities and Transcultural Studies
 
-The website, submissions system, payments and admin dashboard for JHTCS, published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka. Domain: `www.jhtcs.org`.
+The website, submissions system, payments and admin dashboard for JHTCS, published by the Use of English Unit, the School of General Studies, University of Nigeria, Nsukka. Domain: `www.jhtcs.org`.
 
 > **Status: 1.0.0, ready to launch** once the committee confirms the items marked [TO CONFIRM] and the production accounts exist. Follow [`docs/LAUNCH.md`](docs/LAUNCH.md).
 

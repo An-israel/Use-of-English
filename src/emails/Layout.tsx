@@ -88,7 +88,7 @@ export function Layout({ preview, title, children }: { preview: string; title: s
                           color: "#6A6A5C",
                         }}
                       >
-                        The Use of English Unit, School of General Studies, University of Nigeria, Nsukka
+                        The Use of English Unit, the School of General Studies, University of Nigeria, Nsukka
                         <br />
                         Knowledge · Cultures · Global Voices ·{" "}
                         <a href={`${siteUrl}/contact`} style={{ color: "#14452F" }}>

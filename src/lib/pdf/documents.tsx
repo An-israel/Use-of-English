@@ -52,7 +52,7 @@ const s = StyleSheet.create({
   },
 });
 
-const PUBLISHER = "The Use of English Unit, School of General Studies, University of Nigeria, Nsukka";
+const PUBLISHER = "The Use of English Unit, the School of General Studies, University of Nigeria, Nsukka";
 const STATEMENT =
   "Payment of fees does not guarantee acceptance. All editorial decisions are based solely on scholarly merit.";
 

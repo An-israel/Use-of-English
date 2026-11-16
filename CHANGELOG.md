@@ -10,6 +10,8 @@ All notable changes to the JHTS website. Versions follow [Semantic Versioning](h
 - Migration `20261112000100_jhtcs_name` updates the stored pages, area descriptions and settings, and the ID functions; it has a tested rollback.
 - `docs/DNS.md` replaces the UNN ICT DNS note with the records for `jhtcs.org` (apex A record, `www` CNAME, and the Resend email records).
 - Backups now go to the `JHTCS-backups` folder on Google Drive.
+- The publisher reads "**the** Use of English Unit, **the** School of General Studies, University of Nigeria, Nsukka", as the Unit asked: in the site header line, page footers, emails, PDFs and the stored pages and settings (migration `20261116000100_the_unit_and_school`, with a rollback).
+- Dark mode: the count badges on the admin dashboard and error notices now use dark text on the orange accent (7.6:1 contrast); cream text on it was too faint.
 
 ## [1.1.2] - Light mode first
 

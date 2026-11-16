@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: "%s · JHTCS",
   },
   description:
-    "A peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka.",
+    "A peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, the School of General Studies, University of Nigeria, Nsukka.",
   applicationName: "JHTCS",
   openGraph: { siteName: "Journal of Humanities and Transcultural Studies", type: "website", locale: "en_GB" },
   twitter: { card: "summary_large_image" },

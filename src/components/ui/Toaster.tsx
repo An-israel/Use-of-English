@@ -29,7 +29,7 @@ export function Toaster({ children }: { children: ReactNode }) {
             key={t.id}
             className={clsx(
               "toast-in pointer-events-auto flex items-center gap-3 rounded-[3px] px-4 py-3 text-[0.92rem] shadow-[0_18px_40px_-20px_rgb(21_19_15/0.6)]",
-              t.tone === "error" ? "bg-accent text-paper" : "bg-inverse text-inverse-fg",
+              t.tone === "error" ? "bg-accent text-accent-fg" : "bg-inverse text-inverse-fg",
             )}
           >
             <span aria-hidden="true" className="bg-ochre inline-block size-2 rotate-45" />
