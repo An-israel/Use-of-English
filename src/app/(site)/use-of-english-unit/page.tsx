@@ -6,7 +6,8 @@ import { getPage } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "The Use of English Unit",
-  description: "The Use of English Unit, School of General Studies, University of Nigeria, Nsukka: publisher of JHTS.",
+  description:
+    "The Use of English Unit, the School of General Studies, University of Nigeria, Nsukka: publisher of JHTCS.",
   alternates: { canonical: "/use-of-english-unit" },
 };
 

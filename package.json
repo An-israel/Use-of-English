@@ -1,6 +1,6 @@
 {
-  "name": "jhts",
-  "version": "1.1.2",
+  "name": "jhtcs",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

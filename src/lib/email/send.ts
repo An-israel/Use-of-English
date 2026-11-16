@@ -87,7 +87,7 @@ export async function sendEmail(input: SendInput): Promise<"sent" | "logged" | "
       withTimeout(
         () =>
           resend.emails.send({
-            from: process.env.EMAIL_FROM ?? "JHTS <editorial@jhts.unn.edu.ng>",
+            from: process.env.EMAIL_FROM ?? "JHTCS <editorial@jhtcs.org>",
             to: input.to,
             subject: input.subject,
             html,

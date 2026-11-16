@@ -7,7 +7,7 @@ import { ContactForm } from "./ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Write to the JHTS editorial office.",
+  description: "Write to the JHTCS editorial office.",
   alternates: { canonical: "/contact" },
 };
 
@@ -82,7 +82,7 @@ export default async function ContactPage() {
               </div>
             </dl>
             <p className="border-rule text-muted mt-8 border-t pt-6 text-[0.9rem]">
-              Questions about a submission? Include your submission ID (for example JHTS-2027-0042) so we can find it
+              Questions about a submission? Include your submission ID (for example JHTCS-2027-0042) so we can find it
               quickly.
             </p>
           </div>

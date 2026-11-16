@@ -1,5 +1,5 @@
 /**
- * Geometry for the JHTS weave: an Akwete-inspired diamond lattice where two
+ * Geometry for the JHTCS weave: an Akwete-inspired diamond lattice where two
  * families of diagonal threads interlace (over/under) like warp and weft.
  *
  * Lines "/" satisfy x + y = k·s and lines "\" satisfy x − y = m·s. They cross

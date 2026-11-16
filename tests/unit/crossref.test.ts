@@ -3,14 +3,14 @@ import { crossrefDeposit, splitName, suggestDoi } from "@/lib/crossref";
 import { esc } from "@/lib/xml";
 
 const base = {
-  journal: { title: "Journal of Humanities & Transcultural Studies", abbrev: "JHTS", issn: "1234-567X", eissn: null },
+  journal: { title: "Journal of Humanities & Transcultural Studies", abbrev: "JHTCS", issn: "1234-567X", eissn: null },
   volume: 1,
   issue: 2,
   year: 2027,
   month: 6,
-  depositor: { name: "JHTS Editorial Office", email: "editorial@example.test" },
+  depositor: { name: "JHTCS Editorial Office", email: "editorial@example.test" },
   registrant: "University of Nigeria, Nsukka",
-  batchId: "jhts-v1n2-1",
+  batchId: "jhtcs-v1n2-1",
   timestamp: "20270601120000",
   articles: [
     {
@@ -20,7 +20,7 @@ const base = {
         { name: "Bayo", affiliation: null, orcid: null },
       ],
       doi: suggestDoi("10.12345", 2027, 1, 2, 3),
-      url: "https://jhts.unn.edu.ng/articles/proverbs",
+      url: "https://www.jhtcs.org/articles/proverbs",
       firstPage: 1,
       lastPage: 22,
       published: "2027-06-15",
@@ -31,7 +31,7 @@ const base = {
 
 describe("Crossref deposit", () => {
   it("suggests DOIs and splits names", () => {
-    expect(suggestDoi("10.12345", 2027, 1, 2, 3)).toBe("10.12345/jhts.2027.1.2.03");
+    expect(suggestDoi("10.12345", 2027, 1, 2, 3)).toBe("10.12345/jhtcs.2027.1.2.03");
     expect(splitName("Adaeze N. Okafor")).toEqual({ given: "Adaeze N.", surname: "Okafor" });
     expect(splitName("Bayo")).toEqual({ given: "", surname: "Bayo" });
   });
@@ -49,7 +49,7 @@ describe("Crossref deposit", () => {
     expect(xml).toContain("<jats:p>An abstract.</jats:p>");
     expect(xml).toContain("<pages><first_page>1</first_page><last_page>22</last_page></pages>");
     expect(xml).toContain(
-      "<doi>10.12345/jhts.2027.1.2.03</doi><resource>https://jhts.unn.edu.ng/articles/proverbs</resource>",
+      "<doi>10.12345/jhtcs.2027.1.2.03</doi><resource>https://www.jhtcs.org/articles/proverbs</resource>",
     );
   });
   it("drops characters XML forbids", () => {

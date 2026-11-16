@@ -9,7 +9,7 @@ export const contentType = "image/png";
 export default async function Image({ params }: { params: Promise<{ volume: string; issue: string }> }) {
   const p = await params;
   const issue = await getIssue(Number(p.volume), Number(p.issue));
-  if (!issue) return ogCard({ kicker: "JHTS", title: "Journal of Humanities and Transcultural Studies" });
+  if (!issue) return ogCard({ kicker: "JHTCS", title: "Journal of Humanities and Transcultural Studies" });
   const n = issue.articles.length;
   return ogCard({
     kicker: issueLabel(issue),

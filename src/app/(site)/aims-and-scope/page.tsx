@@ -7,7 +7,7 @@ import { getCategories, getPage } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Aims and Scope",
-  description: "The subject areas, article types and contributors JHTS publishes.",
+  description: "The subject areas, article types and contributors JHTCS publishes.",
   alternates: { canonical: "/aims-and-scope" },
 };
 
@@ -81,7 +81,7 @@ export default async function AimsPage() {
                 Who may submit
               </h2>
               <p className="reading mt-4">
-                JHTS welcomes work from scholars and researchers at any stage, and from undergraduate and postgraduate
+                JHTCS welcomes work from scholars and researchers at any stage, and from undergraduate and postgraduate
                 students. Every manuscript is judged on the same terms: originality, rigour, clarity and relevance to
                 the journal’s scope.
               </p>

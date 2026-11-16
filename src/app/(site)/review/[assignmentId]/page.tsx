@@ -123,7 +123,7 @@ async function Detail({ params }: { params: Promise<{ assignmentId: string }> })
                   <p className="reading mt-2 whitespace-pre-line">{a.comments_to_editor}</p>
                 </div>
               )}
-              <p className="text-muted text-[0.9rem]">Thank you for reviewing for JHTS.</p>
+              <p className="text-muted text-[0.9rem]">Thank you for reviewing for JHTCS.</p>
             </section>
           )}
           {(a.status === "declined" || a.status === "cancelled") && (
@@ -167,7 +167,7 @@ async function Detail({ params }: { params: Promise<{ assignmentId: string }> })
           </section>
           <section aria-labelledby="guide">
             <h2 id="guide" className="font-display text-[1.3rem]">
-              Reviewing for JHTS
+              Reviewing for JHTCS
             </h2>
             <ul className="text-muted mt-3 list-disc space-y-1.5 pl-5 text-[0.9rem]">
               <li>Assess originality, argument, use of sources and contribution to the humanities.</li>

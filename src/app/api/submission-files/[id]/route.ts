@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   // Reviewers get a neutral file name: an author's name can hide in the original one.
   const ext = data.original_name.match(/\.[a-z0-9]{2,5}$/i)?.[0] ?? "";
   const name =
-    req.nextUrl.searchParams.get("as") === "review" ? `JHTS-${data.kind}-v${data.version}${ext}` : data.original_name;
+    req.nextUrl.searchParams.get("as") === "review" ? `JHTCS-${data.kind}-v${data.version}${ext}` : data.original_name;
   const { data: signed } = await adminClient()
     .storage.from("submissions")
     .createSignedUrl(data.storage_path, 60, { download: name });

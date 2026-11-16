@@ -92,7 +92,7 @@ test("downloads are counted once per reader per day, under a clean name; bots ar
   expect(res.status()).toBe(302);
   const to = res.headers()["location"];
   expect(to).toContain("/storage/v1/object/public/published/");
-  expect(decodeURIComponent(to)).toContain("download=JHTS_Vol1_No1_2027_Okafor.pdf");
+  expect(decodeURIComponent(to)).toContain("download=JHTCS_Vol1_No1_2027_Okafor.pdf");
   const file = await page.request.get(to);
   expect(file.status()).toBe(200);
   expect((await file.body()).subarray(0, 5).toString()).toBe("%PDF-");
@@ -183,7 +183,7 @@ test("Crossref XML and OAI-PMH, switched on from Settings", async ({ page }) => 
   expect(xml.status()).toBe(200);
   const body = await xml.text();
   expect(body).toContain('<doi_batch version="5.3.1"');
-  expect(body).toContain("<doi>10.99999/jhts.2027.1.1.");
+  expect(body).toContain("<doi>10.99999/jhtcs.2027.1.1.");
 
   expect((await page.request.get("/api/oai?verb=Identify")).status()).toBe(404);
   await page.goto("/admin/settings");

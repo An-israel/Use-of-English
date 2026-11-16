@@ -716,7 +716,7 @@ function PayStep({ id, reviewKobo }: { id: string; reviewKobo: number }) {
       <div className="border-rule bg-surface mt-8 rounded-[3px] border p-6">
         <p className="tabular font-display text-[2rem]">{formatNaira(reviewKobo)}</p>
         <p className="text-muted mt-1">
-          Card, bank transfer or USSD, through Paystack. JHTS never sees your card details.
+          Card, bank transfer or USSD, through Paystack. JHTCS never sees your card details.
         </p>
         <p className="mt-4 italic">{FEE_INTEGRITY_STATEMENT}</p>
         <form action={action} className="mt-6 space-y-4">

@@ -58,7 +58,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   return new NextResponse(new Uint8Array(pdf), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `inline; filename="JHTS_Acceptance_${s.public_id}.pdf"`,
+      "Content-Disposition": `inline; filename="JHTCS_Acceptance_${s.public_id}.pdf"`,
       "Cache-Control": "private, no-store",
     },
   });

@@ -26,7 +26,7 @@ export default async function AllIssuesPage() {
         crumbs={[{ label: "Home", href: "/" }, { label: "All issues" }]}
         eyebrow="The archive"
         title="All Issues"
-        summary="JHTS publishes one volume a year in four quarterly issues: March, June, September and December."
+        summary="JHTCS publishes one volume a year in four quarterly issues: March, June, September and December."
         seed={13}
       />
       <ArchiveBrowser

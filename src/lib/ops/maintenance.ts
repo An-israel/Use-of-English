@@ -99,7 +99,7 @@ async function alert(key: string, subject: string, lines: string[]) {
     // Sent directly, not through the queue: an alert about the queue must not depend on it.
     await sendEmail({
       to,
-      subject: `[JHTS alert] ${subject}`,
+      subject: `[JHTCS alert] ${subject}`,
       template: "ops_alert",
       dedupeKey: `alert:${key}:${today()}:${to}`,
       element: createElement(OpsAlert, { subject, lines, url: `${siteUrl}/admin/system` }),

@@ -63,10 +63,10 @@ export function AdminFrame({
           <Link href="/admin" className="flex items-center gap-2.5 leading-none">
             <Emblem title="" wordmark={false} className={collapsed ? "size-9" : "size-10"} />
             {collapsed ? (
-              <span className="sr-only">JHTS editorial office</span>
+              <span className="sr-only">JHTCS editorial office</span>
             ) : (
               <span className="flex flex-col">
-                <span className="font-display text-brand text-[1.35rem] font-extrabold">JHTS</span>
+                <span className="font-display text-brand text-[1.35rem] font-extrabold">JHTCS</span>
                 <span className="smallcaps text-muted mt-0.5 block text-[0.72rem]"> Editorial office</span>
               </span>
             )}

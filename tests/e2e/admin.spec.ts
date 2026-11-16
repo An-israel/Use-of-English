@@ -73,7 +73,7 @@ test.beforeAll(async () => {
       keywords: ["proverbs", "markets", "Igbo"],
       citation_style: "apa7",
       status: "under_screening",
-      public_id: `JHTS-T${run.slice(-6).toUpperCase()}`,
+      public_id: `JHTCS-T${run.slice(-6).toUpperCase()}`,
       submitted_at: new Date().toISOString(),
     })
     .select("id")

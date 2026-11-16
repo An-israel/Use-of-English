@@ -8,7 +8,7 @@ import { formatNaira } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Fees and Payment",
-  description: "JHTS review and publication fees, what they cover, and how to pay.",
+  description: "JHTCS review and publication fees, what they cover, and how to pay.",
   alternates: { canonical: "/fees" },
 };
 
@@ -46,7 +46,7 @@ export default async function FeesPage() {
             {enabled ? (
               <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Fees table">
                 <table className="w-full min-w-[32rem] border-collapse text-left">
-                  <caption className="sr-only">JHTS fees</caption>
+                  <caption className="sr-only">JHTCS fees</caption>
                   <thead>
                     <tr className="border-fg border-b-2">
                       <th scope="col" className="smallcaps text-muted py-3 pr-4 text-[0.8rem] font-normal">
@@ -79,7 +79,7 @@ export default async function FeesPage() {
                 </p>
               </div>
             ) : (
-              <p className="border-rule bg-surface rounded-[3px] border p-6">JHTS is not charging fees at present.</p>
+              <p className="border-rule bg-surface rounded-[3px] border p-6">JHTCS is not charging fees at present.</p>
             )}
             <p
               className="border-accent bg-surface font-display border-l-4 px-6 py-5 text-[1.3rem] leading-snug"

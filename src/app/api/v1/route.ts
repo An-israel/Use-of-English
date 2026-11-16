@@ -8,7 +8,7 @@ export const GET = handler(
   async () =>
     json(
       {
-        name: "JHTS public API",
+        name: "JHTCS public API",
         version: API_VERSION,
         licence: "Metadata CC0; article content CC BY 4.0",
         endpoints: {

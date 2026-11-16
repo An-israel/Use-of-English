@@ -1,16 +1,16 @@
 import { useId } from "react";
 
 /**
- * The JHTS emblem, redrawn from the journal's flyer: a carved mask between
+ * The JHTCS emblem, redrawn from the journal's flyer: a carved mask between
  * patterned leaves over an open book, a quill rising through a forest-green
- * ring with a gold sweep. `wordmark` adds "JHTS" inside the ring (omit it at
+ * ring with a gold sweep. `wordmark` adds "JHTCS" inside the ring (omit it at
  * favicon sizes). Colours are fixed brand colours on a cream disc, so the
  * emblem reads the same on light pages, dark pages and green bands.
  */
 export function Emblem({
   className,
   wordmark = true,
-  title = "JHTS emblem",
+  title = "JHTCS emblem",
 }: {
   className?: string;
   wordmark?: boolean;
@@ -122,7 +122,7 @@ export function Emblem({
           letterSpacing="1.5"
           style={{ fontFamily: "var(--font-display), Georgia, serif" }}
         >
-          JHTS
+          JHTCS
         </text>
       )}
     </svg>

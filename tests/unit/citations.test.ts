@@ -23,8 +23,8 @@ const base: Citable = {
   year: 2027,
   firstPage: 1,
   lastPage: 22,
-  doi: "10.12345/jhts.2027.0001",
-  url: "https://jhts.unn.edu.ng/articles/code-switching",
+  doi: "10.12345/jhtcs.2027.0001",
+  url: "https://www.jhtcs.org/articles/code-switching",
   inPress: false,
 };
 const two = { ...base, authors: [{ name: "Adaeze N. Okafor" }, { name: "Tobenna Eze" }] };
@@ -55,7 +55,7 @@ describe("initials", () => {
 describe("APA 7th", () => {
   it("one author", () =>
     expect(toPlain(apa(base))).toBe(
-      `Okafor, A. N. (2027). Code-Switching and Classroom Authority. ${J}, 1(2), 1–22. https://doi.org/10.12345/jhts.2027.0001`,
+      `Okafor, A. N. (2027). Code-Switching and Classroom Authority. ${J}, 1(2), 1–22. https://doi.org/10.12345/jhtcs.2027.0001`,
     ));
   it("italicises journal and volume", () => expect(apa(base)).toContain(`<i>${J}</i>, <i>1</i>(2)`));
   it("two authors use an ampersand", () => expect(apaAuthors(two.authors)).toBe("Okafor, A. N., & Eze, T."));
@@ -67,7 +67,7 @@ describe("APA 7th", () => {
   });
   it("in press is an advance online publication", () =>
     expect(toPlain(apa(inPress))).toBe(
-      `Okafor, A. N. (2028). Code-Switching and Classroom Authority. ${J}. Advance online publication. https://doi.org/10.12345/jhts.2027.0001`,
+      `Okafor, A. N. (2028). Code-Switching and Classroom Authority. ${J}. Advance online publication. https://doi.org/10.12345/jhtcs.2027.0001`,
     ));
   it("falls back to the URL without a DOI", () => expect(apa({ ...base, doi: null })).toContain(base.url));
 });
@@ -75,7 +75,7 @@ describe("APA 7th", () => {
 describe("MLA 9th", () => {
   it("one author", () =>
     expect(toPlain(mla(base))).toBe(
-      `Okafor, Adaeze N. “Code-Switching and Classroom Authority.” ${J}, vol. 1, no. 2, 2027, pp. 1–22, https://doi.org/10.12345/jhts.2027.0001.`,
+      `Okafor, Adaeze N. “Code-Switching and Classroom Authority.” ${J}, vol. 1, no. 2, 2027, pp. 1–22, https://doi.org/10.12345/jhtcs.2027.0001.`,
     ));
   it("two authors", () => expect(mlaAuthors(two.authors)).toBe("Okafor, Adaeze N., and Tobenna Eze"));
   it("three or more use et al.", () => expect(toPlain(mla(three))).toMatch(/^Nwosu, Emeka J., et al\. “/));
@@ -89,7 +89,7 @@ describe("MLA 9th", () => {
 describe("Chicago author-date", () => {
   it("one author", () =>
     expect(toPlain(chicago(base))).toBe(
-      `Okafor, Adaeze N. 2027. “Code-Switching and Classroom Authority.” ${J} 1 (2): 1–22. https://doi.org/10.12345/jhts.2027.0001.`,
+      `Okafor, Adaeze N. 2027. “Code-Switching and Classroom Authority.” ${J} 1 (2): 1–22. https://doi.org/10.12345/jhtcs.2027.0001.`,
     ));
   it("two authors", () => expect(chicagoAuthors(two.authors)).toBe("Okafor, Adaeze N., and Tobenna Eze"));
   it("three authors", () =>
@@ -109,7 +109,7 @@ describe("BibTeX and RIS", () => {
     expect(b).toMatch(/^@article\{okafor2027code,/);
     expect(b).toContain("author = {Okafor, Adaeze N. and Eze, Tobenna}");
     expect(b).toContain("pages = {1--22}");
-    expect(b).toContain("doi = {10.12345/jhts.2027.0001}");
+    expect(b).toContain("doi = {10.12345/jhtcs.2027.0001}");
   });
   it("BibTeX escapes special characters", () =>
     expect(bibtex({ ...base, title: "Rates & 50% Costs" })).toContain("Rates \\& 50\\% Costs"));

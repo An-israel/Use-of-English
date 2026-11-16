@@ -24,7 +24,7 @@ export default function PaymentCallbackPage({
 async function Status({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const sp = await searchParams;
   const reference = (sp.reference ?? sp.trxref ?? "").slice(0, 80);
-  if (!/^JHTS-(RF|PF)-[\w-]+$/.test(reference)) {
+  if (!/^JHTCS-(RF|PF)-[\w-]+$/.test(reference)) {
     return <p className="text-muted">This payment link is incomplete. Please return to your account.</p>;
   }
   return <PaymentStatus reference={reference} />;

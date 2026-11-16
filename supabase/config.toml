@@ -427,18 +427,18 @@ skip_nonce_check = false
 
 # Branded auth emails (links go to /auth/confirm so sessions are set server-side)
 [auth.email.template.confirmation]
-subject = "Confirm your email address · JHTS"
+subject = "Confirm your email address · JHTCS"
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.email.template.invite]
-subject = "You have been invited to JHTS"
+subject = "You have been invited to JHTCS"
 content_path = "./supabase/templates/invite.html"
 
 [auth.email.template.recovery]
-subject = "Reset your JHTS password"
+subject = "Reset your JHTCS password"
 content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.email_change]
-subject = "Confirm your new email address · JHTS"
+subject = "Confirm your new email address · JHTCS"
 content_path = "./supabase/templates/email_change.html"
 

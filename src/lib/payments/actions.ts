@@ -16,7 +16,7 @@ export type PayState = { status: "idle" | "error"; message?: string };
 
 /**
  * Starts a Paystack payment for a fee that is due. The amount comes from
- * settings and is stored on the payment row; card details never touch JHTS.
+ * settings and is stored on the payment row; card details never touch JHTCS.
  */
 export async function startPayment(_: PayState, form: FormData): Promise<PayState> {
   if (!validArgs(z.object({ submissionId: Id, fee: z.enum(["review", "publication"]) }), fields(form)))

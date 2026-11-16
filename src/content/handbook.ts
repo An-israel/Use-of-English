@@ -11,7 +11,7 @@ export type HandbookBlock = { p: string } | { steps: string[] } | { list: string
 export type HandbookSection = { id: string; title: string; blocks: HandbookBlock[] };
 
 export const HANDBOOK_INTRO =
-  "How to run JHTS day to day: handling submissions, publishing issues, waivers and refunds. No technical knowledge needed. Every button named here is on the screen exactly as written.";
+  "How to run JHTCS day to day: handling submissions, publishing issues, waivers and refunds. No technical knowledge needed. Every button named here is on the screen exactly as written.";
 
 export const HANDBOOK: HandbookSection[] = [
   {
@@ -43,7 +43,7 @@ export const HANDBOOK: HandbookSection[] = [
     title: "Handling a submission",
     blocks: [
       {
-        p: "Every submission has a public ID such as JHTS-2027-0042. Authors see its status on their dashboard and get an email each time it changes.",
+        p: "Every submission has a public ID such as JHTCS-2027-0042. Authors see its status on their dashboard and get an email each time it changes.",
       },
       {
         steps: [
@@ -68,7 +68,7 @@ export const HANDBOOK: HandbookSection[] = [
     title: "Publishing an issue",
     blocks: [
       {
-        p: "JHTS publishes quarterly: March, June, September and December.",
+        p: "JHTCS publishes quarterly: March, June, September and December.",
       },
       {
         steps: [
@@ -79,7 +79,7 @@ export const HANDBOOK: HandbookSection[] = [
           "Upload the PDFs. Either upload each one on its article under **Files**, or use **Article PDFs** on the issue to drop several at once: each file is matched to an article by its name, and you can correct any match before uploading.",
           "Under **Contents**, drag the articles into the order they appear in the issue.",
           "Upload the whole-issue PDF under **Full-issue files** if there is one.",
-          "When JHTS has a DOI prefix, use **Assign DOIs** under **DOIs and Crossref**, then download the Crossref file and upload it at Crossref.",
+          "When JHTCS has a DOI prefix, use **Assign DOIs** under **DOIs and Crossref**, then download the Crossref file and upload it at Crossref.",
           "Preview the issue. Then choose **Publish now**, or set a date and time under **Schedule** and the site publishes it for you (Lagos time).",
         ],
       },

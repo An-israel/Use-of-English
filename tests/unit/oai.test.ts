@@ -11,18 +11,18 @@ const rec = (n: number): OaiRecord => ({
   publisher: "UNN",
   date: "2027-03-28",
   type: "Research Article",
-  doi: n === 1 ? "10.12345/jhts.2027.1.1.01" : null,
-  source: "JHTS, Vol. 1 No. 1 (2027)",
+  doi: n === 1 ? "10.12345/jhtcs.2027.1.1.01" : null,
+  source: "JHTCS, Vol. 1 No. 1 (2027)",
   datestamp: "2027-03-28",
 });
 const all = Array.from({ length: PAGE + 5 }, (_, i) => rec(i + 1));
 const deps: OaiDeps = {
-  baseUrl: "https://jhts.example/api/oai",
-  siteUrl: "https://jhts.example",
-  repositoryName: "JHTS",
+  baseUrl: "https://jhtcs.example/api/oai",
+  siteUrl: "https://jhtcs.example",
+  repositoryName: "JHTCS",
   adminEmail: "editorial@example.test",
   earliest: "2027-03-28",
-  domain: "jhts.example",
+  domain: "jhtcs.example",
   list: async ({ from, offset, limit }) => {
     const rows = from && from > "2027-03-28" ? [] : all;
     return { records: rows.slice(offset, offset + limit), total: rows.length };
@@ -34,7 +34,7 @@ const q = (s: string) => oai(new URLSearchParams(s), deps, new Date("2027-04-01T
 describe("OAI-PMH", () => {
   it("identifies the repository", async () => {
     const x = await q("verb=Identify");
-    expect(x).toContain('<request verb="Identify">https://jhts.example/api/oai</request>');
+    expect(x).toContain('<request verb="Identify">https://jhtcs.example/api/oai</request>');
     expect(x).toContain("<protocolVersion>2.0</protocolVersion>");
     expect(x).toContain("<granularity>YYYY-MM-DD</granularity>");
   });
@@ -48,15 +48,15 @@ describe("OAI-PMH", () => {
       '<error code="noRecordsMatch">',
     );
     expect(await q("verb=ListRecords&resumptionToken=garbage!")).toContain('<error code="badResumptionToken">');
-    expect(await q("verb=GetRecord&metadataPrefix=oai_dc&identifier=oai:jhts.example:article/missing")).toContain(
+    expect(await q("verb=GetRecord&metadataPrefix=oai_dc&identifier=oai:jhtcs.example:article/missing")).toContain(
       '<error code="idDoesNotExist">',
     );
   });
   it("returns Dublin Core records", async () => {
-    const x = await q(`verb=GetRecord&metadataPrefix=oai_dc&identifier=oai:jhts.example:article/${rec(1).id}`);
+    const x = await q(`verb=GetRecord&metadataPrefix=oai_dc&identifier=oai:jhtcs.example:article/${rec(1).id}`);
     expect(x).toContain("<dc:title>Article 1 &amp; more</dc:title>");
     expect(x).toContain("<dc:creator>Adaeze Okafor</dc:creator><dc:creator>Bayo Ade</dc:creator>");
-    expect(x).toContain("<dc:identifier>https://doi.org/10.12345/jhts.2027.1.1.01</dc:identifier>");
+    expect(x).toContain("<dc:identifier>https://doi.org/10.12345/jhtcs.2027.1.1.01</dc:identifier>");
     expect(x).toContain("<dc:description>An abstract.</dc:description>");
   });
   it("pages with a resumption token", async () => {

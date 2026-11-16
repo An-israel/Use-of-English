@@ -1,4 +1,4 @@
-# JHTS runbook
+# JHTCS runbook
 
 What to do when something needs attention, written for whoever is on duty. The engineering reasoning behind each piece is in [ENGINEERING.md](ENGINEERING.md).
 
@@ -18,7 +18,7 @@ What to do when something needs attention, written for whoever is on duty. The e
 | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | Super Admin (the `ALERT_EMAIL` address, or every active Super Admin) | Site down (UptimeRobot), error spikes (Sentry), failed jobs, backups, certificate expiry | The developer maintaining the site [TO CONFIRM: name and phone] |
 | Finance Officer                                                      | Payment mismatches from reconciliation                                                   | Super Admin                                                     |
-| The developer                                                        | Escalations                                                                              | UNN ICT for DNS and the domain [TO CONFIRM: contact]            |
+| The developer                                                        | Escalations                                                                              | The `jhtcs.org` registrar account for DNS [TO CONFIRM: contact] |
 
 Response targets: site down, acknowledge within 1 hour during office hours (09:00–16:00 WAT) and the next morning otherwise; everything else within one working day.
 
@@ -26,47 +26,48 @@ Response targets: site down, acknowledge within 1 hour during office hours (09:0
 
 Do these once when moving to production; each is needed for something in this runbook.
 
-1. **Vercel**: Project → Settings → Environment Variables: every variable in `.env.example`. Firewall → enable the managed rule set and bot protection. Domains → add `jhts.unn.edu.ng` (see [DNS](#dns)).
-2. **Supabase**: London region (eu-west-2), Pro plan (daily backups, no pausing). Auth → SMTP → Resend's SMTP so sign-up emails come from the journal. Auth → URL configuration → site URL `https://jhts.unn.edu.ng`. Database → note the session-pooler connection string (port 5432) for backups.
+1. **Vercel**: Project → Settings → Environment Variables: every variable in `.env.example`. Firewall → enable the managed rule set and bot protection. Domains → add `www.jhtcs.org` and `jhtcs.org`, redirecting `jhtcs.org` to `www` (see [DNS](#dns)).
+2. **Supabase**: London region (eu-west-2), Pro plan (daily backups, no pausing). Auth → SMTP → Resend's SMTP so sign-up emails come from the journal. Auth → URL configuration → site URL `https://www.jhtcs.org`. Database → note the session-pooler connection string (port 5432) for backups.
 3. **GitHub** → Settings → Secrets and variables → Actions. Variables: `SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`. Secrets: `CRON_SECRET`, `SUPABASE_DB_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `BACKUP_PASSPHRASE`, `RCLONE_CONFIG`.
 4. **Backups (rclone)**: on any computer run `rclone config` and create two remotes. `gdrive` is the journal's Google Drive. `supabase` is type S3, provider Other, with the endpoint, key and secret from Supabase → Storage → S3 connection. Paste the resulting `rclone.conf` into the `RCLONE_CONFIG` secret. Store `BACKUP_PASSPHRASE` offline as well, in the Unit's safe: without it, the backups can't be read.
-5. **Paystack**: Settings → API keys and webhooks. Webhook URL `https://jhts.unn.edu.ng/api/webhooks/paystack`.
-6. **Resend**: verify the sending domain ([DNS](#dns)); Webhooks → add `https://jhts.unn.edu.ng/api/webhooks/email` for `email.bounced` and `email.complained`, and put its signing secret in `RESEND_WEBHOOK_SECRET`.
-7. **UptimeRobot** (free): two HTTP monitors every 5 minutes, `https://jhts.unn.edu.ng/` and `https://jhts.unn.edu.ng/api/health` (alert on any non-200), alerting the Super Admin email.
+5. **Paystack**: Settings → API keys and webhooks. Webhook URL `https://www.jhtcs.org/api/webhooks/paystack`.
+6. **Resend**: verify the sending domain ([DNS](#dns)); Webhooks → add `https://www.jhtcs.org/api/webhooks/email` for `email.bounced` and `email.complained`, and put its signing secret in `RESEND_WEBHOOK_SECRET`.
+7. **UptimeRobot** (free): two HTTP monitors every 5 minutes, `https://www.jhtcs.org/` and `https://www.jhtcs.org/api/health` (alert on any non-200), alerting the Super Admin email.
 8. **Sentry** (free): create a Next.js project; set `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN`; Alerts → "number of errors > 20 in 5 minutes" to the Super Admin email.
 9. **First Super Admin**: `npm run admin:create` with `SUPER_ADMIN_EMAIL` and `SUPER_ADMIN_NAME` set (plus the Supabase URL and service role key); the person receives an invitation to set their password (README).
 
 ## DNS
 
-Records for UNN ICT to create (the values in angle brackets come from Vercel and Resend when the domain is added). Send UNN ICT [DNS_FOR_UNN_ICT.md](DNS_FOR_UNN_ICT.md), which explains each record and how to check it; the launch sequence is in [LAUNCH.md](LAUNCH.md).
+Records to create in the DNS for `jhtcs.org` (the values in angle brackets come from Vercel and Resend when the domain is added). [DNS.md](DNS.md) explains each record and how to check it; the launch sequence is in [LAUNCH.md](LAUNCH.md).
 
-| Purpose                     | Name                                | Type  | Value                                                                                                  |
-| --------------------------- | ----------------------------------- | ----- | ------------------------------------------------------------------------------------------------------ |
-| The site                    | `jhts.unn.edu.ng`                   | CNAME | `cname.vercel-dns.com`                                                                                 |
-| Vercel ownership (if asked) | `_vercel.unn.edu.ng`                | TXT   | `<vc-domain-verify=…>`                                                                                 |
-| Email: SPF                  | `send.jhts.unn.edu.ng`              | TXT   | `v=spf1 include:amazonses.com ~all`                                                                    |
-| Email: bounces              | `send.jhts.unn.edu.ng`              | MX 10 | `feedback-smtp.eu-west-1.amazonses.com`                                                                |
-| Email: DKIM                 | `resend._domainkey.jhts.unn.edu.ng` | TXT   | `<p=MIGfMA0… from Resend>`                                                                             |
-| Email: DMARC                | `_dmarc.jhts.unn.edu.ng`            | TXT   | `v=DMARC1; p=none; rua=mailto:<journal email>` (move to `p=quarantine` after a month of clean reports) |
+| Purpose                     | Name                          | Type  | Value                                                                                                  |
+| --------------------------- | ----------------------------- | ----- | ------------------------------------------------------------------------------------------------------ |
+| The site                    | `www.jhtcs.org`               | CNAME | `cname.vercel-dns.com`                                                                                 |
+| The site (bare domain)      | `jhtcs.org`                   | A     | `76.76.21.21` (redirects to `www`)                                                                     |
+| Vercel ownership (if asked) | `_vercel.jhtcs.org`           | TXT   | `<vc-domain-verify=…>`                                                                                 |
+| Email: SPF                  | `send.jhtcs.org`              | TXT   | `v=spf1 include:amazonses.com ~all`                                                                    |
+| Email: bounces              | `send.jhtcs.org`              | MX 10 | `feedback-smtp.eu-west-1.amazonses.com`                                                                |
+| Email: DKIM                 | `resend._domainkey.jhtcs.org` | TXT   | `<p=MIGfMA0… from Resend>`                                                                             |
+| Email: DMARC                | `_dmarc.jhtcs.org`            | TXT   | `v=DMARC1; p=none; rua=mailto:<journal email>` (move to `p=quarantine` after a month of clean reports) |
 
-Vercel issues and renews the HTTPS certificate once the CNAME resolves. If `jhts.unn.edu.ng` must be an apex record instead, use an A record to `76.76.21.21`. Allow up to 24 hours for DNS to propagate.
+Vercel issues and renews the HTTPS certificate once the CNAME resolves. The bare `jhtcs.org` takes an A record to `76.76.21.21` and redirects to `www`. Allow up to 24 hours for DNS to propagate.
 
 ## Refreshing the site's pages
 
 Public pages are cached for up to a few hours and refresh themselves whenever an editor saves in the admin. After a change made directly in the database (the SQL editor, `npm run samples:delete`), refresh them at once:
 
 ```bash
-curl -X POST -H "Authorization: Bearer $CRON_SECRET" https://jhts.unn.edu.ng/api/cron/revalidate
+curl -X POST -H "Authorization: Bearer $CRON_SECRET" https://www.jhtcs.org/api/cron/revalidate
 ```
 
 ## Backups
 
-| Copy                    | Where                                       | How often                 | Kept                                 |
-| ----------------------- | ------------------------------------------- | ------------------------- | ------------------------------------ |
-| Supabase backups        | Supabase (same provider)                    | Daily (Pro plan)          | 7 days                               |
-| Off-site data and files | The journal's Google Drive, `JHTS-backups/` | Weekly (Sunday 03:13 WAT) | Until deleted; keep at least 8 weeks |
+| Copy                    | Where                                        | How often                 | Kept                                 |
+| ----------------------- | -------------------------------------------- | ------------------------- | ------------------------------------ |
+| Supabase backups        | Supabase (same provider)                     | Daily (Pro plan)          | 7 days                               |
+| Off-site data and files | The journal's Google Drive, `JHTCS-backups/` | Weekly (Sunday 03:13 WAT) | Until deleted; keep at least 8 weeks |
 
-The weekly workflow (`.github/workflows/backup.yml`) writes `JHTS-backups/<date>/` with `data.sql.gz.gpg` (the data), `full.dump.gpg` (a complete dump) and `storage.json.gpg` (every file's path and size). It also mirrors every bucket to `JHTS-backups/storage/`. Each run reports to the site: Admin → System shows the last backup, and a failed or missing backup is emailed the next morning.
+The weekly workflow (`.github/workflows/backup.yml`) writes `JHTCS-backups/<date>/` with `data.sql.gz.gpg` (the data), `full.dump.gpg` (a complete dump) and `storage.json.gpg` (every file's path and size). It also mirrors every bucket to `JHTCS-backups/storage/`. Each run reports to the site: Admin → System shows the last backup, and a failed or missing backup is emailed the next morning.
 
 To run it by hand: GitHub → Actions → Weekly backup → Run workflow.
 
@@ -95,13 +96,13 @@ Targets: **RPO 24 hours** (at most a day of changes lost), **RTO 4 hours** (the 
 
 1. Create a new Supabase project in London. In `supabase/config.toml` keep the settings; link it with `npx supabase link --project-ref <new ref>`.
 2. Create the schema from git: `npx supabase db push` (all migrations).
-3. Download the latest `JHTS-backups/<date>/data.sql.gz.gpg` from Google Drive and decrypt it: `gpg -d data.sql.gz.gpg > data.sql.gz`.
+3. Download the latest `JHTCS-backups/<date>/data.sql.gz.gpg` from Google Drive and decrypt it: `gpg -d data.sql.gz.gpg > data.sql.gz`.
 4. Load the data: `( echo "SET session_replication_role = replica;"; gunzip -c data.sql.gz ) | psql "<new session-pooler connection string>"`.
-5. Restore the files: `for b in published finance covers submissions; do rclone copy gdrive:JHTS-backups/storage/$b newsupabase:$b; done`, with a `newsupabase` remote for the new project's S3 endpoint.
+5. Restore the files: `for b in published finance covers submissions; do rclone copy gdrive:JHTCS-backups/storage/$b newsupabase:$b; done`, with a `newsupabase` remote for the new project's S3 endpoint.
 6. Update the Supabase URL and keys in Vercel and GitHub, redeploy, then sign in and check an article PDF, a receipt and the admin.
 7. Tell staff they need to sign in again (sessions aren't backed up).
 
-**Vercel is lost**: the Docker image (`Dockerfile`) runs the same app on any server; UNN ICT can host it with the same environment variables, and DNS points at that server instead.
+**Vercel is lost**: the Docker image (`Dockerfile`) runs the same app on any server; the university or any host can run it with the same environment variables, and DNS points at that server instead.
 
 ## When a provider is down
 
@@ -119,9 +120,9 @@ For every incident: **detect** (the alert or report), **triage** (how many peopl
 
 **Site down** (UptimeRobot alert)
 
-1. Open `https://jhts.unn.edu.ng/api/health`. A 503 names the failing dependency (database or storage); see [When a provider is down](#when-a-provider-is-down).
+1. Open `https://www.jhtcs.org/api/health`. A 503 names the failing dependency (database or storage); see [When a provider is down](#when-a-provider-is-down).
 2. If the health page itself doesn't load: Vercel → Deployments. Was there a deployment just before? Roll it back.
-3. If the domain doesn't resolve: check the CNAME with UNN ICT ([DNS](#dns)).
+3. If the domain doesn't resolve: check the records with whoever manages DNS for `jhtcs.org` ([DNS](#dns)).
 
 **Uploads failing** (authors or editors report "The upload was interrupted")
 

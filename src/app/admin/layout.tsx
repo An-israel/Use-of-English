@@ -8,7 +8,7 @@ import { isPaymentTestMode } from "@/lib/payments/paystack";
 import { STAFF_ROLES } from "@/lib/workflow";
 
 export const metadata: Metadata = {
-  title: { default: "Admin", template: "%s · JHTS admin" },
+  title: { default: "Admin", template: "%s · JHTCS admin" },
   robots: { index: false },
 };
 

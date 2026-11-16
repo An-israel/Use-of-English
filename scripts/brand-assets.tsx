@@ -3,7 +3,7 @@
  * favicon, home-screen icons, email and PDF images always match the site's
  * logo. Run after changing the emblem: npm run brand:generate
  *
- *   public/brand/emblem.svg        emblem with the JHTS wordmark
+ *   public/brand/emblem.svg        emblem with the JHTCS wordmark
  *   public/brand/emblem-mark.svg   emblem without lettering (small sizes)
  *   public/brand/emblem-512.png    for emails, PDFs and social images
  *   src/app/icon.svg               browser tab icon
@@ -19,7 +19,7 @@ import { Emblem } from "../src/components/brand/Emblem";
 const SERIF = "'Playfair Display', Georgia, 'Times New Roman', serif";
 
 function svg(wordmark: boolean): string {
-  const markup = renderToStaticMarkup(<Emblem wordmark={wordmark} title="JHTS" />)
+  const markup = renderToStaticMarkup(<Emblem wordmark={wordmark} title="JHTCS" />)
     // Standalone files can't see the page's font variables.
     .replace(/font-family:var\(--font-display\), Georgia, serif/g, `font-family:${SERIF}`)
     .replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ');

@@ -7,7 +7,7 @@ import { getPages } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Policies",
-  description: "JHTS editorial policies, following the Core Practices of the Committee on Publication Ethics (COPE).",
+  description: "JHTCS editorial policies, following the Core Practices of the Committee on Publication Ethics (COPE).",
   alternates: { canonical: "/policies" },
 };
 
@@ -19,7 +19,7 @@ export default async function PoliciesPage() {
         crumbs={[{ label: "Home", href: "/" }, { label: "About", href: "/about" }, { label: "Policies" }]}
         eyebrow="About the journal"
         title="Policies"
-        summary="How JHTS handles ethics, review, authorship, licensing and your data. The policies follow the Core Practices of the Committee on Publication Ethics (COPE)."
+        summary="How JHTCS handles ethics, review, authorship, licensing and your data. The policies follow the Core Practices of the Committee on Publication Ethics (COPE)."
         seed={61}
       />
       <ol className="max-w-page mx-auto grid gap-px px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-3 lg:px-10 lg:py-16">

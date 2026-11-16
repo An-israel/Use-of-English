@@ -5,11 +5,13 @@ describe("downloads", () => {
   it("names files cleanly", () => {
     expect(
       downloadName({ format: "pdf", issue: { volume: 1, number: 2, year: 2027 }, firstAuthor: "Adaeze N. Okafor" }),
-    ).toBe("JHTS_Vol1_No2_2027_Okafor.pdf");
+    ).toBe("JHTCS_Vol1_No2_2027_Okafor.pdf");
     expect(downloadName({ format: "docx", year: 2027, firstAuthor: "Chidi Ụzọ-Eze" })).toBe(
-      "JHTS_InPress_2027_Uzo-Eze.docx",
+      "JHTCS_InPress_2027_Uzo-Eze.docx",
     );
-    expect(downloadName({ format: "pdf", issue: { volume: 2, number: 1, year: 2028 } })).toBe("JHTS_Vol2_No1_2028.pdf");
+    expect(downloadName({ format: "pdf", issue: { volume: 2, number: 1, year: 2028 } })).toBe(
+      "JHTCS_Vol2_No1_2028.pdf",
+    );
     expect(surname("O'Neil")).toBe("ONeil");
   });
   it("filters bots and scripts but counts browsers", () => {

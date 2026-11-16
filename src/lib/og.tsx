@@ -117,7 +117,7 @@ export async function ogCard({
             letterSpacing: -1,
           }}
         >
-          JHTS
+          JHTCS
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", flex: 1, padding: "64px 72px 56px 72px" }}>

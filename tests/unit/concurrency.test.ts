@@ -24,7 +24,7 @@ describe("matchByName", () => {
     { slug: "hashtags-and-the-grammar-of-protest", title: "Hashtags and the Grammar of Protest" },
   ];
   it("matches files by shared words and refuses weak guesses", () => {
-    expect(matchByName("JHTS_Vol1_No1_Code_Switching_final.pdf", articles)?.slug).toBe(articles[0].slug);
+    expect(matchByName("JHTCS_Vol1_No1_Code_Switching_final.pdf", articles)?.slug).toBe(articles[0].slug);
     expect(matchByName("grammar-of-protest (2).pdf", articles)?.slug).toBe(articles[1].slug);
     expect(matchByName("scan0001.pdf", articles)).toBeNull();
   });

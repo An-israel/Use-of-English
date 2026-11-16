@@ -73,7 +73,7 @@ export function ArticleDetailsForm({
           label="DOI"
           name="doi"
           defaultValue={values.doi}
-          placeholder="10.xxxxx/jhts…"
+          placeholder="10.xxxxx/jhtcs…"
         />
       </div>
       <div className="grid gap-4 sm:grid-cols-4">

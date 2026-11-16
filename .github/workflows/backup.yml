@@ -50,9 +50,9 @@ jobs:
         run: PG_DUMP=/usr/lib/postgresql/17/bin/pg_dump OUT=backup-out scripts/backup.sh
       - name: Copy the dumps and the file buckets to Google Drive
         run: |
-          DEST="gdrive:JHTS-backups/$(date -u +%Y-%m-%d)"
+          DEST="gdrive:JHTCS-backups/$(date -u +%Y-%m-%d)"
           rclone copy backup-out "$DEST"
-          for b in published finance covers submissions; do rclone sync "supabase:$b" "gdrive:JHTS-backups/storage/$b" --fast-list; done
+          for b in published finance covers submissions; do rclone sync "supabase:$b" "gdrive:JHTCS-backups/storage/$b" --fast-list; done
           echo "DEST=$DEST" >> "$GITHUB_ENV"
       - name: Report success
         run: |

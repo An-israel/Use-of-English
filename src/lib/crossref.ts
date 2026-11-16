@@ -1,6 +1,6 @@
 /**
  * Crossref deposit XML for one issue (brief section 12, schema 5.3.1). It is
- * exported for manual deposit; nothing is sent until JHTS has a Crossref
+ * exported for manual deposit; nothing is sent until JHTCS has a Crossref
  * membership. Pure, so the output is unit-tested.
  */
 import { el, esc, plain } from "./xml";
@@ -31,9 +31,9 @@ export type CrossrefIssue = {
   timestamp: string;
 };
 
-/** "10.12345/jhts.2027.1.2.03" for the third article of Vol. 1 No. 2 (2027). */
+/** "10.12345/jhtcs.2027.1.2.03" for the third article of Vol. 1 No. 2 (2027). */
 export function suggestDoi(prefix: string, year: number, volume: number, issue: number, position: number): string {
-  return `${prefix}/jhts.${year}.${volume}.${issue}.${String(position).padStart(2, "0")}`;
+  return `${prefix}/jhtcs.${year}.${volume}.${issue}.${String(position).padStart(2, "0")}`;
 }
 
 export function splitName(name: string): { given: string; surname: string } {

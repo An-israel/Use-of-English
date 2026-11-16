@@ -19,7 +19,7 @@ export default async function SubjectsPage() {
         crumbs={[{ label: "Home", href: "/" }, { label: "Subjects" }]}
         eyebrow="Browse by subject"
         title="Nine threads, one cloth"
-        summary="JHTS publishes across the humanities. Each subject has its own thread colour, used on its articles throughout the site."
+        summary="JHTCS publishes across the humanities. Each subject has its own thread colour, used on its articles throughout the site."
         seed={23}
       />
       <ol className="max-w-page mx-auto px-4 py-10 sm:px-6 lg:px-10 lg:py-16">

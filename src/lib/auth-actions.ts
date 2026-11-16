@@ -152,7 +152,7 @@ export async function requestPasswordReset(_: FormState, form: FormData): Promis
     redirectTo: `${siteUrl}/auth/callback?next=/reset-password`,
   });
   if (error) logger.warn({ code: error.code }, "password reset request failed");
-  return { status: "ok", message: `If ${email} has a JHTS account, a link to reset your password is on its way.` };
+  return { status: "ok", message: `If ${email} has a JHTCS account, a link to reset your password is on its way.` };
 }
 
 /** Sets a new password for the signed-in user (after a recovery or invitation link). */

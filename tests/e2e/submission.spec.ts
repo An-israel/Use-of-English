@@ -129,14 +129,14 @@ test("an author submits a manuscript and pays the review fee", async ({ page }) 
   await expect(
     page.getByText("Under screening").or(page.getByText("Submitted", { exact: true }).first()),
   ).toBeVisible();
-  await expect(page.getByText(/JHTS-\d{4}-\d{4}/).first()).toBeVisible();
+  await expect(page.getByText(/JHTCS-\d{4}-\d{4}/).first()).toBeVisible();
   // The receipt is made by the job queue moments after the webhook.
   // After each reload, give React a moment to reveal the streamed part of the
   // page: until then it sits hidden, and a role query finds nothing.
   await waitFor(async () => {
     await page.reload();
     return page
-      .getByRole("link", { name: /Receipt JHTS-R-/ })
+      .getByRole("link", { name: /Receipt JHTCS-R-/ })
       .waitFor({ state: "visible", timeout: 3_000 })
       .then(() => true)
       .catch(() => false);
@@ -163,7 +163,7 @@ test("an author submits a manuscript and pays the review fee", async ({ page }) 
   });
   const receipt = await page.request.get(
     await page
-      .getByRole("link", { name: /Receipt JHTS-R-/ })
+      .getByRole("link", { name: /Receipt JHTCS-R-/ })
       .getAttribute("href")
       .then((h) => h!),
     { maxRedirects: 5 },

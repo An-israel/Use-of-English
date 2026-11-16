@@ -87,7 +87,7 @@ export function IssueCover({ volume, issue, month, year, coverUrl, className, pr
       <line x1={48} x2={W - 48} y1={band} y2={band} stroke={season.thread} strokeWidth={1} />
 
       <text x={48} y={86} fill={season.accent} style={display} fontSize={60} fontWeight={600} letterSpacing={-1}>
-        JHTS
+        JHTCS
       </text>
       <text x={48} y={124} fill={season.accent} style={sans} fontSize={14} letterSpacing={2.4} opacity={0.85}>
         JOURNAL OF HUMANITIES

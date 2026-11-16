@@ -20,7 +20,7 @@ export default function GlobalError({ error, retry }: { error: Error & { digest?
   return (
     <html lang="en-GB">
       <head>
-        <title>{transient ? "Connection interrupted · JHTS" : "Something went wrong · JHTS"}</title>
+        <title>{transient ? "Connection interrupted · JHTCS" : "Something went wrong · JHTCS"}</title>
       </head>
       <body
         style={{

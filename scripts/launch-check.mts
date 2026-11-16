@@ -3,7 +3,7 @@
  * environment loaded, e.g. `vercel env pull .env.production.local` and then
  *
  *   npm run launch:check -- --env .env.production.local
- *   npm run launch:check -- --env .env.production.local --site https://jhts.unn.edu.ng
+ *   npm run launch:check -- --env .env.production.local --site https://www.jhtcs.org
  *
  * It reads settings and content with the service role, and (with --site)
  * probes the live site. Nothing is changed. Exits 1 if anything blocks launch.
@@ -127,7 +127,7 @@ if (supabaseUrl && env("SUPABASE_SERVICE_ROLE_KEY")) {
     );
 
     const s = Object.fromEntries((settings.data ?? []).map((r) => [r.key, r.value])) as Record<string, unknown>;
-    const placeholder = (v: unknown) => typeof v === "string" && /\[(TO CONFIRM|JHTS_[A-Z_]+)\]/.test(v);
+    const placeholder = (v: unknown) => typeof v === "string" && /\[(TO CONFIRM|JHTCS_[A-Z_]+)\]/.test(v);
     const contact = s.contactEmail;
     pass(
       typeof contact === "string" && /@/.test(contact) && !placeholder(contact),
