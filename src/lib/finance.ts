@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export const FEE_LABEL = { review: "Review fee", publication: "Publication fee" } as const;
 export const PAYMENT_STATUS_LABEL = {
-  pending: "Pending",
+  pending: "To confirm",
   success: "Paid",
   failed: "Failed",
   abandoned: "Abandoned",

@@ -101,7 +101,7 @@ export type ReceiptData = {
   channel: string | null;
   publicId: string;
   title: string;
-  testMode: boolean;
+  testMode?: boolean;
 };
 
 export function renderReceipt(d: ReceiptData) {
@@ -122,8 +122,8 @@ export function renderReceipt(d: ReceiptData) {
             ["Fee", d.feeLabel],
             ["Amount", d.amount],
             ["Date paid", d.date],
-            ["Paystack reference", d.reference],
-            ["Payment method", d.channel ? d.channel.replace("_", " ") : "Paystack"],
+            ["Payment reference", d.reference],
+            ["Payment method", d.channel ? d.channel.replace("_", " ") : "Bank transfer"],
             ["Submission ID", d.publicId],
             ["Manuscript", d.title],
           ]}
@@ -230,7 +230,7 @@ function Table({ cols, rows }: { cols: Col[]; rows: string[][] }) {
   );
 }
 
-function ReportFoot({ generated, testMode }: { generated: string; testMode: boolean }) {
+function ReportFoot({ generated, testMode }: { generated: string; testMode?: boolean }) {
   return (
     <Text
       fixed
@@ -248,7 +248,7 @@ export type PaymentsReportData = {
   title: string;
   filters: string;
   generated: string;
-  testMode: boolean;
+  testMode?: boolean;
   tiles: Tile[];
   byMonth: string[][];
   byFee: string[][];
@@ -326,7 +326,7 @@ export function renderPaymentsReport(d: PaymentsReportData) {
 
 export type FundStatementData = {
   generated: string;
-  testMode: boolean;
+  testMode?: boolean;
   tiles: Tile[];
   years: string[][];
   byFee: string[][];
@@ -339,9 +339,7 @@ export function renderFundStatement(d: FundStatementData) {
       <Page size="A4" style={s.page}>
         <Masthead />
         <Text style={s.h1}>Fund statement</Text>
-        <Text style={s.muted}>
-          Review and publication fees received through Paystack, refunds and net, as of {d.generated}.
-        </Text>
+        <Text style={s.muted}>Review and publication fees received, refunds and net, as of {d.generated}.</Text>
         <View style={t.tiles}>
           {d.tiles.map(([k, v]) => (
             <View key={k} style={t.tile}>

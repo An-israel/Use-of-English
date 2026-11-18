@@ -20,7 +20,11 @@ export function RefundForm({ paymentId, maxNaira, today }: { paymentId: string; 
         />
         <AField label="Refunded on" name="refunded_on" type="date" max={today} defaultValue={today} required />
       </div>
-      <AField label="Paystack refund reference" name="reference" hint="From the Paystack dashboard, if there is one." />
+      <AField
+        label="Transfer reference"
+        name="reference"
+        hint="The reference of the transfer back to the author, if any."
+      />
       <AText label="Reason" name="reason" rows={2} required minLength={5} />
     </AdminForm>
   );

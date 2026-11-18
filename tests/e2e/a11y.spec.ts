@@ -173,7 +173,6 @@ test.describe("signed in", () => {
         "/admin/users",
         "/admin/payments",
         ...(pay ? [`/admin/payments/${pay.id}`] : []),
-        "/admin/reconciliation",
         "/admin/fund-summary",
         "/admin/analytics",
         "/admin/settings",

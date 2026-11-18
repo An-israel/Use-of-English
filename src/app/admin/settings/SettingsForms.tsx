@@ -79,6 +79,19 @@ export function SettingsForm({ s }: { s: SiteSettings }) {
           />
         </div>
         <AText label="What the fees cover" name="feesCovers" rows={2} defaultValue={s.fees.covers} />
+        <p className="text-muted text-[0.86rem]">
+          Authors pay by bank transfer into this account, quoting their submission ID, and upload the receipt.
+        </p>
+        <AField label="Account name" name="bankAccountName" defaultValue={s.bankAccount.accountName} />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <AField
+            label="Account number"
+            name="bankAccountNumber"
+            inputMode="numeric"
+            defaultValue={s.bankAccount.accountNumber}
+          />
+          <AField label="Bank" name="bankName" defaultValue={s.bankAccount.bankName} />
+        </div>
       </fieldset>
       <fieldset className="admin-box space-y-4">
         <legend className={h}>Email, links and search engines</legend>

@@ -3,12 +3,11 @@ import { expect, test, type Page } from "@playwright/test";
 
 /**
  * Finance (brief section 7.3): the payments table, exports, refunds,
- * reconciliation and who may do what. Needs Supabase and PAYSTACK_MODE=mock,
- * where "Paystack" is the record the simulated checkout leaves on each payment.
+ * confirming bank transfers and who may do what. Needs Supabase.
  */
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-test.skip(!URL_ || !KEY || process.env.PAYSTACK_MODE !== "mock", "requires Supabase and PAYSTACK_MODE=mock");
+test.skip(!URL_ || !KEY, "requires Supabase");
 test.skip(({ isMobile }) => isMobile, "runs once, on desktop");
 test.describe.configure({ mode: "serial" });
 
@@ -93,8 +92,16 @@ test.beforeAll(async () => {
         outcome: "success",
         amount_kobo: 400_000,
       }),
-      // Paystack took the money; our webhook never arrived.
-      pay(ref("MISSED"), ids.subB, "publication", "pending", 2_000_000, { mock_outcome: "success" }),
+      // A bank transfer whose receipt is waiting to be checked.
+      {
+        ...pay(ref("TRANSFER"), ids.subB, "publication", "pending", 2_000_000, null),
+        channel: "bank_transfer",
+        proof_path: `proofs/${ids.subB}/publication-1-receipt.png`,
+        proof_name: "receipt.png",
+        transfer_payer: "Sample Payer",
+        transfer_date: now.slice(0, 10),
+        proof_submitted_at: now,
+      },
     ])
     .select("id, reference");
   if (error) throw error;
@@ -103,7 +110,6 @@ test.beforeAll(async () => {
 
 test.afterAll(async () => {
   const db = sb();
-  await db.from("reconciliation_flags").delete().like("paystack_reference", `%${run}%`);
   const paymentIds = Object.entries(ids)
     .filter(([k]) => k.includes(run))
     .map(([, v]) => v);
@@ -146,7 +152,7 @@ test("the Finance Officer records a partial refund", async ({ page }) => {
   await signIn(page, "finance");
   await page.goto(`/admin/payments/${ids[ref("OK")]}`);
   await page.getByLabel("Amount (₦)").fill("1500");
-  await page.getByLabel("Paystack refund reference").fill(`RF-${run}`);
+  await page.getByLabel("Transfer reference").fill(`RF-${run}`);
   await page.getByLabel("Reason").fill("Charged twice by the bank; partial refund agreed.");
   await page.getByRole("button", { name: "Record refund" }).click();
   await expect(page.getByText("Refund recorded.")).toBeVisible();
@@ -159,49 +165,25 @@ test("the Finance Officer records a partial refund", async ({ page }) => {
   expect(await amount.evaluate((el: HTMLInputElement) => el.checkValidity())).toBe(false);
 });
 
-test("reconciliation flags every kind of mismatch and can be resolved", async ({ page }) => {
+test("a bank transfer waiting to be checked is listed and confirmed by Finance", async ({ page }) => {
   await signIn(page, "finance");
-  await page.goto("/admin/reconciliation");
-  await page.getByLabel("Day (Lagos time)").fill(today);
-  await page.getByRole("button", { name: "Check this day" }).click();
-  await expect(page.getByText(new RegExp(`${today}: \\d+ mismatch`))).toBeVisible({ timeout: 20_000 });
-
-  const { data: flags } = await sb()
-    .from("reconciliation_flags")
-    .select("kind, paystack_reference")
-    .like("paystack_reference", `%${run}%`);
-  expect(flags?.map((f) => `${f.kind}:${f.paystack_reference}`).sort()).toEqual(
-    [
-      `amount_mismatch:${ref("AMOUNT")}`,
-      `missing_in_paystack:${ref("GHOST")}`,
-      `status_mismatch:${ref("MISSED")}`,
-    ].sort(),
-  );
-
-  // Running the same day again adds nothing.
-  await page.getByRole("button", { name: "Check this day" }).click();
-  await expect(page.getByText(/\(0 new\)/)).toBeVisible({ timeout: 20_000 });
-
-  const card = page.getByRole("article").filter({ hasText: ref("GHOST") });
-  await expect(card.getByText("Marked paid here, not found on Paystack")).toBeVisible();
-  await card.getByLabel("What was done").fill("Test row inserted by hand; no money involved.");
-  await card.getByRole("button", { name: "Mark resolved" }).click();
-  await expect(page.getByText("Marked as resolved.")).toBeVisible();
-  await page.goto("/admin/reconciliation?show=resolved");
-  await expect(page.getByText("Test row inserted by hand; no money involved.")).toBeVisible();
-});
-
-test("a payment whose webhook was missed is confirmed with Paystack from the admin", async ({ page }) => {
-  await signIn(page, "finance");
-  await page.goto(`/admin/payments/${ids[ref("MISSED")]}`);
-  await page.getByRole("button", { name: "Check with Paystack" }).click();
-  await page.getByRole("dialog").getByRole("button", { name: "Check with Paystack" }).click();
-  await expect(page.getByText("Confirmed with Paystack and recorded as paid.", { exact: false })).toBeVisible({
-    timeout: 15_000,
-  });
-  const { data } = await sb().from("payments").select("status, receipt_number").eq("id", ids[ref("MISSED")]).single();
-  expect(data?.status).toBe("success");
+  await page.goto("/admin/payments");
+  const waiting = page.getByRole("region", { name: /bank transfers? to confirm/ });
+  await expect(waiting.getByRole("link", { name: ref("TRANSFER") })).toBeVisible();
+  await waiting.getByRole("link", { name: ref("TRANSFER") }).click();
+  await expect(page.getByText("Sample Payer")).toBeVisible();
+  await expect(page.getByRole("link", { name: /Open the transfer receipt/ })).toBeVisible();
+  await page.getByRole("button", { name: "Confirm payment received" }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Confirm payment" }).click();
+  await expect(page.getByText(/Payment confirmed/)).toBeVisible({ timeout: 15_000 });
+  const { data } = await sb()
+    .from("payments")
+    .select("status, receipt_number, channel, confirmed_by")
+    .eq("id", ids[ref("TRANSFER")])
+    .single();
+  expect(data).toMatchObject({ status: "success", channel: "bank_transfer" });
   expect(data?.receipt_number).toMatch(/^JHTCS-R-/);
+  expect(data?.confirmed_by).toBe(ids.finance);
 });
 
 test("editors view finance but cannot export or refund; authors are kept out", async ({ page }) => {
@@ -212,8 +194,6 @@ test("editors view finance but cannot export or refund; authors are kept out", a
   expect((await page.request.get("/api/finance/export?format=csv")).status()).toBe(403);
   await page.goto(`/admin/payments/${ids[ref("AMOUNT")]}`);
   await expect(page.getByRole("button", { name: "Record refund" })).toHaveCount(0);
-  await page.goto("/admin/reconciliation");
-  await expect(page.getByRole("button", { name: "Check this day" })).toHaveCount(0);
 
   await signIn(page, "author");
   await page.goto("/admin/payments");

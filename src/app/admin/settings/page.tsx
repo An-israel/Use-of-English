@@ -2,7 +2,6 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { FEATURE_FLAG_DESCRIPTIONS } from "@/content/journal";
 import { requireRole } from "@/lib/auth";
 import { getFlags, getSettings } from "@/lib/data";
-import { isPaymentTestMode } from "@/lib/payments/paystack";
 import { systemInfo } from "../journal-actions";
 import { FlagToggles, SettingsForm } from "./SettingsForms";
 
@@ -11,16 +10,6 @@ export const metadata = { title: "Settings" };
 export default async function SettingsPage() {
   await requireRole(["super_admin"], "/admin/settings");
   const [settings, flags, info] = await Promise.all([getSettings(), getFlags(), systemInfo()]);
-  let mode = "live";
-  try {
-    mode = isPaymentTestMode()
-      ? process.env.PAYSTACK_MODE === "mock"
-        ? "mock (local simulator)"
-        : "test keys"
-      : "live";
-  } catch {
-    mode = "misconfigured";
-  }
   return (
     <>
       <AdminPageHeader
@@ -54,8 +43,8 @@ export default async function SettingsPage() {
               <dt className="text-muted">Schema version</dt>
               <dd className="tabular font-mono text-[0.8rem]">{info?.version ?? "unknown"}</dd>
               <dt className="text-muted">Payments</dt>
-              <dd className={mode === "live" ? "" : "text-thread-text font-medium"}>
-                {mode === "live" ? "Live" : `TEST MODE: ${mode}`}
+              <dd>
+                Bank transfer · {settings.bankAccount.bankName} {settings.bankAccount.accountNumber}
               </dd>
               <dt className="text-muted">Queued jobs</dt>
               <dd className="tabular">{String(info?.health?.queue_depth ?? "—")}</dd>

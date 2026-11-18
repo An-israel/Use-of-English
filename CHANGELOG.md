@@ -2,6 +2,17 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - Fees paid by bank transfer
+
+- **Fees are now paid by bank transfer** into the journal's account: **Journal of Humanities and Transcultural Studies, Zenith Bank PLC, 1313504238**. Paystack card payment has been removed.
+- **Authors** see the account details, the amount and their submission ID (to write in the transfer description), with copy buttons. They then upload the transfer receipt or bank teller (PDF or photo, up to 5 MB) with the payer's name and the date. They are emailed an acknowledgement and see "We have your receipt" until it is confirmed. A new upload replaces one still being checked.
+- **The Finance Officer** (or a Super Admin) is notified of each transfer. Transfers to confirm are listed at the top of Payments and counted on the admin overview. On each one they open the receipt, check it against the bank statement and either **confirm** it (the payment is recorded, the official receipt is emailed and the submission moves on) or **say why it can't be matched** (the author is emailed the reason and can upload again). Editors can view but not confirm.
+- The account details are editable in Admin → Settings and shown on the Fees page. The Fees and privacy pages, the handbook, emails, receipts and refund wording now describe bank transfer.
+- Removed: the Paystack checkout, webhook, simulator, the nightly reconciliation with Paystack (page, cron and email), the test-mode banner and the Paystack settings and keys. Past payments and flags are kept.
+- Migration `20261118000100_bank_transfer`, with a rollback.
+- Next.js is updated to 16.4.6 for two moderate security advisories (cache leaks across root params, GHSA-mfr8-8qww-v76h and GHSA-vc7v-qv4w-wrv8); the build refused to run on 16.4.3.
+- The admin sidebar header wraps below the longer JHTCS name instead of overlapping the page.
+
 ## [1.2.0] - JHTCS and www.jhtcs.org
 
 - The journal's abbreviation is now **JHTCS** everywhere: the logo and icons, page titles, emails, PDFs (receipts, acceptance letters, fund statements), file names, the manuscript template (`/templates/JHTCS-manuscript-template.docx`) and the admin.

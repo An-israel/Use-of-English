@@ -7,10 +7,6 @@
       "schedule": "17 3 * * *"
     },
     {
-      "path": "/api/cron/reconcile",
-      "schedule": "43 0 * * *"
-    },
-    {
       "path": "/api/cron/daily",
       "schedule": "7 5 * * *"
     }

@@ -113,7 +113,7 @@ export const pages: Page[] = [
     "Two transparent fees, what they cover and how to pay.",
     `
 <h2>Payment methods</h2>
-<p>Fees are paid securely online through Paystack by card, bank transfer or USSD. JHTCS never sees or stores your card details. You receive an emailed receipt and can download it from your dashboard at any time.</p>
+<p>Fees are paid by bank transfer into the journal’s account: <strong>Journal of Humanities and Transcultural Studies</strong>, Zenith Bank PLC, account number <strong>1313504238</strong>. Write your submission ID (for example JHTCS-2027-0042) in the transfer description, then upload the transfer receipt or bank teller on your dashboard. Once the Finance Officer has confirmed the payment, your manuscript moves on and you receive an official receipt by email, which you can also download from your dashboard at any time.</p>
 <h2>Refunds</h2>
 <p>Refund policy ${TC}</p>
 <h2>Waivers</h2>
@@ -328,7 +328,7 @@ export const policies: Page[] = [
 <ul>
 <li><strong>Account details:</strong> your name, email address, affiliation and, optionally, your ORCID iD.</li>
 <li><strong>Submission details:</strong> manuscripts, co-author details and correspondence with the editors.</li>
-<li><strong>Payment records:</strong> the amount, date, reference and status of each payment. Card details are handled entirely by Paystack and never reach us.</li>
+<li><strong>Payment records:</strong> the amount, date, reference and status of each payment, the name of the payer and the transfer receipt you upload. We never ask for card details or bank log-in details.</li>
 <li><strong>Usage statistics:</strong> anonymous counts of article views and downloads. We store a daily-changing hashed session code, not your IP address.</li>
 </ul>
 <h2>Why we use it</h2>

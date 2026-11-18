@@ -27,10 +27,10 @@ function actions(file: string): Fn[] {
 
 const all = files.flatMap(actions);
 // Who-is-calling checks used across the codebase.
-// Ownership helpers (ownDraft, ownAssignment, own) look up the viewer and check the row is theirs;
+// Ownership helpers (ownDraft, ownAssignment, own, dueFor) look up the viewer and check the row is theirs;
 // createVolumeYear hands over to createNextIssue, which checks the role.
 const AUTH =
-  /\b(staff|requireRole|requireViewer|getViewer|ownDraft|ownAssignment|own|createNextIssue)\(|auth\.getClaims|NODE_ENV/;
+  /\b(staff|requireRole|requireViewer|getViewer|ownDraft|ownAssignment|own|dueFor|createNextIssue)\(|auth\.getClaims|NODE_ENV/;
 const ZOD = /\.safeParse\(|\.parse\(|validArgs\(/;
 
 describe("server actions", () => {
@@ -52,7 +52,6 @@ describe("server actions", () => {
     "signInWithGoogle",
     "signOut",
     "sendContactMessage",
-    "mockOutcome",
   ]);
   it.each(all.filter((f) => !PUBLIC.has(f.name)).map((f) => [`${f.file} ${f.name}`, f]))(
     "%s checks who is calling",

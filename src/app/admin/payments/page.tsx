@@ -32,12 +32,19 @@ export default async function PaymentsPage({
   const f = parseFilters(sp);
   const page = pageOf(sp.page);
   const db = await userClient();
-  const [{ data, count }, all, issues] = await Promise.all([
+  const [{ data, count }, all, issues, { data: toConfirm }] = await Promise.all([
     ledgerQuery(db, f, { count: true })
       .range(...range(page))
       .returns<LedgerRow[]>(),
     allLedgerRows(db, f),
     issueOptions(db),
+    db
+      .from("payments")
+      .select("id, reference, fee_type, amount_kobo, transfer_payer, proof_submitted_at")
+      .eq("status", "pending")
+      .not("proof_submitted_at", "is", null)
+      .order("proof_submitted_at")
+      .limit(50),
   ]);
   const rows = data ?? [];
   const t = totals(all);
@@ -69,6 +76,29 @@ export default async function PaymentsPage({
         }
       />
       <div className="space-y-6 px-5 py-6 lg:px-10">
+        {!!toConfirm?.length && (
+          <section className="admin-box border-thread border-2" aria-labelledby="to-confirm">
+            <h2 id="to-confirm" className="font-display text-[1.2rem]">
+              {toConfirm.length} bank transfer{toConfirm.length === 1 ? "" : "s"} to confirm
+            </h2>
+            <p className="text-muted mt-1 text-[0.86rem]">
+              Check each against the journal’s bank statement, then confirm it or tell the author what is wrong.
+            </p>
+            <ul className="divide-rule mt-3 divide-y text-[0.92rem]">
+              {toConfirm.map((t) => (
+                <li key={t.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2.5">
+                  <Link href={`/admin/payments/${t.id}`} className="tabular font-medium underline underline-offset-4">
+                    {t.reference}
+                  </Link>
+                  <span className="text-muted">
+                    {FEE_LABEL[t.fee_type as keyof typeof FEE_LABEL]} · {formatNaira(t.amount_kobo)} ·{" "}
+                    {t.transfer_payer} · sent {formatDate(t.proof_submitted_at)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         <form action="/admin/payments" className="flex flex-wrap items-end gap-3" aria-label="Filter payments">
           <label className="admin-label">
             From

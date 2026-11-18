@@ -6,12 +6,13 @@ import {
   ContactReceived,
   OpsAlert,
   PaymentReceipt,
-  ReconciliationFlags,
   ReviewInvitation,
   ReviewReminder,
   ReviewSubmitted,
   StatusChanged,
   SubmissionReceived,
+  TransferNotAccepted,
+  TransferReceived,
 } from "@/emails/templates";
 import { requireRole } from "@/lib/auth";
 import { siteUrl } from "@/lib/env";
@@ -41,10 +42,41 @@ const PREVIEWS: { id: string; label: string; to: string; when: string; element: 
     ),
   },
   {
+    id: "transfer-received",
+    label: "Proof of payment received",
+    to: "Author",
+    when: "The author uploads the receipt for a bank transfer.",
+    element: (
+      <TransferReceived
+        name="Ada Okafor"
+        feeLabel="Review and plagiarism-check fee"
+        amount="₦5,000.00"
+        publicId="JHTCS-2027-0042"
+        url={u("/account")}
+      />
+    ),
+  },
+  {
+    id: "transfer-not-accepted",
+    label: "Payment not confirmed",
+    to: "Author",
+    when: "The Finance Officer can’t match a bank transfer.",
+    element: (
+      <TransferNotAccepted
+        name="Ada Okafor"
+        feeLabel="Review and plagiarism-check fee"
+        amount="₦5,000.00"
+        publicId="JHTCS-2027-0042"
+        reason="No transfer of ₦5,000 reached the account on 14 January 2027."
+        url={u("/account")}
+      />
+    ),
+  },
+  {
     id: "receipt",
     label: "Payment receipt",
     to: "Author",
-    when: "Paystack confirms a fee payment.",
+    when: "The Finance Officer confirms a bank transfer.",
     element: (
       <PaymentReceipt
         name="Ada Okafor"
@@ -134,13 +166,6 @@ const PREVIEWS: { id: string; label: string; to: string; when: string; element: 
         url={u("/admin/messages")}
       />
     ),
-  },
-  {
-    id: "reconciliation",
-    label: "Reconciliation flags",
-    to: "Super Admin",
-    when: "The daily check finds payments that don’t match Paystack.",
-    element: <ReconciliationFlags date="15 January 2027" flags={2} url={u("/admin/reconciliation")} />,
   },
   {
     id: "alert",

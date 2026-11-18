@@ -38,7 +38,7 @@ export function validArgs(schema: z.ZodType, value: unknown): boolean {
   return schema.safeParse(value).success;
 }
 
-/** Paystack references the site creates (letters, digits, dashes, underscores). */
+/** Payment references the site creates (letters, digits, dashes, underscores). */
 export const PaymentReference = z.string().regex(/^[A-Za-z0-9_-]{6,100}$/);
 /** Article and page slugs. */
 export const Slug = z

@@ -59,7 +59,12 @@ export function AdminFrame({
           collapsed ? "lg:w-[4.25rem]" : "lg:w-64",
         )}
       >
-        <div className={clsx("flex items-center justify-between gap-2 px-5 py-5", collapsed && "lg:flex-col lg:px-2")}>
+        <div
+          className={clsx(
+            "flex flex-wrap items-center justify-between gap-x-2 gap-y-3 px-5 py-5",
+            collapsed && "lg:flex-col lg:flex-nowrap lg:px-2",
+          )}
+        >
           <Link href="/admin" className="flex items-center gap-2.5 leading-none">
             <Emblem title="" wordmark={false} className={collapsed ? "size-9" : "size-10"} />
             {collapsed ? (
@@ -86,7 +91,7 @@ export function AdminFrame({
             <button
               type="button"
               onClick={() => setCollapsed(!collapsed)}
-              className="text-muted hover:text-fg hidden rounded-sm p-2 lg:inline-flex"
+              className="text-muted hover:text-fg hidden size-8 items-center justify-center rounded-sm lg:inline-flex"
               aria-label={collapsed ? "Expand the sidebar" : "Collapse the sidebar"}
               aria-expanded={!collapsed}
               title={collapsed ? "Expand the sidebar" : "Collapse the sidebar"}

@@ -177,6 +177,8 @@ export type SiteSettings = {
     publicationKobo: number;
     covers: string;
   };
+  /** The account authors pay fees into by bank transfer. */
+  bankAccount: { accountName: string; accountNumber: string; bankName: string };
   showBoardTerms: boolean;
   social: { label: string; url: string }[];
   seo: { description: string };

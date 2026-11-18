@@ -26,7 +26,7 @@ export const HANDBOOK: HandbookSection[] = [
           "**Super Admin**: everything, including users, settings and the System screen.",
           "**Editor**: submissions, reviewers, issues, articles, pages, the board and messages. Editors can see payments but not record refunds.",
           "**Book Review Editor**: book reviews.",
-          "**Finance Officer**: payments, refunds, reconciliation and the fund summary.",
+          "**Finance Officer**: confirming bank transfers, refunds and the fund summary.",
           "**Reviewer**: only the manuscripts they are asked to review.",
         ],
       },
@@ -112,33 +112,49 @@ export const HANDBOOK: HandbookSection[] = [
     ],
   },
   {
+    id: "transfers",
+    title: "Confirming bank transfers",
+    blocks: [
+      {
+        p: "Authors pay fees by bank transfer into the journal’s account (shown on the Fees page and in [Settings](/admin/settings)), writing their submission ID in the transfer description, and then upload the receipt or bank teller. Nothing moves on until the Finance Officer or a Super Admin confirms the money has arrived.",
+      },
+      {
+        steps: [
+          "You get a notification, **Bank transfer to confirm**, and the transfer appears at the top of [Payments](/admin/payments).",
+          "Open it and choose **Open the transfer receipt**. Check the amount, the date and the submission ID against the journal’s bank statement.",
+          "If the money is there, choose **Confirm payment received**. The author is emailed an official receipt with a receipt number, and the submission moves on: to the editors after the review fee, into production after the publication fee.",
+          "If you can’t find the transfer, or the receipt doesn’t match, write the reason under **Can’t find this transfer?** and send it. The author is emailed the reason and can upload the right receipt.",
+        ],
+      },
+      {
+        tip: "Only confirm once the transfer shows on the bank statement, not on the strength of the receipt alone: receipts can be edited.",
+      },
+    ],
+  },
+  {
     id: "refunds",
     title: "Refunds",
     blocks: [
       {
-        p: "Refunds are made in Paystack and then recorded on the website, so the journal’s accounts match the money. Only the Finance Officer or a Super Admin can record a refund.",
+        p: "Refunds are paid back from the journal’s account and then recorded on the website, so the journal’s accounts match the money. Only the Finance Officer or a Super Admin can record a refund.",
       },
       {
         steps: [
-          "In the Paystack dashboard, open the transaction (search for the payment reference) and refund it, in full or in part. Note the refund reference Paystack gives you.",
+          "Transfer the refund back to the author from the journal’s account, in full or in part, and note the transfer reference.",
           "On the website, open the payment in [Payments](/admin/payments).",
-          "Under **Record a refund**, enter the amount in naira, the date, the reason and the Paystack refund reference, then choose **Record refund**.",
+          "Under **Record a refund**, enter the amount in naira, the date, the reason and the transfer reference, then choose **Record refund**.",
           "A full refund marks the payment **Refunded**. The site never lets the refunds add up to more than was paid.",
         ],
-      },
-      {
-        tip: "If an author says they paid but the website still shows the payment as pending, open the payment and choose **Check with Paystack**. It asks Paystack directly and updates the payment if the money arrived.",
       },
     ],
   },
   {
     id: "money",
-    title: "Payments and reconciliation",
+    title: "Payments and reports",
     blocks: [
       {
         list: [
-          "[Payments](/admin/payments): every payment, waiver and refund, with filters, totals by month and by fee, and CSV or PDF exports for the Bursary.",
-          "[Reconciliation](/admin/reconciliation): every night the site compares the day’s Paystack transactions with its own records and flags any difference. Investigate each flag, then resolve it with a note. **Check a day now** re-checks any day.",
+          "[Payments](/admin/payments): every payment, waiver and refund, with filters, totals by month and by fee, and CSV or PDF exports for the Bursary. Transfers waiting to be confirmed are listed at the top.",
           "[Fund summary](/admin/fund-summary): money collected, refunded and net, by year and by fee, as PDF or CSV.",
         ],
       },
@@ -177,7 +193,7 @@ export const HANDBOOK: HandbookSection[] = [
           "**“Someone else saved this”**: another person changed the same item while you were editing. Choose **Reload now** to see their version, then make your change again.",
           "**“The editorial office can’t reach the database”**: a service is briefly down. Nothing you saved has been lost. Wait a minute and choose **Try again**.",
           "**An email didn’t arrive**: ask the person to check their spam folder. The Super Admin can see failed emails on the [System](/admin/system) screen and retry them.",
-          "**A payment is stuck as pending**: open it and choose **Check with Paystack**.",
+          "**An author says they paid but nothing has happened**: check [Payments](/admin/payments) for a transfer to confirm. If they haven’t uploaded a receipt yet, ask them to upload it on their submission page.",
         ],
       },
       {

@@ -2,17 +2,17 @@ import "server-only";
 import {
   ContactReceived,
   PaymentReceipt,
-  ReconciliationFlags,
   ReviewInvitation,
   ReviewReminder,
   ReviewSubmitted,
   StatusChanged,
   SubmissionReceived,
+  TransferNotAccepted,
+  TransferReceived,
 } from "@/emails/templates";
 import { sendEmail } from "@/lib/email/send";
 import { siteUrl } from "@/lib/env";
 import { formatDate, formatNaira, formatNairaPlain } from "@/lib/format";
-import { isPaymentTestMode } from "@/lib/payments/paystack";
 import { renderReceipt } from "@/lib/pdf/documents";
 import { RECOMMENDATION_LABEL, type Recommendation } from "@/lib/submission";
 import { adminClient } from "@/lib/supabase/clients";
@@ -42,6 +42,13 @@ async function dispatchEvent(payload: Record<string, unknown>) {
   switch (ev.type) {
     case "payment.succeeded":
       await enqueue("payment_receipt", { payment_id: id }, `receipt:${id}`, "default", PRIORITY.payment);
+      break;
+    case "payment.proof_submitted":
+      // One acknowledgement per upload (a replacement receipt is a new event).
+      await enqueue("email_transfer", { payment_id: id, kind: "received", event_id: ev.id }, `transfer:${ev.id}`);
+      break;
+    case "payment.rejected":
+      await enqueue("email_transfer", { payment_id: id, kind: "rejected", event_id: ev.id }, `transfer:${ev.id}`);
       break;
     case "submission.created":
       await enqueue("email_submission_received", { submission_id: id }, `received:${id}`);
@@ -95,7 +102,6 @@ async function paymentReceipt(payload: Record<string, unknown>) {
       channel: p.channel,
       publicId: sub.public_id,
       title: sub.title,
-      testMode: isPaymentTestMode(),
     });
     path = `receipts/${p.author_id}/${p.receipt_number}.pdf`;
     const up = await db.storage.from("finance").upload(path, pdf, { contentType: "application/pdf", upsert: true });
@@ -280,25 +286,40 @@ async function reviewEmail(payload: Record<string, unknown>, kind: "invitation" 
   });
 }
 
-/** Tell the Finance Officers and Super Admins that the daily comparison found mismatches. */
-async function reconciliationEmail(payload: Record<string, unknown>) {
-  const { data: staff, error } = await adminClient()
-    .from("profiles")
-    .select("email")
-    .in("role", ["finance_officer", "super_admin"])
-    .eq("is_active", true);
-  if (error) throw new Error(`finance staff lookup failed: ${error.message}`);
-  const date = String(payload.date);
-  const flags = Number(payload.flags);
-  for (const { email } of staff ?? []) {
-    await sendEmail({
-      to: email,
-      subject: `Reconciliation ${date}: ${flags} payment${flags === 1 ? "" : "s"} to check`,
-      template: "reconciliation_flags",
-      dedupeKey: `reconcile:${date}:${flags}:${email}`,
-      element: <ReconciliationFlags date={date} flags={flags} url={`${siteUrl}/admin/reconciliation`} />,
-    });
-  }
+/** Bank transfers: acknowledge an uploaded receipt, or explain why it wasn't accepted. */
+async function transferEmail(payload: Record<string, unknown>) {
+  const { data: p, error } = await adminClient()
+    .from("payments")
+    .select(
+      "id, fee_type, amount_kobo, rejection_reason, submission:submissions ( id, public_id ), author:profiles!payments_author_id_fkey ( full_name, email )",
+    )
+    .eq("id", payload.payment_id)
+    .single();
+  if (error || !p) throw new Error(`payment lookup failed: ${error?.message ?? "not found"}`);
+  const sub = p.submission as unknown as { id: string; public_id: string };
+  const author = p.author as unknown as { full_name: string; email: string };
+  const common = {
+    name: author.full_name || "author",
+    feeLabel: FEE_LABEL[p.fee_type as "review" | "publication"],
+    amount: formatNaira(p.amount_kobo),
+    publicId: sub.public_id,
+    url: `${siteUrl}/account/submissions/${sub.id}`,
+  };
+  const rejected = payload.kind === "rejected";
+  await sendEmail({
+    to: author.email,
+    subject: rejected
+      ? `We couldn’t confirm your payment · ${sub.public_id}`
+      : `Proof of payment received · ${sub.public_id}`,
+    template: rejected ? "transfer_not_accepted" : "transfer_received",
+    relatedId: p.id,
+    dedupeKey: `transfer-email:${payload.event_id}`,
+    element: rejected ? (
+      <TransferNotAccepted {...common} reason={p.rejection_reason ?? "The transfer couldn’t be matched."} />
+    ) : (
+      <TransferReceived {...common} />
+    ),
+  });
 }
 
 async function reviewReminder(payload: Record<string, unknown>) {
@@ -339,6 +360,6 @@ export const HANDLERS: Record<string, (payload: Record<string, unknown>) => Prom
   email_contact: contactNotification,
   email_review_invitation: (p) => reviewEmail(p, "invitation"),
   email_review_submitted: (p) => reviewEmail(p, "submitted"),
-  email_reconciliation: reconciliationEmail,
+  email_transfer: transferEmail,
   email_review_reminder: reviewReminder,
 };

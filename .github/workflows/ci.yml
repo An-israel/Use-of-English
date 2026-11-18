@@ -68,7 +68,6 @@ jobs:
         env:
           # Local-only values for the test run; production secrets never reach CI.
           NEXT_PUBLIC_SITE_URL: http://localhost:3000
-          PAYSTACK_MODE: mock
           CRON_SECRET: ci-cron-secret-0123456789abcdef
           METRICS_SALT: ci-metrics-salt-0123456789
           RESEND_WEBHOOK_SECRET: whsec_Y2ktd2ViaG9vay1zZWNyZXQtMDEyMzQ1Njc4OWFiY2RlZg==

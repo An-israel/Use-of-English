@@ -148,7 +148,7 @@ export function NotificationBell() {
   );
 }
 
-const KIND_TONE: Record<string, string> = { payment: "bg-accent", reconciliation: "bg-accent", message: "bg-info" };
+const KIND_TONE: Record<string, string> = { payment: "bg-accent", message: "bg-info" };
 
 function when(iso: string): string {
   const mins = Math.round((Date.now() - Date.parse(iso)) / 60_000);

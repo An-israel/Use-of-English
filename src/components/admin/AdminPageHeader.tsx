@@ -21,7 +21,7 @@ export function AdminPageHeader({
             <ol className="flex flex-wrap items-center gap-1.5">
               {crumbs.map((c) => (
                 <li key={c.href} className="flex items-center gap-1.5">
-                  <Link href={c.href} className="hover:text-fg">
+                  <Link href={c.href} className="hover:text-fg inline-flex min-h-6 items-center">
                     {c.label}
                   </Link>
                   <span aria-hidden="true">/</span>

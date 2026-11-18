@@ -4,7 +4,6 @@ import { z } from "zod";
 const serverSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20).optional(),
-  PAYSTACK_SECRET_KEY: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
   RESEND_WEBHOOK_SECRET: z.string().optional(),
   TURNSTILE_SECRET_KEY: z.string().optional(),
@@ -19,6 +18,3 @@ const serverSchema = z.object({
 export const serverEnv = serverSchema.parse(
   Object.fromEntries(Object.entries(process.env).map(([k, v]) => [k, v === "" ? undefined : v])),
 );
-
-/** Paystack test keys start with sk_test_; the admin shows a TEST MODE banner. */
-export const paystackTestMode = !serverEnv.PAYSTACK_SECRET_KEY || serverEnv.PAYSTACK_SECRET_KEY.startsWith("sk_test_");
