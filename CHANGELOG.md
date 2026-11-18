@@ -12,6 +12,7 @@ All notable changes to the JHTS website. Versions follow [Semantic Versioning](h
 - Migration `20261118000100_bank_transfer`, with a rollback.
 - Next.js is updated to 16.4.6 for two moderate security advisories (cache leaks across root params, GHSA-mfr8-8qww-v76h and GHSA-vc7v-qv4w-wrv8); the build refused to run on 16.4.3.
 - The admin sidebar header wraps below the longer JHTCS name instead of overlapping the page.
+- CI's dependency audit (`scripts/audit.mjs`) still fails on any high or critical advisory, except those in `.audit-allowlist.json` until their expiry. One entry: picomatch GHSA-fc5q-39xc-vjpf (build-time only, no fixed release yet), allowed until 18 December 2026.
 
 ## [1.2.0] - JHTCS and www.jhtcs.org
 
