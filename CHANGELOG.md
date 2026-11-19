@@ -2,6 +2,10 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.3.2] - Forms survive a new deployment
+
+- A page opened before a new version of the site was deployed could not submit its forms ("Server Action … was not found on the server"), and showed the error page. The error pages now recognise this, and stale code chunks, and reload the page once (at most once a minute) so the form works again.
+
 ## [1.3.1] - Sign-up emails through the website
 
 - Sign-up confirmations, password resets, invitations and email-change messages can now be sent by the website through Resend, in the journal's design, using Supabase's **Send Email hook** (`/api/auth/send-email`, Standard Webhooks signature checked on the raw body, links always on the site's own address). Supabase then needs no SMTP settings; the hook is available on Supabase's free plan.
