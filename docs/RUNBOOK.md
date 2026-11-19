@@ -17,7 +17,7 @@ What to do when something needs attention, written for whoever is on duty. The e
 | Who                                                                  | Receives                                                                                 | Escalate to                                                     |
 | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | Super Admin (the `ALERT_EMAIL` address, or every active Super Admin) | Site down (UptimeRobot), error spikes (Sentry), failed jobs, backups, certificate expiry | The developer maintaining the site [TO CONFIRM: name and phone] |
-| Finance Officer                                                      | Payment mismatches from reconciliation                                                   | Super Admin                                                     |
+| Finance Officer                                                      | Bank transfers waiting to be confirmed                                                   | Super Admin                                                     |
 | The developer                                                        | Escalations                                                                              | The `jhtcs.org` registrar account for DNS [TO CONFIRM: contact] |
 
 Response targets: site down, acknowledge within 1 hour during office hours (09:00–16:00 WAT) and the next morning otherwise; everything else within one working day.
@@ -30,7 +30,7 @@ Do these once when moving to production; each is needed for something in this ru
 2. **Supabase**: London region (eu-west-2), Pro plan (daily backups, no pausing). Auth → SMTP → Resend's SMTP so sign-up emails come from the journal. Auth → URL configuration → site URL `https://www.jhtcs.org`. Database → note the session-pooler connection string (port 5432) for backups.
 3. **GitHub** → Settings → Secrets and variables → Actions. Variables: `SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`. Secrets: `CRON_SECRET`, `SUPABASE_DB_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `BACKUP_PASSPHRASE`, `RCLONE_CONFIG`.
 4. **Backups (rclone)**: on any computer run `rclone config` and create two remotes. `gdrive` is the journal's Google Drive. `supabase` is type S3, provider Other, with the endpoint, key and secret from Supabase → Storage → S3 connection. Paste the resulting `rclone.conf` into the `RCLONE_CONFIG` secret. Store `BACKUP_PASSPHRASE` offline as well, in the Unit's safe: without it, the backups can't be read.
-5. **Paystack**: Settings → API keys and webhooks. Webhook URL `https://www.jhtcs.org/api/webhooks/paystack`.
+5. **Bank account**: Admin → Settings → the account authors pay into (Zenith Bank PLC, 1313504238). No payment provider is used.
 6. **Resend**: verify the sending domain ([DNS](#dns)); Webhooks → add `https://www.jhtcs.org/api/webhooks/email` for `email.bounced` and `email.complained`, and put its signing secret in `RESEND_WEBHOOK_SECRET`.
 7. **UptimeRobot** (free): two HTTP monitors every 5 minutes, `https://www.jhtcs.org/` and `https://www.jhtcs.org/api/health` (alert on any non-200), alerting the Super Admin email.
 8. **Sentry** (free): create a Next.js project; set `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN`; Alerts → "number of errors > 20 in 5 minutes" to the Super Admin email.
@@ -110,7 +110,6 @@ Targets: **RPO 24 hours** (at most a day of changes lost), **RTO 4 hours** (the 
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | Supabase (database or Storage) | Cached pages keep working; search, sign-in, downloads and submissions fail with an error page. `/api/health` returns 503. | "The editorial office can't reach the database" with a retry button.                                                                                                     | Check status.supabase.com. Nothing to fix on our side; it recovers by itself. Supabase fails over or restarts the database automatically. |
 | Vercel                         | The site may be unreachable in some regions                                                                               | Same                                                                                                                                                                     | Check vercel-status.com. If it's long, the Docker image can serve from UNN ICT (see above).                                               |
-| Paystack                       | "The payment service is not responding. Please try again in a few minutes." when paying.                                  | Nothing else changes.                                                                                                                                                    | Check status.paystack.com. Payments made but not confirmed are caught by the nightly reconciliation.                                      |
 | Resend (email)                 | Nothing visible.                                                                                                          | Emails wait in the queue and retry six times over about half an hour; after that they show under Admin → System → Failed jobs, and an alert is emailed the next morning. | When Resend is back, press Retry on each failed job.                                                                                      |
 | Google Drive                   | Nothing.                                                                                                                  | The weekly backup fails and an alert is emailed.                                                                                                                         | Run the backup again from GitHub Actions once Drive is back.                                                                              |
 
@@ -140,8 +139,8 @@ For every incident: **detect** (the alert or report), **triage** (how many peopl
 
 **Payments**
 
-- _An author paid but the site shows unpaid_: Admin → Payments → the payment → **Check with Paystack**. If Paystack confirms the money, the payment is recorded and the receipt sent, exactly as the missed webhook would have done (it can't be applied twice). The nightly reconciliation lists any others as "Statuses differ".
-- _Charged twice_: refund one in the Paystack dashboard, then record it on the payment (Admin → Payments → the payment → Record a refund).
+- _An author paid but the site shows unpaid_: check Admin → Payments for a bank transfer to confirm. If there is none, the author hasn't uploaded the receipt yet: ask them to upload it on their submission page. Confirm only once the money shows on the bank statement (a payment can't be confirmed twice).
+- _Paid twice_: transfer one back from the journal's account, then record it on the payment (Admin → Payments → the payment → Record a refund).
 
 **Wrong file published** (wrong PDF on an article or issue)
 
@@ -158,25 +157,24 @@ For every incident: **detect** (the alert or report), **triage** (how many peopl
 
 Rotate a key at once if it may have leaked, and at least yearly. After changing a value in Vercel, redeploy (Deployments → Redeploy) so functions pick it up.
 
-| Key                       | Where to make a new one                              | Then update                                   | Notes                                                                                      |
-| ------------------------- | ---------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Supabase JWT signing key  | Supabase → Project Settings → JWT keys → rotate      | nothing                                       | Signed-in users sign in again once.                                                        |
-| Supabase anon key         | Supabase → API keys                                  | Vercel `NEXT_PUBLIC_SUPABASE_ANON_KEY`        | Public by design; rotate if the project is recreated.                                      |
-| Supabase service role key | Supabase → API keys → roll the secret key            | Vercel and GitHub `SUPABASE_SERVICE_ROLE_KEY` | Server-only; treat a leak as an incident.                                                  |
-| Database password         | Supabase → Database → reset password                 | GitHub `SUPABASE_DB_URL`                      | Used only by backups.                                                                      |
-| Paystack secret key       | Paystack → Settings → API keys → generate new secret | Vercel `PAYSTACK_SECRET_KEY`                  | The webhook signature uses this key, so update promptly; Paystack retries failed webhooks. |
-| Resend API key            | Resend → API keys → create, then revoke the old one  | Vercel `RESEND_API_KEY`                       | Supabase SMTP uses it too (Auth → SMTP).                                                   |
-| Resend webhook secret     | Resend → Webhooks → the endpoint → rotate            | Vercel `RESEND_WEBHOOK_SECRET`                | Both secrets are accepted during the rotation window.                                      |
-| Turnstile secret          | Cloudflare → Turnstile → the widget → rotate         | Vercel `TURNSTILE_SECRET_KEY`                 |                                                                                            |
-| `CRON_SECRET`             | any 32+ random characters                            | Vercel and GitHub                             | Change both together.                                                                      |
-| `METRICS_SALT`            | any 32+ random characters                            | Vercel                                        | Only affects de-duplication on the day it changes.                                         |
-| `BACKUP_PASSPHRASE`       | any long passphrase                                  | GitHub, and the offline copy                  | Keep the old one for old backups.                                                          |
-| Sentry DSN                | Sentry → the project → Client keys                   | Vercel `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN` |                                                                                            |
-| Google sign-in client     | Google Cloud → Credentials                           | Supabase → Auth → Providers → Google          |                                                                                            |
+| Key                       | Where to make a new one                             | Then update                                   | Notes                                                 |
+| ------------------------- | --------------------------------------------------- | --------------------------------------------- | ----------------------------------------------------- |
+| Supabase JWT signing key  | Supabase → Project Settings → JWT keys → rotate     | nothing                                       | Signed-in users sign in again once.                   |
+| Supabase anon key         | Supabase → API keys                                 | Vercel `NEXT_PUBLIC_SUPABASE_ANON_KEY`        | Public by design; rotate if the project is recreated. |
+| Supabase service role key | Supabase → API keys → roll the secret key           | Vercel and GitHub `SUPABASE_SERVICE_ROLE_KEY` | Server-only; treat a leak as an incident.             |
+| Database password         | Supabase → Database → reset password                | GitHub `SUPABASE_DB_URL`                      | Used only by backups.                                 |
+| Resend API key            | Resend → API keys → create, then revoke the old one | Vercel `RESEND_API_KEY`                       | Supabase SMTP uses it too (Auth → SMTP).              |
+| Resend webhook secret     | Resend → Webhooks → the endpoint → rotate           | Vercel `RESEND_WEBHOOK_SECRET`                | Both secrets are accepted during the rotation window. |
+| Turnstile secret          | Cloudflare → Turnstile → the widget → rotate        | Vercel `TURNSTILE_SECRET_KEY`                 |                                                       |
+| `CRON_SECRET`             | any 32+ random characters                           | Vercel and GitHub                             | Change both together.                                 |
+| `METRICS_SALT`            | any 32+ random characters                           | Vercel                                        | Only affects de-duplication on the day it changes.    |
+| `BACKUP_PASSPHRASE`       | any long passphrase                                 | GitHub, and the offline copy                  | Keep the old one for old backups.                     |
+| Sentry DSN                | Sentry → the project → Client keys                  | Vercel `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN` |                                                       |
+| Google sign-in client     | Google Cloud → Credentials                          | Supabase → Auth → Providers → Google          |                                                       |
 
 ## Routine checks
 
-- **Weekly**: Admin → System. No failed jobs; the last backup is under a week old; no unexpected bounces. Admin → Reconciliation: nothing left to check.
+- **Weekly**: Admin → System. No failed jobs; the last backup is under a week old; no unexpected bounces. Admin → Payments: no bank transfers left waiting.
 - **Monthly**: UptimeRobot availability (target 99.5%); Vercel Speed Insights p95 (target under 2.5 s); merge Dependabot pull requests whose checks pass.
 - **Quarterly**: run the restore drill; review who has staff roles (Admin → Users and roles) and deactivate people who have left.
 - **Yearly**: rotate keys; re-run `scripts/explain.sql` and look for sequential scans on large tables; check the Supabase plan still fits (database size, Storage, egress). Upgrade compute (Supabase → Project Settings → Compute) if database CPU stays above 70%.

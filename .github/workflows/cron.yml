@@ -26,9 +26,3 @@ jobs:
           curl --fail --silent --show-error --max-time 120 \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             "${{ vars.SITE_URL }}/api/cron/daily"
-      - name: Reconcile yesterday's payments with Paystack
-        if: ${{ github.event.schedule == '43 0 * * *' }}
-        run: |
-          curl --fail --silent --show-error --max-time 120 \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            "${{ vars.SITE_URL }}/api/cron/reconcile"

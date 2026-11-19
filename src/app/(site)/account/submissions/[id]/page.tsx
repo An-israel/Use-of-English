@@ -7,12 +7,14 @@ import { Breadcrumbs } from "@/components/journal/Breadcrumbs";
 import { PageSkeleton } from "@/components/journal/Skeleton";
 import { requireViewer } from "@/lib/auth";
 import { getCategories, getFlags, getSettings } from "@/lib/data";
-import { formatDate, formatNaira } from "@/lib/format";
+import { formatDate, formatNaira, isoDateFromNow } from "@/lib/format";
 import { FILE_KINDS } from "@/lib/submission";
 import { userClient } from "@/lib/supabase/clients";
 import { ARTICLE_TYPE_LABEL, type ArticleType } from "@/lib/types";
 import { AUTHOR_NEXT_STEP, STATUS_LABEL, canWithdraw, type SubmissionStatus } from "@/lib/workflow";
-import { MessageForm, PayFee, RevisionUpload, WithdrawForm } from "./Panels";
+import { BankTransferPay } from "@/components/payments/BankTransferPay";
+import { transferState } from "@/lib/payments/bank";
+import { MessageForm, RevisionUpload, WithdrawForm } from "./Panels";
 
 export const metadata: Metadata = { title: "Submission", robots: { index: false } };
 
@@ -78,7 +80,9 @@ async function Detail({
         .order("created_at"),
       supabase
         .from("payments")
-        .select("id, fee_type, amount_kobo, status, paid_at, receipt_number, receipt_path, reference, waiver_reason")
+        .select(
+          "id, fee_type, amount_kobo, status, paid_at, receipt_number, receipt_path, reference, waiver_reason, proof_submitted_at, transfer_payer, transfer_date, rejection_reason, created_at",
+        )
         .eq("submission_id", id)
         .order("created_at"),
       getSettings(),
@@ -136,11 +140,17 @@ async function Detail({
 
       <div className="border-rule grid grid-cols-12 gap-x-6 gap-y-12 border-t pt-10">
         <div className="col-span-12 space-y-10 lg:col-span-7">
-          {s.status === "awaiting_review_fee" && feesOn && (
-            <PayFee id={s.id} fee="review" amountKobo={settings.fees.reviewKobo} />
-          )}
-          {s.status === "accepted_awaiting_fee" && feesOn && (
-            <PayFee id={s.id} fee="publication" amountKobo={settings.fees.publicationKobo} />
+          {feesOn && s.public_id && (s.status === "awaiting_review_fee" || s.status === "accepted_awaiting_fee") && (
+            <BankTransferPay
+              submissionId={s.id}
+              publicId={s.public_id}
+              fee={s.status === "awaiting_review_fee" ? "review" : "publication"}
+              amountKobo={s.status === "awaiting_review_fee" ? settings.fees.reviewKobo : settings.fees.publicationKobo}
+              bank={settings.bankAccount}
+              state={transferState(payments ?? [], s.status === "awaiting_review_fee" ? "review" : "publication")}
+              defaultPayer={viewer.fullName}
+              today={isoDateFromNow(0)}
+            />
           )}
           {s.status === "revisions_requested" && <RevisionUpload id={s.id} />}
           {letterReady && (

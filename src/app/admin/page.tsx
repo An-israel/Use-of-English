@@ -27,7 +27,7 @@ export default async function AdminHome() {
   const monthAgo = isoDaysAgo(30);
   const nowIso = isoDaysAgo(0);
 
-  const [subs, overdue, unread, failed, flags, events, paid] = await Promise.all([
+  const [subs, overdue, unread, toConfirm, events, paid] = await Promise.all([
     db
       .from("submissions")
       .select("id, status, submitted_at, decided_at, accepted_at, updated_at")
@@ -47,10 +47,11 @@ export default async function AdminHome() {
           .eq("is_read", false)
           .is("archived_at", null)
       : Promise.resolve({ count: 0 }),
-    db.from("payments").select("id", { count: "exact", head: true }).eq("status", "failed").gte("created_at", monthAgo),
-    finance
-      ? db.from("reconciliation_flags").select("id", { count: "exact", head: true }).is("resolved_at", null)
-      : Promise.resolve({ count: 0 }),
+    db
+      .from("payments")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "pending")
+      .not("proof_submitted_at", "is", null),
     db
       .from("submission_events")
       .select("id, to_status, message, visibility, created_at, submission:submissions ( id, public_id, title )")
@@ -108,17 +109,12 @@ export default async function AdminHome() {
       label: "Accepted, awaiting publication fee",
       n: count("accepted_awaiting_fee"),
     },
-    { href: "/admin/payments?status=failed", label: "Failed payments (30 days)", n: failed.count ?? 0, tone: "accent" },
-    ...(finance
-      ? [
-          {
-            href: "/admin/reconciliation",
-            label: "Unresolved reconciliation flags",
-            n: flags.count ?? 0,
-            tone: "accent" as const,
-          },
-        ]
-      : []),
+    {
+      href: "/admin/payments?status=pending",
+      label: "Bank transfers to confirm",
+      n: toConfirm.count ?? 0,
+      tone: "accent" as const,
+    },
     ...(["super_admin", "editor"].includes(viewer.role)
       ? [{ href: "/admin/messages", label: "Unread messages", n: unread.count ?? 0 }]
       : []),

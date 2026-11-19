@@ -1,0 +1,6 @@
+{
+  "GHSA-fc5q-39xc-vjpf": {
+    "until": "2026-12-18",
+    "reason": "picomatch ReDoS: build-time only (Sentry's rollup/vite plugins on our own paths); every version is affected and no fix is published yet. Remove once picomatch is patched (npm update)."
+  }
+}

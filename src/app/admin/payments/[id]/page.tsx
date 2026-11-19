@@ -7,8 +7,9 @@ import { FEE_LABEL, LEDGER_COLUMNS, type LedgerRow } from "@/lib/finance";
 import { formatDate, formatNaira, isoDateFromNow } from "@/lib/format";
 import { userClient } from "@/lib/supabase/clients";
 import { StatusBadge } from "../StatusBadge";
-import { recheckPayment } from "../../finance-actions";
+import { confirmTransfer } from "../../finance-actions";
 import { RefundForm } from "./RefundForm";
+import { RejectTransferForm } from "./TransferForms";
 
 export const metadata = { title: "Payment" };
 
@@ -18,14 +19,22 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
   const db = await userClient();
   const { data: p } = await db.from("payment_ledger").select(LEDGER_COLUMNS).eq("id", id).maybeSingle<LedgerRow>();
   if (!p) notFound();
-  const [{ data: refunds }, { data: flags }] = await Promise.all([
+  const [{ data: refunds }, { data: flags }, { data: transfer }] = await Promise.all([
     db
       .from("refunds")
       .select("id, amount_kobo, reason, refunded_on, paystack_refund_reference, created_at, by:profiles ( full_name )")
       .eq("payment_id", id)
       .order("created_at"),
     db.from("reconciliation_flags").select("id, kind, run_date, resolved_at").eq("payment_id", id),
+    db
+      .from("payments")
+      .select(
+        "proof_path, proof_name, transfer_payer, transfer_date, proof_submitted_at, confirmed_at, rejection_reason, confirmer:profiles!payments_confirmed_by_fkey ( full_name )",
+      )
+      .eq("id", id)
+      .maybeSingle(),
   ]);
+  const awaiting = p.status === "pending" && !!transfer?.proof_submitted_at;
   const canRefund = ["super_admin", "finance_officer"].includes(viewer.role);
   const refundable = p.status === "success" ? p.amount_kobo - p.refunded_kobo : 0;
   const rows: [string, React.ReactNode][] = [
@@ -46,6 +55,17 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
     ],
   ];
   if (p.waiver_reason) rows.push(["Waiver reason", p.waiver_reason]);
+  if (transfer?.proof_submitted_at) {
+    rows.push(["Paid in by", transfer.transfer_payer ?? "—"]);
+    rows.push(["Transfer date", transfer.transfer_date ? formatDate(transfer.transfer_date) : "—"]);
+    rows.push(["Receipt sent", formatDate(transfer.proof_submitted_at)]);
+    if (transfer.confirmed_at)
+      rows.push([
+        "Confirmed",
+        `${formatDate(transfer.confirmed_at)} by ${(transfer.confirmer as unknown as { full_name: string } | null)?.full_name ?? "—"}`,
+      ]);
+    if (transfer.rejection_reason) rows.push(["Not accepted", transfer.rejection_reason]);
+  }
 
   return (
     <>
@@ -61,17 +81,18 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
           </span>
         }
         actions={
-          canRefund && ["pending", "failed", "abandoned"].includes(p.status) ? (
+          canRefund && awaiting ? (
             <ActionButton
-              run={recheckPayment.bind(null, p.id)}
+              variant="primary"
+              run={confirmTransfer.bind(null, p.id)}
               confirm={{
-                title: "Check this payment with Paystack?",
+                title: `Confirm ${formatNaira(p.amount_kobo)} received?`,
                 description:
-                  "If Paystack confirms the money was received, the payment is recorded as paid exactly as if its webhook had arrived, and the author gets a receipt.",
-                confirmLabel: "Check with Paystack",
+                  "Only confirm once the transfer shows on the journal’s bank statement. The payment is recorded as paid, the author is emailed an official receipt and the submission moves on.",
+                confirmLabel: "Confirm payment",
               }}
             >
-              Check with Paystack
+              Confirm payment received
             </ActionButton>
           ) : p.receipt_number ? (
             <a href={`/api/receipts/${p.id}`} className="btn-line">
@@ -95,6 +116,25 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
               ))}
             </dl>
           </section>
+          {transfer?.proof_path && (
+            <section className="admin-box" aria-labelledby="proof">
+              <h2 id="proof" className="font-display text-[1.15rem]">
+                Proof of payment
+              </h2>
+              <p className="text-muted mt-1 text-[0.9rem]">
+                Check the amount, the date and the description ({p.public_id}) against the journal’s bank statement
+                before confirming.
+              </p>
+              <a
+                href={`/api/payment-proofs/${p.id}`}
+                target="_blank"
+                rel="noopener"
+                className="btn-line mt-3 inline-block"
+              >
+                Open the transfer receipt{transfer.proof_name ? ` (${transfer.proof_name})` : ""}
+              </a>
+            </section>
+          )}
           <section className="admin-box" aria-labelledby="rf">
             <h2 id="rf" className="font-display text-[1.15rem]">
               Refunds
@@ -118,24 +158,33 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
               </ul>
             )}
           </section>
-          {!!flags?.length && (
+          {!!flags?.filter((f) => !f.resolved_at).length && (
             <p className="text-thread-text text-[0.9rem]">
-              This payment appears in {flags.length} reconciliation flag{flags.length === 1 ? "" : "s"}.{" "}
-              <Link href="/admin/reconciliation" className="underline underline-offset-4">
-                Open reconciliation
-              </Link>
+              This payment was flagged by an earlier Paystack check ({flags.map((f) => f.kind).join(", ")}).
             </p>
           )}
         </div>
-        <aside className="col-span-12 xl:col-span-5">
+        <aside className="col-span-12 space-y-6 xl:col-span-5">
+          {canRefund && awaiting && (
+            <section className="admin-box" aria-labelledby="rej">
+              <h2 id="rej" className="font-display text-[1.15rem]">
+                Can’t find this transfer?
+              </h2>
+              <p className="text-muted mt-1 mb-4 text-[0.86rem]">
+                If the money hasn’t reached the account, or the receipt doesn’t match, tell the author why. They can
+                then upload the right receipt.
+              </p>
+              <RejectTransferForm paymentId={p.id} />
+            </section>
+          )}
           {canRefund && refundable > 0 ? (
             <section className="admin-box" aria-labelledby="rec">
               <h2 id="rec" className="font-display text-[1.15rem]">
                 Record a refund
               </h2>
               <p className="text-muted mt-1 mb-4 text-[0.86rem]">
-                Refund the money in the Paystack dashboard first, then record it here. Up to {formatNaira(refundable)}{" "}
-                can be refunded.
+                Transfer the money back to the author from the journal’s account first, then record it here. Up to{" "}
+                {formatNaira(refundable)} can be refunded.
               </p>
               <RefundForm paymentId={p.id} maxNaira={refundable / 100} today={isoDateFromNow(0)} />
             </section>

@@ -16,7 +16,6 @@ import {
 } from "@/lib/finance";
 import { allLedgerRows, issueOptions } from "@/lib/finance-data";
 import { formatDate, formatNairaPlain } from "@/lib/format";
-import { isPaymentTestMode } from "@/lib/payments/paystack";
 import { renderFundStatement, renderPaymentsReport } from "@/lib/pdf/documents";
 import { adminClient, userClient } from "@/lib/supabase/clients";
 
@@ -49,12 +48,6 @@ export async function GET(req: NextRequest) {
   const rows = await allLedgerRows(db, f);
   const t = totals(rows);
   const stamp = new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Lagos" }).format(new Date());
-  let testMode = true;
-  try {
-    testMode = isPaymentTestMode();
-  } catch {
-    // misconfigured payments count as test mode on documents
-  }
 
   await adminClient()
     .from("audit_log")
@@ -81,7 +74,6 @@ export async function GET(req: NextRequest) {
       );
     const pdf = await renderFundStatement({
       generated: formatDate(new Date().toISOString()),
-      testMode,
       tiles: [
         ["Collected", formatNairaPlain(t.all.collected)],
         ["Refunds", formatNairaPlain(t.all.refunded)],
@@ -123,7 +115,6 @@ export async function GET(req: NextRequest) {
     title: "JHTCS payments report",
     filters: filterText,
     generated: formatDate(new Date().toISOString()),
-    testMode,
     tiles: [
       ["Collected", formatNairaPlain(t.all.collected)],
       ["Refunded", formatNairaPlain(t.all.refunded)],

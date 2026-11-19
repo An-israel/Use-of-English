@@ -1,14 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 import { expect, test, type Page } from "@playwright/test";
-import { createHmac } from "node:crypto";
 
 /**
- * Submission and payments end to end, against a real Supabase stack with
- * PAYSTACK_MODE=mock (the simulated checkout sends signed webhooks).
+ * Submission and payments end to end, against a real Supabase stack. Fees are
+ * paid by bank transfer: the author uploads the receipt and the Finance
+ * Officer confirms it (or says why it can't be matched).
  */
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-test.skip(!URL_ || !KEY || process.env.PAYSTACK_MODE !== "mock", "requires Supabase and PAYSTACK_MODE=mock");
+test.skip(!URL_ || !KEY, "requires Supabase");
 test.skip(({ isMobile }) => isMobile, "runs once, on desktop");
 test.describe.configure({ mode: "serial" });
 
@@ -20,6 +20,16 @@ const author = {
   name: "Ngozi Sample Author",
 };
 const editor = { email: `sub.editor.${run}@example.test`, password: "editor-password-123" };
+const finance = { email: `sub.finance.${run}@example.test`, password: "finance-password-123" };
+// A tiny PNG standing in for a photo of the transfer receipt.
+const receiptPng = (name = "transfer-receipt.png") => ({
+  name,
+  mimeType: "image/png",
+  buffer: Buffer.from(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+    "base64",
+  ),
+});
 const DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 const docx = (name: string) => ({
   name,
@@ -33,6 +43,8 @@ const ABSTRACT = Array.from(
 let submissionUrl = "";
 
 async function signIn(page: Page, email: string, password: string) {
+  // Several people sign in during these tests; keep the login rate limit out of the way.
+  await sb().from("rate_limit_buckets").delete().neq("key", "");
   await page.context().clearCookies();
   await page.goto("/login");
   await page.getByLabel("Email").fill(email);
@@ -66,7 +78,56 @@ test.beforeAll(async () => {
     app_metadata: { jhts_role: "editor" },
     user_metadata: { full_name: "Ed Sample Editor" },
   });
+  await db.auth.admin.createUser({
+    email: finance.email,
+    password: finance.password,
+    email_confirm: true,
+    app_metadata: { jhts_role: "finance_officer" },
+    user_metadata: { full_name: "Fola Sample Finance" },
+  });
 });
+
+/** The author pays into the journal's account and uploads the receipt. */
+async function sendTransferReceipt(page: Page, amount: string) {
+  const panel = page.getByTestId("bank-transfer");
+  await expect(panel.getByText("1313504238")).toBeVisible();
+  await expect(panel.getByText("Zenith Bank PLC")).toBeVisible();
+  await expect(panel.getByText(amount).first()).toBeVisible();
+  await expect(panel.getByText(/JHTCS-\d{4}-\d{4}/).first()).toBeVisible();
+  await expect(panel.getByLabel("Name the transfer was made in")).toHaveValue(author.name);
+  await panel.locator('input[type="file"]').setInputFiles(receiptPng());
+  await expect(panel.getByText("transfer-receipt.png")).toBeVisible();
+  await panel.getByRole("button", { name: "Send proof of payment" }).click();
+  await expect(panel.getByText("We have your receipt", { exact: true })).toBeVisible({ timeout: 20_000 });
+}
+
+/** The newest transfer waiting for confirmation on a submission. */
+async function awaitingTransfer(submissionId: string, fee: "review" | "publication") {
+  return waitFor(async () => {
+    const { data } = await sb()
+      .from("payments")
+      .select("id, reference, status")
+      .eq("submission_id", submissionId)
+      .eq("fee_type", fee)
+      .eq("status", "pending")
+      .not("proof_submitted_at", "is", null)
+      .maybeSingle();
+    return data;
+  });
+}
+
+/** The Finance Officer checks the receipt and confirms the money arrived. */
+async function confirmAsFinance(page: Page, paymentId: string) {
+  await signIn(page, finance.email, finance.password);
+  await page.goto("/admin/payments");
+  await expect(page.getByRole("heading", { name: /bank transfers? to confirm/ })).toBeVisible();
+  await page.goto(`/admin/payments/${paymentId}`);
+  const proof = await page.request.get(`/api/payment-proofs/${paymentId}`, { maxRedirects: 5 });
+  expect(proof.status()).toBe(200);
+  await page.getByRole("button", { name: "Confirm payment received" }).click();
+  await page.getByRole("button", { name: "Confirm payment", exact: true }).click();
+  await expect(page.getByText(/Payment confirmed/)).toBeVisible();
+}
 
 test("an author submits a manuscript and pays the review fee", async ({ page }) => {
   await signIn(page, author.email, author.password);
@@ -118,14 +179,19 @@ test("an author submits a manuscript and pays the review fee", async ({ page }) 
   // Step 5: review, submit, pay
   await expect(page.getByText("Review and plagiarism-check fee: ₦5,000")).toBeVisible();
   await page.getByRole("button", { name: "Submit manuscript" }).click();
-  await expect(page.getByRole("heading", { name: "Pay the review fee" })).toBeVisible();
-  await page.getByRole("button", { name: /Pay ₦5,000 with Paystack/ }).click();
-  await page.waitForURL(/\/dev\/paystack/);
-  await expect(page.getByText("Test mode · simulated checkout")).toBeVisible();
-  await page.getByRole("button", { name: "Simulate successful payment" }).click();
-  await expect(page.getByRole("heading", { name: "Payment received" })).toBeVisible({ timeout: 20_000 });
+  await page.waitForURL(/\/account\/submissions\/[0-9a-f-]{36}\?new=1/);
+  await expect(page.getByText("Submission received")).toBeVisible();
+  await sendTransferReceipt(page, "₦5,000");
+  // Nothing moves on until the money is confirmed.
+  const subId = submissionUrl.split("/").pop()!;
+  const { data: waiting } = await sb().from("submissions").select("status").eq("id", subId).single();
+  expect(waiting!.status).toBe("awaiting_review_fee");
+  const transfer = await awaitingTransfer(subId, "review");
+  expect(transfer.reference).toMatch(/^JHTCS-RF-\d{4}-\d{4}-1$/);
 
-  await page.getByRole("link", { name: "View your submission" }).click();
+  await confirmAsFinance(page, transfer.id);
+  await signIn(page, author.email, author.password);
+  await page.goto(submissionUrl.replace("/submit/", "/account/submissions/"));
   await expect(
     page.getByText("Under screening").or(page.getByText("Submitted", { exact: true }).first()),
   ).toBeVisible();
@@ -174,29 +240,33 @@ test("an author submits a manuscript and pays the review fee", async ({ page }) 
   const id = submissionUrl.split("/").pop()!;
   const { data: emails } = await sb().from("email_outbox").select("template, status").eq("related_id", id);
   expect(emails?.map((e) => e.template)).toContain("submission_received");
+  const { data: payEmails } = await sb().from("email_outbox").select("template").eq("related_id", transfer.id);
+  expect(payEmails?.map((e) => e.template)).toEqual(expect.arrayContaining(["transfer_received", "payment_receipt"]));
 });
 
-test("payments are idempotent and webhooks must be signed", async ({ request }) => {
+test("only the Finance Officer confirms, and a confirmed fee is settled once", async ({ page }) => {
   const id = submissionUrl.split("/").pop()!;
-  const { data: p } = await sb()
-    .from("payments")
-    .select("reference, amount_kobo")
-    .eq("submission_id", id)
-    .eq("status", "success")
-    .single();
-  const body = JSON.stringify({ event: "charge.success", data: { reference: p!.reference, amount: p!.amount_kobo } });
-  const bad = await request.post("/api/webhooks/paystack", {
-    data: body,
-    headers: { "content-type": "application/json", "x-paystack-signature": "nope" },
+  const db = sb();
+  const { data: p } = await db.from("payments").select("id").eq("submission_id", id).eq("status", "success").single();
+  // Editors can see payments but not confirm them.
+  await signIn(page, editor.email, editor.password);
+  await page.goto(`/admin/payments/${p!.id}`);
+  await expect(page.getByRole("button", { name: "Confirm payment received" })).toHaveCount(0);
+  // The fee is no longer due, so another receipt can't be recorded against it.
+  const again = await db.rpc("submit_bank_transfer", {
+    p_submission: id,
+    p_fee: "review",
+    p_amount_kobo: 500000,
+    p_proof_path: `proofs/${id}/review-x.png`,
+    p_proof_name: "x.png",
+    p_payer: author.name,
+    p_transfer_date: new Date().toISOString().slice(0, 10),
   });
-  expect(bad.status()).toBe(401);
-  const sig = createHmac("sha512", "sk_test_mock_local_only").update(body).digest("hex");
-  const again = await request.post("/api/webhooks/paystack", {
-    data: body,
-    headers: { "content-type": "application/json", "x-paystack-signature": sig },
-  });
-  expect(await again.json()).toMatchObject({ ok: true, outcome: "duplicate" });
-  const { count } = await sb()
+  expect(again.error?.message).toMatch(/not due/);
+  // Without a signed-in Finance Officer the database refuses to confirm.
+  const anon = await db.rpc("confirm_bank_transfer", { p_payment: p!.id });
+  expect(anon.error?.message).toMatch(/Finance Officer/);
+  const { count } = await db
     .from("payments")
     .select("id", { count: "exact", head: true })
     .eq("submission_id", id)
@@ -220,11 +290,25 @@ test("an editor accepts it, the author pays the publication fee and downloads th
   await signIn(page, author.email, author.password);
   await page.goto(`/account/submissions/${id}`);
   await expect(page.getByText("Congratulations: the reviewers recommend acceptance.")).toBeVisible();
-  await page.getByRole("button", { name: "Pay publication fee" }).click();
-  await page.waitForURL(/\/dev\/paystack/);
-  await expect(page.getByRole("heading", { name: "Pay ₦20,000" })).toBeVisible();
-  await page.getByRole("button", { name: "Simulate successful payment" }).click();
-  await expect(page.getByRole("heading", { name: "Payment received" })).toBeVisible({ timeout: 20_000 });
+  await sendTransferReceipt(page, "₦20,000");
+  const first = await awaitingTransfer(id, "publication");
+
+  // Finance can't find it: the author is told why and uploads again.
+  await signIn(page, finance.email, finance.password);
+  await page.goto(`/admin/payments/${first.id}`);
+  await page.getByLabel("Reason").fill("No transfer of ₦20,000 reached the account on that date.");
+  await page.getByRole("button", { name: "Not received: tell the author" }).click();
+  await expect(page.getByText("The author has been told")).toBeVisible();
+
+  await signIn(page, author.email, author.password);
+  await page.goto(`/account/submissions/${id}`);
+  await expect(page.getByText("No transfer of ₦20,000 reached the account on that date.")).toBeVisible();
+  await sendTransferReceipt(page, "₦20,000");
+  const second = await awaitingTransfer(id, "publication");
+  expect(second.id).not.toBe(first.id);
+  await confirmAsFinance(page, second.id);
+
+  await signIn(page, author.email, author.password);
   await page.goto(`/account/submissions/${id}`);
   await expect(page.getByText("In production").first()).toBeVisible();
   const letter = await page.request.get(`/api/acceptance-letter/${id}`);
@@ -232,7 +316,7 @@ test("an editor accepts it, the author pays the publication fee and downloads th
   expect(letter.headers()["content-type"]).toBe("application/pdf");
 });
 
-test("a failed payment can be retried, and an editor can waive the fee instead", async ({ page }) => {
+test("an editor can waive the fee instead of payment", async ({ page }) => {
   // Second submission prepared directly in the database, then submitted by the author.
   await signIn(page, author.email, author.password);
   const db = sb();
@@ -272,10 +356,8 @@ test("a failed payment can be retried, and an editor can waive the fee instead",
     await expect(page.getByRole("heading", { name: next, level: 2 })).toBeVisible();
   }
   await page.getByRole("button", { name: "Submit manuscript" }).click();
-  await page.getByRole("button", { name: /with Paystack/ }).click();
-  await page.waitForURL(/\/dev\/paystack/);
-  await page.getByRole("button", { name: "Simulate failed payment" }).click();
-  await expect(page.getByRole("heading", { name: "Payment not completed" })).toBeVisible({ timeout: 20_000 });
+  await page.waitForURL(/\/account\/submissions\/[0-9a-f-]{36}\?new=1/);
+  await expect(page.getByTestId("bank-transfer")).toBeVisible();
 
   await signIn(page, editor.email, editor.password);
   await page.goto(`/admin/submissions/${s!.id}`);

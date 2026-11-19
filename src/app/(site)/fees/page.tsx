@@ -77,6 +77,28 @@ export default async function FeesPage() {
                 <p className="text-muted mt-4 text-[0.92rem]">
                   <span className="text-fg">What the fees cover:</span> {s.fees.covers}
                 </p>
+                <section
+                  aria-labelledby="how-to-pay"
+                  className="border-thread bg-surface mt-8 rounded-[3px] border-2 p-6"
+                  data-testid="bank-account"
+                >
+                  <h2 id="how-to-pay" className="font-display text-[1.4rem]">
+                    How to pay: bank transfer
+                  </h2>
+                  <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-[1rem]">
+                    <dt className="text-muted">Account name</dt>
+                    <dd className="font-medium">{s.bankAccount.accountName}</dd>
+                    <dt className="text-muted">Account number</dt>
+                    <dd className="tabular font-display text-[1.35rem] leading-tight">{s.bankAccount.accountNumber}</dd>
+                    <dt className="text-muted">Bank</dt>
+                    <dd className="font-medium">{s.bankAccount.bankName}</dd>
+                  </dl>
+                  <p className="text-muted mt-4 text-[0.92rem]">
+                    Write your submission ID (for example {s.shortName}-2027-0042) in the transfer description, then
+                    upload the receipt or bank teller from your submission page. Your manuscript moves on once the
+                    payment is confirmed, and your official receipt is emailed to you.
+                  </p>
+                </section>
               </div>
             ) : (
               <p className="border-rule bg-surface rounded-[3px] border p-6">JHTCS is not charging fees at present.</p>

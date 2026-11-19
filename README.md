@@ -16,7 +16,7 @@ The website, submissions system, payments and admin dashboard for JHTCS, publish
 
 ## Stack
 
-Next.js 16 (App Router, Cache Components, TypeScript strict) · Supabase (Postgres, Auth, Storage, Realtime) · Tailwind CSS 4 with JHTCS design tokens · Paystack · Resend · Vercel.
+Next.js 16 (App Router, Cache Components, TypeScript strict) · Supabase (Postgres, Auth, Storage, Realtime) · Tailwind CSS 4 with JHTCS design tokens · Resend · Vercel. Fees are paid by bank transfer.
 
 ## Run it locally
 
@@ -47,7 +47,6 @@ Copy `.env.example` to `.env.local` for development; in production set them in V
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Project Settings → API                                             |
 | `SUPABASE_SERVICE_ROLE_KEY`                                 | Same page. **Server only**: never in client code or a `NEXT_PUBLIC_` variable |
 | `DATABASE_URL`                                              | Session-pooler connection string, for scripts (`samples:delete`, `db:test`)   |
-| `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY`, `PAYSTACK_SECRET_KEY`    | Paystack test keys (`pk_test_`/`sk_test_`) until launch, then live keys       |
 | `RESEND_API_KEY`, `RESEND_WEBHOOK_SECRET`                   | Resend API key; signing secret of the bounce webhook                          |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`    | Cloudflare Turnstile (spam protection on the contact form and sign-up)        |
 | `CRON_SECRET`                                               | 32+ random characters; scheduled jobs and the GitHub workflows send it        |
@@ -56,7 +55,7 @@ Copy `.env.example` to `.env.local` for development; in production set them in V
 | `ALERT_EMAIL`                                               | Optional; alerts go to every Super Admin otherwise                            |
 | `SUPER_ADMIN_EMAIL`, `SUPER_ADMIN_NAME`                     | For `npm run admin:create`                                                    |
 
-`npm run launch:check` checks the production values (live Paystack keys, https site address and so on) before launch.
+`npm run launch:check` checks the production values (https site address, email and secrets) before launch.
 
 ## Accounts and email (Supabase Auth)
 
@@ -77,33 +76,32 @@ All other email (receipts, decisions, reviewer invitations and reminders) is sen
 2. Resend → API keys → create a sending key for `RESEND_API_KEY`.
 3. Resend → Webhooks → `https://www.jhtcs.org/api/webhooks/email` for `email.bounced` and `email.complained`; its signing secret is `RESEND_WEBHOOK_SECRET`. Addresses that bounce are not emailed again.
 
-## Payments (Paystack)
+## Payments (bank transfer)
 
-1. In the Paystack dashboard (Settings → API keys and webhooks), copy the **test** keys into `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` and `PAYSTACK_SECRET_KEY`. The receipts and the admin show "TEST MODE" until live keys (`sk_live_…`) are used.
-2. Set the webhook URL to `https://www.jhtcs.org/api/webhooks/paystack`. The callback URL is set per payment by the site.
-3. Without keys, set `PAYSTACK_MODE=mock` locally to use the simulated checkout. It is refused in production.
-4. **Going live:** the Unit completes Paystack's business verification ("Go live" in the dashboard), then the live keys (`pk_live_…`, `sk_live_…`) replace the test keys in Vercel. The TEST MODE banner disappears. [LAUNCH.md](docs/LAUNCH.md) describes a ₦100 live test payment and refund.
-5. Reconciliation runs daily at `/api/cron/reconcile` (yesterday in Lagos time; `?date=YYYY-MM-DD` for another day), from Vercel Cron and the GitHub workflow. Mismatches appear under Admin → Reconciliation and are emailed to the Finance Officers. Nothing is changed automatically.
-6. Refunds are made in the Paystack dashboard, then recorded under Admin → Payments → the payment (amount, date, reason, Paystack refund reference).
-7. The job worker (receipts and emails) runs at `/api/cron/jobs`, protected by `CRON_SECRET`. Set the repository variable `SITE_URL` and the secret `CRON_SECRET` in GitHub so `.github/workflows/cron.yml` calls it every 10 minutes.
+1. Fees are paid by bank transfer into the journal's account, set in Admin → Settings (**Journal of Humanities and Transcultural Studies, Zenith Bank PLC, 1313504238**). No payment provider or keys are needed.
+2. The author transfers the fee, writes the submission ID in the transfer description, and uploads the receipt or teller (PDF or photo, up to 5 MB) on their submission page. It is stored privately in the `finance` bucket under `proofs/`.
+3. The Finance Officer (or a Super Admin) is notified, checks the transfer against the bank statement and chooses **Confirm payment received** (the payment is recorded, the receipt is issued and emailed, and the submission moves on) or explains why it can't be matched (the author is emailed and can upload again).
+4. Refunds are transferred back from the journal's account, then recorded under Admin → Payments → the payment (amount, date, reason, transfer reference).
+5. Fees can be changed or switched off in Admin → Settings; editors can waive a fee on a submission.
+6. The job worker (receipts and emails) runs at `/api/cron/jobs`, protected by `CRON_SECRET`. Set the repository variable `SITE_URL` and the secret `CRON_SECRET` in GitHub so `.github/workflows/cron.yml` calls it every 10 minutes.
 
 ## The editorial office (`/admin`)
 
 Staff sign in and open `/admin`. Press Ctrl or ⌘ + K for quick actions; the sidebar collapses and the choice is remembered.
 
-| Section                                | Who                                              | What                                                                                       |
-| -------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| Submissions                            | Editors (book reviews: BRE)                      | Table with saved filters, kanban board, reviewers, plagiarism data, decisions              |
-| Issues                                 | Editors                                          | Create the next issue, editorial, cover, full-issue files, order, publish                  |
-| Articles, In Press                     | Editors                                          | Details, authors, files with versions, full text, publish or schedule, bin                 |
-| Book reviews                           | Editors, Book Review Editor                      | Book details and cover                                                                     |
-| Journal                                | Editors                                          | Categories, Call for Papers, pages and policies (versioned), editorial board               |
-| Messages                               | Editors                                          | Contact-form inbox                                                                         |
-| Users and roles                        | Super Admin, editors                             | Invitations and roles                                                                      |
-| Payments, Reconciliation, Fund summary | Finance Officer, Super Admin (editors view only) | Filters, totals by month and fee, CSV and PDF exports, refunds, mismatches, fund statement |
-| Settings                               | Super Admin                                      | Journal details, ISSN, DOI prefix, fees, email sender, links, SEO, feature flags           |
-| System, Audit log                      | Super Admin                                      | Service health, failed jobs, scheduled jobs, backups; every change on record               |
-| Handbook                               | All staff                                        | The Editor's Handbook                                                                      |
+| Section                | Who                                              | What                                                                                                      |
+| ---------------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| Submissions            | Editors (book reviews: BRE)                      | Table with saved filters, kanban board, reviewers, plagiarism data, decisions                             |
+| Issues                 | Editors                                          | Create the next issue, editorial, cover, full-issue files, order, publish                                 |
+| Articles, In Press     | Editors                                          | Details, authors, files with versions, full text, publish or schedule, bin                                |
+| Book reviews           | Editors, Book Review Editor                      | Book details and cover                                                                                    |
+| Journal                | Editors                                          | Categories, Call for Papers, pages and policies (versioned), editorial board                              |
+| Messages               | Editors                                          | Contact-form inbox                                                                                        |
+| Users and roles        | Super Admin, editors                             | Invitations and roles                                                                                     |
+| Payments, Fund summary | Finance Officer, Super Admin (editors view only) | Bank transfers to confirm, filters, totals by month and fee, CSV and PDF exports, refunds, fund statement |
+| Settings               | Super Admin                                      | Journal details, ISSN, DOI prefix, fees, email sender, links, SEO, feature flags                          |
+| System, Audit log      | Super Admin                                      | Service health, failed jobs, scheduled jobs, backups; every change on record                              |
+| Handbook               | All staff                                        | The Editor's Handbook                                                                                     |
 
 Reviewers find their requests on `/account` and review at `/review/<id>`.
 
@@ -130,7 +128,7 @@ The full go-live sequence, including deleting the SAMPLE content and a live test
 ## Operations
 
 - `docs/ENGINEERING.md`: how each of the 111 engineering items is met, SLOs and measurements. `docs/RUNBOOK.md`: setup, backups, incidents and recovery. `docs/POSTMORTEM_TEMPLATE.md`: for incidents.
-- Scheduled jobs: `/api/cron/jobs` (queue), `/api/cron/reconcile` and `/api/cron/daily` (reminders, clean-up, alerts), called by Vercel Cron or `.github/workflows/cron.yml` with `CRON_SECRET`. Weekly backups run in `.github/workflows/backup.yml`.
+- Scheduled jobs: `/api/cron/jobs` (queue) and `/api/cron/daily` (reminders, clean-up, alerts), called by Vercel Cron or `.github/workflows/cron.yml` with `CRON_SECRET`. Weekly backups run in `.github/workflows/backup.yml`.
 - GitHub secrets for the backup workflow: `SUPABASE_DB_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `BACKUP_PASSPHRASE`, `RCLONE_CONFIG` and `CRON_SECRET` (listed at the top of the workflow).
 - Admin → System shows health, failed jobs, scheduled jobs and backups; Admin → Audit log shows every change. The public API is documented at `/api/v1`.
 

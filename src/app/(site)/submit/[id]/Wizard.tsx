@@ -1,13 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useId, useRef, useState, useTransition } from "react";
+import { useEffect, useId, useRef, useState, useTransition } from "react";
 import clsx from "clsx";
 import { FormMessage } from "@/components/forms/FormMessage";
-import { SubmitButton } from "@/components/forms/SubmitButton";
 import { FEE_INTEGRITY_STATEMENT } from "@/content/journal";
 import { formatNaira } from "@/lib/format";
-import { startPayment, type PayState } from "@/lib/payments/actions";
 import { DECLARATIONS, FILE_KINDS, MAX_FILE_BYTES, countWords, type UploadKind } from "@/lib/submission";
 import { browserClient } from "@/lib/supabase/browser";
 import { ARTICLE_TYPE_LABEL } from "@/lib/types";
@@ -52,7 +50,6 @@ export function Wizard(props: WizardProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState<{ status: "ok" | "error"; text: string } | null>(null);
   const [savedAt, setSavedAt] = useState<string | null>(null);
-  const [awaitingFee, setAwaitingFee] = useState(false);
   const [pending, start] = useTransition();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const router = useRouter();
@@ -107,8 +104,8 @@ export function Wizard(props: WizardProps) {
     start(async () => {
       const r = await submitDraft(props.id);
       if (!r.ok) return setMessage({ status: "error", text: r.message });
-      if (r.status === "awaiting_review_fee") setAwaitingFee(true);
-      else router.push(`/account/submissions/${props.id}?new=1`);
+      // The submission page shows the submission ID and, when a fee is due, how to pay it.
+      router.push(`/account/submissions/${props.id}?new=1`);
     });
 
   const words = countWords(details.abstract);
@@ -118,13 +115,13 @@ export function Wizard(props: WizardProps) {
       <nav aria-label="Submission steps" className="col-span-12 lg:col-span-3">
         <ol className="flex gap-2 overflow-x-auto lg:sticky lg:top-24 lg:flex-col lg:gap-0">
           {STEPS.map((label, i) => {
-            const done = awaitingFee || i < step;
-            const current = !awaitingFee && i === step;
+            const done = i < step;
+            const current = i === step;
             return (
               <li key={label} className="shrink-0">
                 <button
                   type="button"
-                  disabled={awaitingFee || i > step || pending}
+                  disabled={i > step || pending}
                   onClick={() => go(i)}
                   aria-current={current ? "step" : undefined}
                   className={clsx(
@@ -146,201 +143,197 @@ export function Wizard(props: WizardProps) {
       </nav>
 
       <div className="col-span-12 lg:col-span-8 lg:col-start-5">
-        {awaitingFee ? (
-          <PayStep id={props.id} reviewKobo={props.fees.reviewKobo} />
-        ) : (
-          <section aria-labelledby="step-title">
-            <p className="smallcaps text-muted text-[0.82rem]">
-              Step {step + 1} of {STEPS.length}
-            </p>
-            <h2 id="step-title" ref={headingRef} tabIndex={-1} className="font-display mt-2 text-[2rem] outline-none">
-              {STEPS[step]}
-            </h2>
+        <section aria-labelledby="step-title">
+          <p className="smallcaps text-muted text-[0.82rem]">
+            Step {step + 1} of {STEPS.length}
+          </p>
+          <h2 id="step-title" ref={headingRef} tabIndex={-1} className="font-display mt-2 text-[2rem] outline-none">
+            {STEPS[step]}
+          </h2>
 
-            <div className="mt-8 space-y-7">
-              {step === 0 && (
-                <>
-                  <label className="block">
-                    <span>Title</span>
-                    <input
-                      className={input(errors.title)}
-                      value={details.title}
-                      onChange={(e) => setDetails({ ...details, title: e.target.value })}
-                      maxLength={300}
-                    />
-                    <Err msg={errors.title} />
-                  </label>
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <label className="block">
-                      <span>Article type</span>
-                      <select
-                        className={input(errors.type)}
-                        value={details.type}
-                        onChange={(e) => setDetails({ ...details, type: e.target.value })}
-                      >
-                        {TYPES.map((t) => (
-                          <option key={t} value={t}>
-                            {ARTICLE_TYPE_LABEL[t]}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    <label className="block">
-                      <span>Subject area</span>
-                      <select
-                        className={input(errors.categoryId)}
-                        value={details.categoryId}
-                        onChange={(e) => setDetails({ ...details, categoryId: e.target.value })}
-                      >
-                        <option value="">Choose a subject</option>
-                        {props.categories.map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.name}
-                          </option>
-                        ))}
-                      </select>
-                      <Err msg={errors.categoryId} />
-                    </label>
-                  </div>
-                  <label className="block">
-                    <span className="flex justify-between">
-                      <span>Abstract</span>
-                      <span
-                        className={clsx(
-                          "tabular text-[0.85rem]",
-                          words && (words < 150 || words > 250) ? "text-accent" : "text-muted",
-                        )}
-                        aria-live="polite"
-                      >
-                        {words} / 150–250 words
-                      </span>
-                    </span>
-                    <textarea
-                      rows={9}
-                      className={clsx(input(errors.abstract), "font-reading leading-relaxed")}
-                      value={details.abstract}
-                      onChange={(e) => setDetails({ ...details, abstract: e.target.value })}
-                    />
-                    <Err msg={errors.abstract} />
-                  </label>
-                  <KeywordInput
-                    value={details.keywords}
-                    onChange={(keywords) => setDetails({ ...details, keywords })}
-                    error={errors.keywords}
+          <div className="mt-8 space-y-7">
+            {step === 0 && (
+              <>
+                <label className="block">
+                  <span>Title</span>
+                  <input
+                    className={input(errors.title)}
+                    value={details.title}
+                    onChange={(e) => setDetails({ ...details, title: e.target.value })}
+                    maxLength={300}
                   />
-                  <fieldset>
-                    <legend>Citation style</legend>
-                    <div className="mt-2 flex flex-wrap gap-6">
-                      {[
-                        ["apa7", "APA 7th edition"],
-                        ["mla9", "MLA 9th edition"],
-                      ].map(([v, l]) => (
-                        <label key={v} className="flex items-center gap-2">
-                          <input
-                            type="radio"
-                            name="citationStyle"
-                            value={v}
-                            checked={details.citationStyle === v}
-                            onChange={() => setDetails({ ...details, citationStyle: v })}
-                            className="size-4 accent-[var(--brand)]"
-                          />
-                          {l}
-                        </label>
+                  <Err msg={errors.title} />
+                </label>
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <label className="block">
+                    <span>Article type</span>
+                    <select
+                      className={input(errors.type)}
+                      value={details.type}
+                      onChange={(e) => setDetails({ ...details, type: e.target.value })}
+                    >
+                      {TYPES.map((t) => (
+                        <option key={t} value={t}>
+                          {ARTICLE_TYPE_LABEL[t]}
+                        </option>
                       ))}
-                    </div>
-                    <Err msg={errors.citationStyle} />
-                  </fieldset>
-                </>
-              )}
-
-              {step === 1 && <AuthorsEditor authors={authors} onChange={setAuthors} errors={errors} />}
-
-              {step === 2 && (
-                <div className="space-y-6">
-                  {(["manuscript", "title_page", "cover_letter"] as const).map((k) => (
-                    <FileSlot
-                      key={k}
-                      id={props.id}
-                      kind={k}
-                      current={files[k]}
-                      disabled={!props.supabaseReady}
-                      onUploaded={(f) => setFiles((prev) => ({ ...prev, [k]: f }))}
-                    />
-                  ))}
-                  <p className="text-muted text-[0.88rem]">
-                    Files go straight to secure storage. Only you, the editors and (for the anonymised manuscript) your
-                    reviewers can open them.
-                  </p>
+                    </select>
+                  </label>
+                  <label className="block">
+                    <span>Subject area</span>
+                    <select
+                      className={input(errors.categoryId)}
+                      value={details.categoryId}
+                      onChange={(e) => setDetails({ ...details, categoryId: e.target.value })}
+                    >
+                      <option value="">Choose a subject</option>
+                      {props.categories.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                    <Err msg={errors.categoryId} />
+                  </label>
                 </div>
-              )}
-
-              {step === 3 && (
-                <fieldset className="space-y-4">
-                  <legend className="sr-only">Declarations</legend>
-                  {DECLARATIONS.map(([k, label]) => (
-                    <label key={k} className="border-rule bg-surface flex items-start gap-3 rounded-sm border p-4">
-                      <input
-                        type="checkbox"
-                        checked={declared.includes(k)}
-                        onChange={(e) => setDeclared((d) => (e.target.checked ? [...d, k] : d.filter((x) => x !== k)))}
-                        className="mt-1 size-4 shrink-0 accent-[var(--brand)]"
-                      />
-                      <span>{label}</span>
-                    </label>
-                  ))}
-                </fieldset>
-              )}
-
-              {step === 4 && (
-                <Review
-                  details={details}
-                  authors={authors}
-                  files={files}
-                  categories={props.categories}
-                  fees={props.fees}
+                <label className="block">
+                  <span className="flex justify-between">
+                    <span>Abstract</span>
+                    <span
+                      className={clsx(
+                        "tabular text-[0.85rem]",
+                        words && (words < 150 || words > 250) ? "text-accent" : "text-muted",
+                      )}
+                      aria-live="polite"
+                    >
+                      {words} / 150–250 words
+                    </span>
+                  </span>
+                  <textarea
+                    rows={9}
+                    className={clsx(input(errors.abstract), "font-reading leading-relaxed")}
+                    value={details.abstract}
+                    onChange={(e) => setDetails({ ...details, abstract: e.target.value })}
+                  />
+                  <Err msg={errors.abstract} />
+                </label>
+                <KeywordInput
+                  value={details.keywords}
+                  onChange={(keywords) => setDetails({ ...details, keywords })}
+                  error={errors.keywords}
                 />
-              )}
-            </div>
+                <fieldset>
+                  <legend>Citation style</legend>
+                  <div className="mt-2 flex flex-wrap gap-6">
+                    {[
+                      ["apa7", "APA 7th edition"],
+                      ["mla9", "MLA 9th edition"],
+                    ].map(([v, l]) => (
+                      <label key={v} className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="citationStyle"
+                          value={v}
+                          checked={details.citationStyle === v}
+                          onChange={() => setDetails({ ...details, citationStyle: v })}
+                          className="size-4 accent-[var(--brand)]"
+                        />
+                        {l}
+                      </label>
+                    ))}
+                  </div>
+                  <Err msg={errors.citationStyle} />
+                </fieldset>
+              </>
+            )}
 
-            <div className="mt-8">
-              <FormMessage status={message?.status ?? "idle"} message={message?.text} />
-            </div>
+            {step === 1 && <AuthorsEditor authors={authors} onChange={setAuthors} errors={errors} />}
 
-            <div className="border-rule mt-8 flex flex-wrap items-center justify-between gap-4 border-t pt-6">
-              {step > 0 ? (
-                <button
-                  type="button"
-                  onClick={() => go(step - 1)}
-                  disabled={pending}
-                  className="text-muted decoration-rule hover:text-fg text-[0.95rem] underline underline-offset-4"
-                >
-                  ← Back
-                </button>
-              ) : (
-                <span />
-              )}
-              {step < 4 ? (
-                <button
-                  type="button"
-                  onClick={next}
-                  disabled={pending}
-                  className="bg-brand text-brand-fg hover:bg-brand-hover rounded-sm px-6 py-3.5 font-medium disabled:opacity-60"
-                >
-                  {pending ? "Saving…" : "Save and continue"}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={submit}
-                  disabled={pending}
-                  className="bg-brand text-brand-fg hover:bg-brand-hover rounded-sm px-6 py-3.5 font-medium disabled:opacity-60"
-                >
-                  {pending ? "Submitting…" : "Submit manuscript"}
-                </button>
-              )}
-            </div>
-          </section>
-        )}
+            {step === 2 && (
+              <div className="space-y-6">
+                {(["manuscript", "title_page", "cover_letter"] as const).map((k) => (
+                  <FileSlot
+                    key={k}
+                    id={props.id}
+                    kind={k}
+                    current={files[k]}
+                    disabled={!props.supabaseReady}
+                    onUploaded={(f) => setFiles((prev) => ({ ...prev, [k]: f }))}
+                  />
+                ))}
+                <p className="text-muted text-[0.88rem]">
+                  Files go straight to secure storage. Only you, the editors and (for the anonymised manuscript) your
+                  reviewers can open them.
+                </p>
+              </div>
+            )}
+
+            {step === 3 && (
+              <fieldset className="space-y-4">
+                <legend className="sr-only">Declarations</legend>
+                {DECLARATIONS.map(([k, label]) => (
+                  <label key={k} className="border-rule bg-surface flex items-start gap-3 rounded-sm border p-4">
+                    <input
+                      type="checkbox"
+                      checked={declared.includes(k)}
+                      onChange={(e) => setDeclared((d) => (e.target.checked ? [...d, k] : d.filter((x) => x !== k)))}
+                      className="mt-1 size-4 shrink-0 accent-[var(--brand)]"
+                    />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </fieldset>
+            )}
+
+            {step === 4 && (
+              <Review
+                details={details}
+                authors={authors}
+                files={files}
+                categories={props.categories}
+                fees={props.fees}
+              />
+            )}
+          </div>
+
+          <div className="mt-8">
+            <FormMessage status={message?.status ?? "idle"} message={message?.text} />
+          </div>
+
+          <div className="border-rule mt-8 flex flex-wrap items-center justify-between gap-4 border-t pt-6">
+            {step > 0 ? (
+              <button
+                type="button"
+                onClick={() => go(step - 1)}
+                disabled={pending}
+                className="text-muted decoration-rule hover:text-fg text-[0.95rem] underline underline-offset-4"
+              >
+                ← Back
+              </button>
+            ) : (
+              <span />
+            )}
+            {step < 4 ? (
+              <button
+                type="button"
+                onClick={next}
+                disabled={pending}
+                className="bg-brand text-brand-fg hover:bg-brand-hover rounded-sm px-6 py-3.5 font-medium disabled:opacity-60"
+              >
+                {pending ? "Saving…" : "Save and continue"}
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={submit}
+                disabled={pending}
+                className="bg-brand text-brand-fg hover:bg-brand-hover rounded-sm px-6 py-3.5 font-medium disabled:opacity-60"
+              >
+                {pending ? "Submitting…" : "Submit manuscript"}
+              </button>
+            )}
+          </div>
+        </section>
       </div>
     </div>
   );
@@ -691,41 +684,12 @@ function Review({
         <div className="border-rule bg-surface rounded-[3px] border p-6">
           <p className="font-display text-[1.2rem]">Review and plagiarism-check fee: {formatNaira(fees.reviewKobo)}</p>
           <p className="text-muted mt-2">
-            After you submit, you will pay this fee securely with Paystack. Your manuscript goes to the editors once
-            payment is confirmed.
+            After you submit, you pay this fee by bank transfer into the journal’s account and upload the receipt. Your
+            manuscript goes to the editors once the payment is confirmed.
           </p>
           <p className="mt-3 italic">{FEE_INTEGRITY_STATEMENT}</p>
         </div>
       )}
     </div>
-  );
-}
-
-function PayStep({ id, reviewKobo }: { id: string; reviewKobo: number }) {
-  const [state, action] = useActionState<PayState, FormData>(startPayment, { status: "idle" });
-  return (
-    <section aria-labelledby="pay-title">
-      <p className="smallcaps text-muted text-[0.82rem]">Submitted · one step left</p>
-      <h2 id="pay-title" className="font-display mt-2 text-[2rem]">
-        Pay the review fee
-      </h2>
-      <p className="text-muted mt-4 max-w-[34rem]">
-        Your manuscript is saved and has a submission ID. It goes to the editors as soon as the review and
-        plagiarism-check fee is paid. You can also pay later from your account.
-      </p>
-      <div className="border-rule bg-surface mt-8 rounded-[3px] border p-6">
-        <p className="tabular font-display text-[2rem]">{formatNaira(reviewKobo)}</p>
-        <p className="text-muted mt-1">
-          Card, bank transfer or USSD, through Paystack. JHTCS never sees your card details.
-        </p>
-        <p className="mt-4 italic">{FEE_INTEGRITY_STATEMENT}</p>
-        <form action={action} className="mt-6 space-y-4">
-          <input type="hidden" name="submissionId" value={id} />
-          <input type="hidden" name="fee" value="review" />
-          <FormMessage status={state.status} message={state.message} />
-          <SubmitButton pendingLabel="Opening Paystack…">Pay {formatNaira(reviewKobo)} with Paystack</SubmitButton>
-        </form>
-      </div>
-    </section>
   );
 }

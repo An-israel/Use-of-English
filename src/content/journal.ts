@@ -41,6 +41,11 @@ export const settings: SiteSettings = {
     publicationKobo: 2_000_000,
     covers: "Review administration, similarity checking, copy-editing, formatting, production and website maintenance.",
   },
+  bankAccount: {
+    accountName: "Journal of Humanities and Transcultural Studies",
+    accountNumber: "1313504238",
+    bankName: "Zenith Bank PLC",
+  },
   showBoardTerms: false,
   social: [],
   seo: {

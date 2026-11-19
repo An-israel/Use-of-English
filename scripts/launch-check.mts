@@ -59,18 +59,6 @@ pass(
   "SUPABASE_SERVICE_ROLE_KEY is missing",
 );
 
-pass(
-  env("PAYSTACK_SECRET_KEY").startsWith("sk_live_"),
-  "Paystack secret key is a live key",
-  "PAYSTACK_SECRET_KEY is not a live key (sk_live_…): payments would stay in test mode",
-);
-pass(
-  env("NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY").startsWith("pk_live_"),
-  "Paystack public key is a live key",
-  "NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY is not a live key (pk_live_…)",
-);
-pass(env("PAYSTACK_MODE") !== "mock", "Paystack simulator is off", "PAYSTACK_MODE=mock must not be set in production");
-
 pass(env("RESEND_API_KEY").startsWith("re_"), "Resend API key is set", "RESEND_API_KEY is missing");
 pass(
   env("RESEND_WEBHOOK_SECRET").startsWith("whsec_"),

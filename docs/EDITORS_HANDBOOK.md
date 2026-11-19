@@ -12,8 +12,9 @@ The same guide is in the editorial office under **Handbook**.
 - [Handling a submission](#handling-a-submission)
 - [Publishing an issue](#publishing-an-issue)
 - [Waivers](#waivers)
+- [Confirming bank transfers](#confirming-bank-transfers)
 - [Refunds](#refunds)
-- [Payments and reconciliation](#payments-and-reconciliation)
+- [Payments and reports](#payments-and-reports)
 - [Pages, the board and messages](#pages-the-board-and-messages)
 - [When something goes wrong](#when-something-goes-wrong)
 
@@ -24,7 +25,7 @@ Sign in at the journal’s website with the email address you were invited with,
 - **Super Admin**: everything, including users, settings and the System screen.
 - **Editor**: submissions, reviewers, issues, articles, pages, the board and messages. Editors can see payments but not record refunds.
 - **Book Review Editor**: book reviews.
-- **Finance Officer**: payments, refunds, reconciliation and the fund summary.
+- **Finance Officer**: confirming bank transfers, refunds and the fund summary.
 - **Reviewer**: only the manuscripts they are asked to review.
 
 Press **Ctrl + K** (or **⌘ + K** on a Mac) anywhere in the editorial office to jump to a screen or start a common task. The bell at the top of the sidebar shows new submissions, payments, reviews and messages for your role.
@@ -76,21 +77,29 @@ Editors can waive the review fee or the publication fee for a submission, for ex
 
 Waivers appear in [Payments](https://www.jhtcs.org/admin/payments) with the status **Waived**, the reason and who granted it, so the fund statement always adds up. Fees can also be switched off for everyone in [Settings](https://www.jhtcs.org/admin/settings).
 
+## Confirming bank transfers
+
+Authors pay fees by bank transfer into the journal’s account (shown on the Fees page and in [Settings](https://www.jhtcs.org/admin/settings)), writing their submission ID in the transfer description, and then upload the receipt or bank teller. Nothing moves on until the Finance Officer or a Super Admin confirms the money has arrived.
+
+1. You get a notification, **Bank transfer to confirm**, and the transfer appears at the top of [Payments](https://www.jhtcs.org/admin/payments).
+2. Open it and choose **Open the transfer receipt**. Check the amount, the date and the submission ID against the journal’s bank statement.
+3. If the money is there, choose **Confirm payment received**. The author is emailed an official receipt with a receipt number, and the submission moves on: to the editors after the review fee, into production after the publication fee.
+4. If you can’t find the transfer, or the receipt doesn’t match, write the reason under **Can’t find this transfer?** and send it. The author is emailed the reason and can upload the right receipt.
+
+> Only confirm once the transfer shows on the bank statement, not on the strength of the receipt alone: receipts can be edited.
+
 ## Refunds
 
-Refunds are made in Paystack and then recorded on the website, so the journal’s accounts match the money. Only the Finance Officer or a Super Admin can record a refund.
+Refunds are paid back from the journal’s account and then recorded on the website, so the journal’s accounts match the money. Only the Finance Officer or a Super Admin can record a refund.
 
-1. In the Paystack dashboard, open the transaction (search for the payment reference) and refund it, in full or in part. Note the refund reference Paystack gives you.
+1. Transfer the refund back to the author from the journal’s account, in full or in part, and note the transfer reference.
 2. On the website, open the payment in [Payments](https://www.jhtcs.org/admin/payments).
-3. Under **Record a refund**, enter the amount in naira, the date, the reason and the Paystack refund reference, then choose **Record refund**.
+3. Under **Record a refund**, enter the amount in naira, the date, the reason and the transfer reference, then choose **Record refund**.
 4. A full refund marks the payment **Refunded**. The site never lets the refunds add up to more than was paid.
 
-> If an author says they paid but the website still shows the payment as pending, open the payment and choose **Check with Paystack**. It asks Paystack directly and updates the payment if the money arrived.
+## Payments and reports
 
-## Payments and reconciliation
-
-- [Payments](https://www.jhtcs.org/admin/payments): every payment, waiver and refund, with filters, totals by month and by fee, and CSV or PDF exports for the Bursary.
-- [Reconciliation](https://www.jhtcs.org/admin/reconciliation): every night the site compares the day’s Paystack transactions with its own records and flags any difference. Investigate each flag, then resolve it with a note. **Check a day now** re-checks any day.
+- [Payments](https://www.jhtcs.org/admin/payments): every payment, waiver and refund, with filters, totals by month and by fee, and CSV or PDF exports for the Bursary. Transfers waiting to be confirmed are listed at the top.
 - [Fund summary](https://www.jhtcs.org/admin/fund-summary): money collected, refunded and net, by year and by fee, as PDF or CSV.
 
 ## Pages, the board and messages
@@ -113,6 +122,6 @@ Text marked **[TO CONFIRM]** on the public site is waiting for the committee’s
 - **“Someone else saved this”**: another person changed the same item while you were editing. Choose **Reload now** to see their version, then make your change again.
 - **“The editorial office can’t reach the database”**: a service is briefly down. Nothing you saved has been lost. Wait a minute and choose **Try again**.
 - **An email didn’t arrive**: ask the person to check their spam folder. The Super Admin can see failed emails on the [System](https://www.jhtcs.org/admin/system) screen and retry them.
-- **A payment is stuck as pending**: open it and choose **Check with Paystack**.
+- **An author says they paid but nothing has happened**: check [Payments](https://www.jhtcs.org/admin/payments) for a transfer to confirm. If they haven’t uploaded a receipt yet, ask them to upload it on their submission page.
 
 For anything else, contact the Super Admin. Technical details for the Unit’s ICT support are in docs/RUNBOOK.md in the code repository.

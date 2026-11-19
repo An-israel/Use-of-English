@@ -334,6 +334,9 @@ export async function saveSettings(form: FormData): Promise<ActionResult> {
       doiPrefix: z.union([z.string().regex(/^10\.\d{4,9}$/), z.literal("")]),
       reviewNaira: naira,
       publicationNaira: naira,
+      bankAccountName: z.string().min(3).max(200),
+      bankAccountNumber: z.string().regex(/^\d{10}$/),
+      bankName: z.string().min(3).max(120),
     })
     .safeParse({
       journalName: f("journalName"),
@@ -345,6 +348,9 @@ export async function saveSettings(form: FormData): Promise<ActionResult> {
       doiPrefix: f("doiPrefix"),
       reviewNaira: f("reviewNaira"),
       publicationNaira: f("publicationNaira"),
+      bankAccountName: f("bankAccountName"),
+      bankAccountNumber: f("bankAccountNumber").replace(/\s+/g, ""),
+      bankName: f("bankName"),
     });
   if (!checks.success) {
     const field = String(checks.error.issues[0].path[0]);
@@ -355,6 +361,9 @@ export async function saveSettings(form: FormData): Promise<ActionResult> {
       contactEmail: "Enter the office email address.",
       reviewNaira: "Fees are amounts in naira.",
       publicationNaira: "Fees are amounts in naira.",
+      bankAccountName: "Enter the name on the journal’s bank account.",
+      bankAccountNumber: "A Nigerian account number has 10 digits.",
+      bankName: "Enter the bank’s name.",
     };
     return { ok: false, message: hint[field] ?? `Check “${field}”.` };
   }
@@ -393,6 +402,7 @@ export async function saveSettings(form: FormData): Promise<ActionResult> {
       publicationKobo: Math.round(v.publicationNaira * 100),
       covers: f("feesCovers"),
     },
+    bankAccount: { accountName: v.bankAccountName, accountNumber: v.bankAccountNumber, bankName: v.bankName },
     showBoardTerms: form.get("showBoardTerms") === "on",
     social,
     seo: { description: f("seoDescription").slice(0, 300) },

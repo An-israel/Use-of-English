@@ -55,14 +55,14 @@ export function PaymentReceipt({
   return (
     <Layout preview={`Receipt ${receiptNumber} for ${amount}`} title="Payment received">
       <P>Dear {name},</P>
-      <P>Thank you. We have received your payment.</P>
+      <P>Thank you. Your payment has been confirmed.</P>
       <Facts
         rows={[
           ["Receipt number", receiptNumber],
           ["Fee", feeLabel],
           ["Amount", amount],
           ["Date", paidAt],
-          ["Paystack reference", reference],
+          ["Payment reference", reference],
           ["Submission ID", publicId],
         ]}
       />
@@ -205,15 +205,69 @@ export function ReviewSubmitted({
   );
 }
 
-export function ReconciliationFlags({ date, flags, url }: { date: string; flags: number; url: string }) {
+export function TransferReceived({
+  name,
+  feeLabel,
+  amount,
+  publicId,
+  url,
+}: {
+  name: string;
+  feeLabel: string;
+  amount: string;
+  publicId: string;
+  url: string;
+}) {
   return (
-    <Layout preview={`Reconciliation ${date}: ${flags} to check`} title="Payments need checking">
+    <Layout preview={`We have your proof of payment for ${publicId}`} title="Proof of payment received">
+      <P>Dear {name},</P>
       <P>
-        The daily comparison with Paystack for {date} found {flags} payment{flags === 1 ? "" : "s"} that{" "}
-        {flags === 1 ? "doesn’t" : "don’t"} match the journal’s records. No money has been moved; please review and
-        resolve {flags === 1 ? "it" : "them"}.
+        Thank you. We have received the receipt for your bank transfer. The Finance Officer will confirm the payment as
+        soon as it shows in the journal’s account, and we will then email you an official receipt.
       </P>
-      <Button href={url}>Open reconciliation</Button>
+      <Facts
+        rows={[
+          ["Fee", feeLabel],
+          ["Amount", amount],
+          ["Submission ID", publicId],
+        ]}
+      />
+      <Button href={url}>Open your submission</Button>
+    </Layout>
+  );
+}
+
+export function TransferNotAccepted({
+  name,
+  feeLabel,
+  amount,
+  publicId,
+  reason,
+  url,
+}: {
+  name: string;
+  feeLabel: string;
+  amount: string;
+  publicId: string;
+  reason: string;
+  url: string;
+}) {
+  return (
+    <Layout preview={`We couldn’t confirm your payment for ${publicId}`} title="We couldn’t confirm your payment">
+      <P>Dear {name},</P>
+      <P>We were not able to confirm your bank transfer for the {feeLabel.toLowerCase()}.</P>
+      <Facts
+        rows={[
+          ["Reason", reason],
+          ["Amount due", amount],
+          ["Submission ID", publicId],
+        ]}
+      />
+      <P>
+        Please check the details on your submission page and upload the correct receipt. If you believe the payment has
+        been made, reply to this email with the transfer details.
+      </P>
+      <Button href={url}>Open your submission</Button>
     </Layout>
   );
 }

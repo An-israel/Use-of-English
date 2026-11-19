@@ -4,35 +4,9 @@ import { FileDrop } from "@/components/ui/FileDrop";
 import { useActionState, useState } from "react";
 import { FormMessage } from "@/components/forms/FormMessage";
 import { SubmitButton } from "@/components/forms/SubmitButton";
-import { FEE_INTEGRITY_STATEMENT } from "@/content/journal";
-import { formatNaira } from "@/lib/format";
-import { startPayment, type PayState } from "@/lib/payments/actions";
 import { FILE_KINDS, MAX_FILE_BYTES } from "@/lib/submission";
 import { browserClient } from "@/lib/supabase/browser";
 import { registerRevision, requestRevisionUpload, sendMessage, withdraw } from "./actions";
-
-export function PayFee({ id, fee, amountKobo }: { id: string; fee: "review" | "publication"; amountKobo: number }) {
-  const [state, action] = useActionState<PayState, FormData>(startPayment, { status: "idle" });
-  return (
-    <div className="border-thread bg-surface rounded-[3px] border-2 p-6">
-      <p className="smallcaps text-thread-text text-[0.8rem]">Payment due</p>
-      <p className="font-display mt-2 text-[1.5rem]">
-        {fee === "review" ? "Review and plagiarism-check fee" : "Publication fee"}
-      </p>
-      <p className="tabular font-display mt-1 text-[2rem]">{formatNaira(amountKobo)}</p>
-      <p className="text-muted mt-2 text-[0.92rem]">Card, bank transfer or USSD, through Paystack.</p>
-      <p className="mt-3 text-[0.92rem] italic">{FEE_INTEGRITY_STATEMENT}</p>
-      <form action={action} className="mt-5 space-y-3">
-        <input type="hidden" name="submissionId" value={id} />
-        <input type="hidden" name="fee" value={fee} />
-        <FormMessage status={state.status} message={state.message} />
-        <SubmitButton pendingLabel="Opening Paystack…">
-          {fee === "review" ? "Pay review fee" : "Pay publication fee"}
-        </SubmitButton>
-      </form>
-    </div>
-  );
-}
 
 export function RevisionUpload({ id }: { id: string }) {
   const [file, setFile] = useState<File | null>(null);

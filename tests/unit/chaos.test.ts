@@ -80,31 +80,6 @@ describe("the email provider is down", () => {
   });
 });
 
-describe("Paystack is unreachable", () => {
-  it("retries network errors with backoff, then fails fast once the breaker opens", async () => {
-    vi.stubEnv("PAYSTACK_SECRET_KEY", "sk_test_123");
-    vi.stubEnv("PAYSTACK_MODE", "");
-    const fetchMock = vi.fn().mockRejectedValue(new TypeError("fetch failed"));
-    vi.stubGlobal("fetch", fetchMock);
-    vi.useFakeTimers({ shouldAdvanceTime: true });
-    const { paystack } = await import("@/lib/payments/paystack");
-    for (let i = 0; i < 2; i++) {
-      const p = paystack().verify(`REF-${i}`);
-      const done = expect(p).rejects.toThrow("fetch failed");
-      await vi.runAllTimersAsync();
-      await done;
-    }
-    expect(fetchMock).toHaveBeenCalledTimes(6); // 3 attempts per call
-    vi.useRealTimers();
-    // Two more failing calls trip the breaker (threshold 4)…
-    for (let i = 0; i < 2; i++) await expect(paystack().verify("x")).rejects.toThrow();
-    const before = fetchMock.mock.calls.length;
-    // …after which Paystack is not called at all, and the author sees "try again later".
-    await expect(paystack().verify("y")).rejects.toThrow(/temporarily unavailable/);
-    expect(fetchMock.mock.calls.length).toBe(before);
-  }, 30_000);
-});
-
 describe("the database or Storage is down", () => {
   it("the health checks report the failing dependencies (the route then answers 503)", async () => {
     db.down = true;

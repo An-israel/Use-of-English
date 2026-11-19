@@ -4,15 +4,15 @@ The order to take JHTCS from test to production. Each step says who does it. Set
 
 ## 1. Before launch day
 
-| #   | Step                                                                                                                                                                                                                                                                | Who                   |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
-| 1   | The committee answers every **[TO CONFIRM]** item (pages, policies, contact details, fees, the domain). `npm run launch:check` lists the ones still on the site.                                                                                                    | Committee             |
-| 2   | Create the production **Supabase** project (London, Pro plan) and apply the schema: `npx supabase link --project-ref <ref>` then `npx supabase db push`.                                                                                                            | Developer             |
-| 3   | Create the **Vercel** project (Pro plan, region `lhr1`), connect the repository, and add every variable in `.env.example` for Production.                                                                                                                           | Developer             |
-| 4   | **Paystack → Go live.** The Unit (through the Bursary) completes Paystack's business verification so live keys are issued. Then copy the live keys (`sk_live_…`, `pk_live_…`) into Vercel and set the webhook URL to `https://www.jhtcs.org/api/webhooks/paystack`. | Bursary, Super Admin  |
-| 5   | **Resend**: add the domain `jhtcs.org`, then add the records in [DNS.md](DNS.md) with the values Resend and Vercel show.                                                                                                                                            | Super Admin → UNN ICT |
-| 6   | Create the first Super Admin: `npm run admin:create` (README).                                                                                                                                                                                                      | Developer             |
-| 7   | Set up backups, monitoring and error tracking (RUNBOOK steps 3, 4, 7 and 8). Run the backup workflow once by hand and check Admin → System shows it.                                                                                                                | Developer             |
+| #   | Step                                                                                                                                                                                                                                        | Who                      |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| 1   | The committee answers every **[TO CONFIRM]** item (pages, policies, contact details, fees, the domain). `npm run launch:check` lists the ones still on the site.                                                                            | Committee                |
+| 2   | Create the production **Supabase** project (London, Pro plan) and apply the schema: `npx supabase link --project-ref <ref>` then `npx supabase db push`.                                                                                    | Developer                |
+| 3   | Create the **Vercel** project (Pro plan, region `lhr1`), connect the repository, and add every variable in `.env.example` for Production.                                                                                                   | Developer                |
+| 4   | **Bank account.** Check the account authors pay into in Admin → Settings (Journal of Humanities and Transcultural Studies, Zenith Bank PLC, 1313504238), and that the Finance Officer can see the account's statement to confirm transfers. | Bursary, Finance Officer |
+| 5   | **Resend**: add the domain `jhtcs.org`, then add the records in [DNS.md](DNS.md) with the values Resend and Vercel show.                                                                                                                    | Super Admin → UNN ICT    |
+| 6   | Create the first Super Admin: `npm run admin:create` (README).                                                                                                                                                                              | Developer                |
+| 7   | Set up backups, monitoring and error tracking (RUNBOOK steps 3, 4, 7 and 8). Run the backup workflow once by hand and check Admin → System shows it.                                                                                        | Developer                |
 
 ## 2. Launch day
 
@@ -33,7 +33,7 @@ The order to take JHTCS from test to production. Each step says who does it. Set
 
    Every ✗ must be fixed before announcing the site. Items marked ! are worth reviewing but don't block launch.
 
-4. **Make one real payment.** In Admin → Settings, set the review fee to ₦100 for a few minutes. Submit a test manuscript from a staff member's author account, pay with a real card, and check the receipt email, the payment in Admin → Payments and the next morning's reconciliation. Refund it in the Paystack dashboard, record the refund, withdraw the test submission, and set the fee back.
+4. **Make one real payment.** In Admin → Settings, set the review fee to ₦100 for a few minutes. Submit a test manuscript from a staff member's author account, transfer ₦100 to the journal's account and upload the receipt. As the Finance Officer, confirm it once it shows on the statement, and check the receipt email and the payment in Admin → Payments. Transfer it back, record the refund, withdraw the test submission, and set the fee back.
 5. **Check the public site** with [PageSpeed Insights](https://pagespeed.web.dev/) on the home page, an issue and an article (target: 95 or more in every category on mobile), and submit `https://www.jhtcs.org/sitemap.xml` in Google Search Console.
 6. Delete `.env.production.local` from the computer used.
 

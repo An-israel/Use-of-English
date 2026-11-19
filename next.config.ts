@@ -15,16 +15,16 @@ const https = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://").startsWith("https
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""} https://js.paystack.co https://challenges.cloudflare.com https://va.vercel-scripts.com`,
+  `script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""} https://challenges.cloudflare.com https://va.vercel-scripts.com`,
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: ${supabase}`,
   "font-src 'self'",
-  `connect-src 'self' ${supabase} ${supabaseWs} https://api.paystack.co https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://vitals.vercel-insights.com ${isDev ? "ws://localhost:*" : ""}`,
-  "frame-src https://checkout.paystack.com https://challenges.cloudflare.com",
+  `connect-src 'self' ${supabase} ${supabaseWs} https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://vitals.vercel-insights.com ${isDev ? "ws://localhost:*" : ""}`,
+  "frame-src https://challenges.cloudflare.com",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",
-  "form-action 'self' https://checkout.paystack.com",
+  "form-action 'self'",
   "frame-ancestors 'none'",
   !isDev && https ? "upgrade-insecure-requests" : "",
 ]
@@ -40,7 +40,7 @@ const securityHeaders = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
     key: "Permissions-Policy",
-    value: 'camera=(), microphone=(), geolocation=(), payment=(self "https://checkout.paystack.com")',
+    value: "camera=(), microphone=(), geolocation=(), payment=()",
   },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ];

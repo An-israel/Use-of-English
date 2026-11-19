@@ -31,13 +31,6 @@ export const ADMIN_NAV: AdminNavItem[] = [
     roles: ["super_admin", "finance_officer", "editor"],
   },
   {
-    href: "/admin/reconciliation",
-    label: "Reconciliation",
-    short: "Rec",
-    group: "Finance",
-    roles: ["super_admin", "finance_officer", "editor"],
-  },
-  {
     href: "/admin/fund-summary",
     label: "Fund summary",
     short: "Fund",
