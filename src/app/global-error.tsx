@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { reloadForNewVersion, STALE_DEPLOY } from "@/lib/stale-deploy";
 
 /** A dropped connection while the page was streaming (B3): retry once by itself. */
 const TRANSIENT = /connection closed|failed to fetch|load failed|networkerror|network error|fetch failed/i;
@@ -8,15 +9,17 @@ let lastAutoRetry = 0;
 
 // Last-resort error page when the root layout itself fails.
 export default function GlobalError({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
-  const transient = TRANSIENT.test(error.message ?? "");
+  const stale = STALE_DEPLOY.test(error.message ?? "");
+  const transient = stale || TRANSIENT.test(error.message ?? "");
   useEffect(() => {
     console.error(error);
+    if (stale && reloadForNewVersion()) return;
     if (transient && Date.now() - lastAutoRetry > 15_000) {
       lastAutoRetry = Date.now();
       const t = setTimeout(retry, 600);
       return () => clearTimeout(t);
     }
-  }, [error, retry, transient]);
+  }, [error, retry, transient, stale]);
   return (
     <html lang="en-GB">
       <head>
