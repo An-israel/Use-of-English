@@ -48,6 +48,7 @@ Copy `.env.example` to `.env.local` for development; in production set them in V
 | `SUPABASE_SERVICE_ROLE_KEY`                                 | Same page. **Server only**: never in client code or a `NEXT_PUBLIC_` variable |
 | `DATABASE_URL`                                              | Session-pooler connection string, for scripts (`samples:delete`, `db:test`)   |
 | `RESEND_API_KEY`, `RESEND_WEBHOOK_SECRET`                   | Resend API key; signing secret of the bounce webhook                          |
+| `SEND_EMAIL_HOOK_SECRET`                                    | Secret of Supabase's Send Email hook (`v1,whsec_…`)                           |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`    | Cloudflare Turnstile (spam protection on the contact form and sign-up)        |
 | `CRON_SECRET`                                               | 32+ random characters; scheduled jobs and the GitHub workflows send it        |
 | `METRICS_SALT`                                              | 16+ random characters; salts the anonymous view and download counts           |
@@ -62,8 +63,8 @@ Copy `.env.example` to `.env.local` for development; in production set them in V
 In the Supabase dashboard for the live project:
 
 1. **Authentication → URL configuration**: Site URL `https://www.jhtcs.org`; add `https://www.jhtcs.org/auth/callback` and `https://www.jhtcs.org/auth/confirm` to the redirect URLs.
-2. **Authentication → Email templates**: paste the four files from `supabase/templates` (confirm signup, invite, reset password, change email). Their links point at `/auth/confirm`.
-3. **Authentication → SMTP**: use Resend's SMTP details so auth emails come from the journal's domain (DNS records: [DNS.md](docs/DNS.md)).
+2. **Authentication → Hooks → Send Email**: add a hook of type **HTTPS** with the URL `https://<site>/api/auth/send-email`, generate its secret and put it in Vercel as `SEND_EMAIL_HOOK_SECRET`, then redeploy. Supabase then hands every sign-up, password reset, invitation and email-change message to the site, which sends it through Resend in the journal's design, so Supabase needs no SMTP (works on the free plan). The links point at `/auth/confirm`.
+3. Alternative to the hook: **Authentication → SMTP** with Resend's SMTP details, and paste the four files from `supabase/templates` under Email templates.
 4. **Authentication → Providers → Email**: keep "Confirm email" on; minimum password length 10.
 5. Optional: enable Google under Providers, then switch on the `google_sign_in` feature flag.
 6. Create the first Super Admin with `npm run admin:create` (with `SUPER_ADMIN_EMAIL`, `SUPER_ADMIN_NAME` and the Supabase URL and service role key set). They receive an invitation email to choose a password, then invite everyone else from Admin → Users.

@@ -311,3 +311,70 @@ export function OpsAlert({ subject, lines, url }: { subject: string; lines: stri
     </Layout>
   );
 }
+
+const AUTH_COPY = {
+  signup: {
+    title: "Confirm your email address",
+    lead: "Thank you for creating a JHTCS author account. Please confirm your email address to finish setting it up.",
+    button: "Confirm my email",
+    ignore: "If you did not create an account, you can ignore this email.",
+  },
+  recovery: {
+    title: "Reset your password",
+    lead: "We received a request to reset the password for your JHTCS account. Choose a new password with the button below.",
+    button: "Choose a new password",
+    ignore: "If you did not ask for this, you can ignore this email; your password stays the same.",
+  },
+  invite: {
+    title: "You have been invited to JHTCS",
+    lead: "You have been invited to join the Journal of Humanities and Transcultural Studies. Accept the invitation to choose your password and open your account.",
+    button: "Accept the invitation",
+    ignore: "If you were not expecting this invitation, you can ignore this email.",
+  },
+  magiclink: {
+    title: "Sign in to JHTCS",
+    lead: "Use the button below to sign in to your JHTCS account.",
+    button: "Sign in",
+    ignore: "If you did not ask to sign in, you can ignore this email.",
+  },
+  email_change: {
+    title: "Confirm your new email address",
+    lead: "Please confirm the change of email address for your JHTCS account.",
+    button: "Confirm the change",
+    ignore: "If you did not ask for this change, please contact the editorial office.",
+  },
+  reauthentication: {
+    title: "Your confirmation code",
+    lead: "Enter this code on the JHTCS website to confirm it is you.",
+    button: "",
+    ignore: "If you did not ask for a code, you can ignore this email.",
+  },
+} as const;
+
+/** Sign-up, password, invitation and email-change messages (sent for Supabase Auth through its Send Email hook). */
+export function AuthMessage({
+  kind,
+  name,
+  link,
+  code,
+  newEmail,
+}: {
+  kind: keyof typeof AUTH_COPY;
+  name?: string;
+  link: string | null;
+  code: string | null;
+  newEmail?: string;
+}) {
+  const c = AUTH_COPY[kind];
+  return (
+    <Layout preview={c.title} title={c.title}>
+      <P>{name ? `Dear ${name},` : "Hello,"}</P>
+      <P>{c.lead}</P>
+      {kind === "email_change" && newEmail ? <P>New address: {newEmail}</P> : null}
+      {code ? <Facts rows={[["Code", code]]} /> : null}
+      {link ? <Button href={link}>{c.button}</Button> : null}
+      {link ? <P>If the button does not work, copy this link into your browser: {link}</P> : null}
+      <P>{c.ignore} The link or code expires in one hour.</P>
+    </Layout>
+  );
+}

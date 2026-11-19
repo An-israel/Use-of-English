@@ -71,6 +71,7 @@ jobs:
           CRON_SECRET: ci-cron-secret-0123456789abcdef
           METRICS_SALT: ci-metrics-salt-0123456789
           RESEND_WEBHOOK_SECRET: whsec_Y2ktd2ViaG9vay1zZWNyZXQtMDEyMzQ1Njc4OWFiY2RlZg==
+          SEND_EMAIL_HOOK_SECRET: v1,whsec_Y2ktYXV0aC1ob29rLXNlY3JldC0wMTIzNDU2Nzg5YWJj
         run: |
           eval "$(supabase status -o env | sed 's/^/export /')"
           export NEXT_PUBLIC_SUPABASE_URL="$API_URL" NEXT_PUBLIC_SUPABASE_ANON_KEY="$ANON_KEY" SUPABASE_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY"
