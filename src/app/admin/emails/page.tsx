@@ -3,6 +3,7 @@ import type { ReactElement } from "react";
 import { render } from "@react-email/render";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import {
+  AuthMessage,
   ContactReceived,
   OpsAlert,
   PaymentReceipt,
@@ -38,6 +39,20 @@ const PREVIEWS: { id: string; label: string; to: string; when: string; element: 
         title="Proverbs in Translation (example)"
         url={u("/account")}
         feeDue="₦10,000 review fee"
+      />
+    ),
+  },
+  {
+    id: "auth-signup",
+    label: "Confirm your email (sign-up)",
+    to: "New author",
+    when: "Someone creates an account. Sent for Supabase through the Send Email hook, as are password resets and invitations.",
+    element: (
+      <AuthMessage
+        kind="signup"
+        name="Ada Okafor"
+        link={u("/auth/confirm?token_hash=example&type=email&next=/account")}
+        code={null}
       />
     ),
   },

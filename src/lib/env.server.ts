@@ -6,6 +6,8 @@ const serverSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20).optional(),
   RESEND_API_KEY: z.string().optional(),
   RESEND_WEBHOOK_SECRET: z.string().optional(),
+  /** Supabase Auth "Send Email" hook secret (v1,whsec_…) */
+  SEND_EMAIL_HOOK_SECRET: z.string().optional(),
   TURNSTILE_SECRET_KEY: z.string().optional(),
   CRON_SECRET: z.string().min(16).optional(),
   METRICS_SALT: z.string().min(16).optional(),

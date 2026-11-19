@@ -2,6 +2,11 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.3.1] - Sign-up emails through the website
+
+- Sign-up confirmations, password resets, invitations and email-change messages can now be sent by the website through Resend, in the journal's design, using Supabase's **Send Email hook** (`/api/auth/send-email`, Standard Webhooks signature checked on the raw body, links always on the site's own address). Supabase then needs no SMTP settings; the hook is available on Supabase's free plan.
+- New setting `SEND_EMAIL_HOOK_SECRET`; the sign-up email is shown under Admin → Email previews.
+
 ## [1.3.0] - Fees paid by bank transfer
 
 - **Fees are now paid by bank transfer** into the journal's account: **Journal of Humanities and Transcultural Studies, Zenith Bank PLC, 1313504238**. Paystack card payment has been removed.

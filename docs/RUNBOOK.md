@@ -27,7 +27,7 @@ Response targets: site down, acknowledge within 1 hour during office hours (09:0
 Do these once when moving to production; each is needed for something in this runbook.
 
 1. **Vercel**: Project → Settings → Environment Variables: every variable in `.env.example`. Firewall → enable the managed rule set and bot protection. Domains → add `www.jhtcs.org` and `jhtcs.org`, redirecting `jhtcs.org` to `www` (see [DNS](#dns)).
-2. **Supabase**: London region (eu-west-2), Pro plan (daily backups, no pausing). Auth → SMTP → Resend's SMTP so sign-up emails come from the journal. Auth → URL configuration → site URL `https://www.jhtcs.org`. Database → note the session-pooler connection string (port 5432) for backups.
+2. **Supabase**: London region (eu-west-2), Pro plan (daily backups, no pausing). Auth → Hooks → Send Email (HTTPS, `https://<site>/api/auth/send-email`, secret in Vercel `SEND_EMAIL_HOOK_SECRET`) so sign-up and password emails go out from the journal through Resend. Auth → URL configuration → site URL `https://www.jhtcs.org`. Database → note the session-pooler connection string (port 5432) for backups.
 3. **GitHub** → Settings → Secrets and variables → Actions. Variables: `SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`. Secrets: `CRON_SECRET`, `SUPABASE_DB_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `BACKUP_PASSPHRASE`, `RCLONE_CONFIG`.
 4. **Backups (rclone)**: on any computer run `rclone config` and create two remotes. `gdrive` is the journal's Google Drive. `supabase` is type S3, provider Other, with the endpoint, key and secret from Supabase → Storage → S3 connection. Paste the resulting `rclone.conf` into the `RCLONE_CONFIG` secret. Store `BACKUP_PASSPHRASE` offline as well, in the Unit's safe: without it, the backups can't be read.
 5. **Bank account**: Admin → Settings → the account authors pay into (Zenith Bank PLC, 1313504238). No payment provider is used.
@@ -163,7 +163,7 @@ Rotate a key at once if it may have leaked, and at least yearly. After changing 
 | Supabase anon key         | Supabase → API keys                                 | Vercel `NEXT_PUBLIC_SUPABASE_ANON_KEY`        | Public by design; rotate if the project is recreated. |
 | Supabase service role key | Supabase → API keys → roll the secret key           | Vercel and GitHub `SUPABASE_SERVICE_ROLE_KEY` | Server-only; treat a leak as an incident.             |
 | Database password         | Supabase → Database → reset password                | GitHub `SUPABASE_DB_URL`                      | Used only by backups.                                 |
-| Resend API key            | Resend → API keys → create, then revoke the old one | Vercel `RESEND_API_KEY`                       | Supabase SMTP uses it too (Auth → SMTP).              |
+| Resend API key            | Resend → API keys → create, then revoke the old one | Vercel `RESEND_API_KEY`                       | The Send Email hook sends through it too.             |
 | Resend webhook secret     | Resend → Webhooks → the endpoint → rotate           | Vercel `RESEND_WEBHOOK_SECRET`                | Both secrets are accepted during the rotation window. |
 | Turnstile secret          | Cloudflare → Turnstile → the widget → rotate        | Vercel `TURNSTILE_SECRET_KEY`                 |                                                       |
 | `CRON_SECRET`             | any 32+ random characters                           | Vercel and GitHub                             | Change both together.                                 |
