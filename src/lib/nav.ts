@@ -27,7 +27,7 @@ export const NAV: NavGroup[] = [
       {
         label: "The Use of English Unit",
         href: "/use-of-english-unit",
-        description: "Our home in the School of General Studies, UNN",
+        description: "Our home in the School of General Studies, University of Nigeria, Nsukka",
       },
       { label: "Policies", href: "/policies", description: "Ethics, peer review, licensing and privacy" },
     ],

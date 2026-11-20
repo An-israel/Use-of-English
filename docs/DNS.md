@@ -1,7 +1,7 @@
 # DNS records for the JHTCS website
 
 **For:** whoever manages DNS for `jhtcs.org` (the registrar's DNS panel, or the DNS host it points to)
-**From:** the JHTCS editorial office, the Use of English Unit, the School of General Studies
+**From:** the JHTCS editorial office, the Use of English Unit, School of General Studies
 **Domain:** `jhtcs.org`, with the site at **https://www.jhtcs.org**
 
 The Journal of Humanities and Transcultural Studies (JHTCS) website is hosted on Vercel, and its emails (submission receipts, payment receipts, reviewer invitations) are sent through Resend. Values shown as `<…>` are generated for our accounts; copy the exact values from the Vercel and Resend dashboards. A TTL of 3600 (1 hour) is fine for all of them.

@@ -41,7 +41,7 @@ export async function Header() {
         <blockquote className="font-display text-fg text-[1.35rem] leading-snug italic">
           “A platform for original research across the humanities, and for ideas that cross borders.”
         </blockquote>
-        <figcaption className="text-muted mt-4 text-[0.9rem]">Published by the {settings.publisherShort}.</figcaption>
+        <figcaption className="text-muted mt-4 text-[0.9rem]">Published by {settings.publisherShort}.</figcaption>
         <Link
           href="/editorial-board"
           className="text-brand mt-5 inline-flex items-center gap-2 text-[0.92rem] hover:underline"
