@@ -9,8 +9,8 @@ insert into public.site_settings (key, value, is_public) values ('journalName', 
 insert into public.site_settings (key, value, is_public) values ('shortName', '"JHTCS"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('tagline', '"A quarterly journal of humanities and transcultural scholarship"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('motto', '"Knowledge · Cultures · Global Voices"'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('publisher', '"The Use of English Unit, the School of General Studies, University of Nigeria, Nsukka"'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('publisherShort', '"The Use of English Unit, the School of General Studies, UNN"'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('publisher', '"The Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN)"'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('publisherShort', '"The Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN)"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('foundedYear', '2026'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('frequency', '"Quarterly: March, June, September and December"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('issn', 'null'::jsonb, true) on conflict (key) do nothing;
@@ -19,14 +19,14 @@ insert into public.site_settings (key, value, is_public) values ('doiPrefix', 'n
 insert into public.site_settings (key, value, is_public) values ('contactEmail', '"[JHTCS_EMAIL]"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('enquiries', '[{"name":"Associate Professor Virginia Eze","role":"Editor-in-Chief","phone":"+234 (0)803 665 9581"},{"name":"Professor Chinyere Ngonebu","role":"Assistant Editor","phone":"+234 (0)803 618 6242"},{"name":"Dr Festus Ngwoke","role":"Book Review Editor","phone":"+234 (0)803 736 7014"},{"name":"Dr Ifeyinwa David-Ojukwu","role":"Managing Editor","phone":"+234 (0)903 386 6531"}]'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('domain', '"jhtcs.org"'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('postalAddress', '"The Use of English Unit, the School of General Studies, University of Nigeria, Nsukka 410001, Enugu State, Nigeria [TO CONFIRM]"'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('postalAddress', '"The Use of English Unit, School of General Studies, University of Nigeria, Nsukka 410001, Enugu State, Nigeria [TO CONFIRM]"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('officeHours', '"Monday to Friday, 9:00 to 16:00 WAT [TO CONFIRM]"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('licence', '{"name":"CC BY 4.0","url":"https://creativecommons.org/licenses/by/4.0/"}'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('fees', '{"enabled":true,"reviewKobo":500000,"publicationKobo":2000000,"covers":"Review administration, similarity checking, copy-editing, formatting, production and website maintenance."}'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('bankAccount', '{"accountName":"Journal of Humanities and Transcultural Studies","accountNumber":"1313504238","bankName":"Zenith Bank PLC"}'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('showBoardTerms', 'false'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('social', '[]'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('seo', '{"description":"JHTCS is a peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, the School of General Studies, University of Nigeria, Nsukka."}'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('seo', '{"description":"JHTCS is a peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka."}'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('emailSender', '"JHTCS Editorial Office <editorial@jhtcs.org>"'::jsonb, true) on conflict (key) do nothing;
 
 -- Feature flags
@@ -76,7 +76,7 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 <h2>Purpose</h2>
 <p>The journal strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and UNN, and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
 <h2>Publisher</h2>
-<p>JHTCS is published by the Use of English Unit, the School of General Studies, University of Nigeria, Nsukka.</p>
+<p>JHTCS is published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN).</p>
 <h2>Frequency and format</h2>
 <p>JHTCS is published quarterly, in March, June, September and December, as an electronic-only journal. Accepted articles may appear online as Articles in Press before their issue is complete.</p>
 <h2>Open access</h2>
@@ -86,12 +86,12 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 <h2>Indexing</h2>
 <p>Indexing and abstracting services <mark class="to-confirm">[TO CONFIRM]</mark>.</p>', 0) on conflict (kind, slug) do nothing;
 insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('130b3563-3b94-56a5-8fa8-0af99fcbb831', 'page', 'aims-and-scope', 'Aims and Scope', 'Nine areas of interest, four article types, and scholars at every stage of their careers.', '<p>JHTCS publishes original, unpublished scholarship across the humanities and social sciences, in language, literature and linguistics, communication and media, education, technology and digital cultures, politics and governance, and philosophy, ethics and religion, with a particular interest in work that crosses borders between languages, cultures and disciplines. Its motto, <em>Knowledge · Cultures · Global Voices</em>, sums up that aim. Every submission is screened by the editors, checked for plagiarism and sent for double-blind peer review.</p>', 0) on conflict (kind, slug) do nothing;
-insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('857bf955-8c51-5f86-85d9-6ebdbc317a8e', 'page', 'use-of-english-unit', 'The Use of English Unit', 'The home of JHTCS within the School of General Studies, University of Nigeria, Nsukka.', '<p>JHTCS is published by the Use of English Unit of the School of General Studies at the University of Nigeria, Nsukka.</p>
+insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('857bf955-8c51-5f86-85d9-6ebdbc317a8e', 'page', 'use-of-english-unit', 'The Use of English Unit', 'The home of JHTCS within the School of General Studies, University of Nigeria, Nsukka.', '<p>JHTCS is published by the Use of English Unit of the School of General Studies at the University of Nigeria, Nsukka (UNN).</p>
 <h2>The Unit</h2>
 <p>History of the Use of English Unit, its founding and its development <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <p>The Unit’s teaching role: courses taught, number of students served each year and the departments involved <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <h2>The School of General Studies</h2>
-<p>The School of General Studies, its mandate within UNN and its relationship to the Unit <mark class="to-confirm">[TO CONFIRM]</mark></p>
+<p>The School of General Studies, its mandate within the University of Nigeria, Nsukka (UNN), and its relationship to the Unit <mark class="to-confirm">[TO CONFIRM]</mark></p>
 <h2>The Unit and the journal</h2>
 <p>JHTCS strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and UNN, and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
 <p>The Editor-in-Chief serves a five-year term that is separate from the office of the Coordinator of the Use of English Unit.</p>
@@ -119,9 +119,9 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 <p>Theoretical papers and critical reviews may depart from this structure where the argument requires it.</p>
 <h2>Length</h2>
 <ul>
-<li>Research articles and theoretical papers: word limit <mark class="to-confirm">[TO CONFIRM]</mark></li>
-<li>Critical reviews: word limit <mark class="to-confirm">[TO CONFIRM]</mark></li>
-<li>Book reviews: word limit <mark class="to-confirm">[TO CONFIRM]</mark></li>
+<li>Research articles and theoretical papers: up to 6,000 words, including references</li>
+<li>Critical reviews: up to 4,000 words, including references</li>
+<li>Book reviews: up to 2,000 words</li>
 </ul>
 <h2>Double-blind review</h2>
 <p>Review at JHTCS is double-blind: reviewers do not know who the authors are, and authors do not know who reviewed their work. Remove all author names, affiliations, acknowledgements and other identifying details from the manuscript file, including from the document properties. Author details go in the submission form and on the separate title page only.</p>
@@ -133,7 +133,7 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('8f1f2f81-a5db-5a07-8203-5a7b5a968e7c', 'page', 'fees-and-payment', 'Fees and Payment', 'Two transparent fees, what they cover and how to pay.', '<h2>Payment methods</h2>
 <p>Fees are paid by bank transfer into the journal’s account: <strong>Journal of Humanities and Transcultural Studies</strong>, Zenith Bank PLC, account number <strong>1313504238</strong>. Write your submission ID (for example JHTCS-2027-0042) in the transfer description, then upload the transfer receipt or bank teller on your dashboard. Once the Finance Officer has confirmed the payment, your manuscript moves on and you receive an official receipt by email, which you can also download from your dashboard at any time.</p>
 <h2>Refunds</h2>
-<p>Refund policy <mark class="to-confirm">[TO CONFIRM]</mark></p>
+<p>Fees are non-refundable. The review and plagiarism-check fee covers the cost of review and administration, and the publication fee covers production, so neither is refunded once paid.</p>
 <h2>Waivers</h2>
 <p>Waivers may be granted at the editors’ discretion.</p>', 0) on conflict (kind, slug) do nothing;
 insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('7911032b-e51f-516f-bc3e-064a7f14fca9', 'page', 'contact', 'Contact', 'Write to the JHTCS editorial office.', '<p>For questions about submissions, reviews, payments or the journal in general, write to the editorial office using the form on this page. We aim to reply within three working days <mark class="to-confirm">[TO CONFIRM]</mark>.</p>', 0) on conflict (kind, slug) do nothing;
@@ -259,7 +259,7 @@ insert into public.pages (id, kind, slug, title, summary, body_html, sort_order)
 <p>The fees cover review administration, similarity checking, copy-editing, formatting, production and website maintenance.</p>
 <p><strong>Payment of fees does not guarantee acceptance. All editorial decisions are based solely on scholarly merit.</strong></p>
 <h2>Refunds</h2>
-<p>Refund policy <mark class="to-confirm">[TO CONFIRM]</mark></p>
+<p>Fees are non-refundable. The review and plagiarism-check fee covers the cost of review and administration, and the publication fee covers production, so neither is refunded once paid.</p>
 <h2>Waivers</h2>
 <p>Waivers may be granted at the editors’ discretion.</p>', 11) on conflict (kind, slug) do nothing;
 insert into public.pages (id, kind, slug, title, summary, body_html, sort_order) values ('a6f8411a-382e-5f73-8b2d-e73b8dac9659', 'policy', 'reviewer-guidelines', 'Guidelines for Reviewers', 'What we ask of reviewers, and how to write a useful report.', '<p>Peer reviewers are the heart of JHTCS. These guidelines follow the COPE Ethical Guidelines for Peer Reviewers.</p>

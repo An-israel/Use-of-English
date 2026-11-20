@@ -15,8 +15,8 @@ export const settings: SiteSettings = {
   shortName: "JHTCS",
   tagline: "A quarterly journal of humanities and transcultural scholarship",
   motto: "Knowledge · Cultures · Global Voices",
-  publisher: "The Use of English Unit, the School of General Studies, University of Nigeria, Nsukka",
-  publisherShort: "The Use of English Unit, the School of General Studies, UNN",
+  publisher: "The Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN)",
+  publisherShort: "The Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN)",
   foundedYear: 2026,
   frequency: "Quarterly: March, June, September and December",
   issn: null,
@@ -32,7 +32,7 @@ export const settings: SiteSettings = {
   ],
   domain: "jhtcs.org",
   postalAddress:
-    "The Use of English Unit, the School of General Studies, University of Nigeria, Nsukka 410001, Enugu State, Nigeria [TO CONFIRM]",
+    "The Use of English Unit, School of General Studies, University of Nigeria, Nsukka 410001, Enugu State, Nigeria [TO CONFIRM]",
   officeHours: "Monday to Friday, 9:00 to 16:00 WAT [TO CONFIRM]",
   licence: { name: "CC BY 4.0", url: "https://creativecommons.org/licenses/by/4.0/" },
   fees: {
@@ -50,7 +50,7 @@ export const settings: SiteSettings = {
   social: [],
   seo: {
     description:
-      "JHTCS is a peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, the School of General Studies, University of Nigeria, Nsukka.",
+      "JHTCS is a peer-reviewed, open-access quarterly journal of the humanities and transcultural studies, published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka.",
   },
   emailSender: "JHTCS Editorial Office <editorial@jhtcs.org>",
 };

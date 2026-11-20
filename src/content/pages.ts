@@ -26,7 +26,7 @@ export const pages: Page[] = [
 <h2>Purpose</h2>
 <p>The journal strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and UNN, and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
 <h2>Publisher</h2>
-<p>JHTCS is published by the Use of English Unit, the School of General Studies, University of Nigeria, Nsukka.</p>
+<p>JHTCS is published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN).</p>
 <h2>Frequency and format</h2>
 <p>JHTCS is published quarterly, in March, June, September and December, as an electronic-only journal. Accepted articles may appear online as Articles in Press before their issue is complete.</p>
 <h2>Open access</h2>
@@ -52,12 +52,12 @@ export const pages: Page[] = [
     "The Use of English Unit",
     "The home of JHTCS within the School of General Studies, University of Nigeria, Nsukka.",
     `
-<p>JHTCS is published by the Use of English Unit of the School of General Studies at the University of Nigeria, Nsukka.</p>
+<p>JHTCS is published by the Use of English Unit of the School of General Studies at the University of Nigeria, Nsukka (UNN).</p>
 <h2>The Unit</h2>
 <p>History of the Use of English Unit, its founding and its development ${TC}</p>
 <p>The Unit’s teaching role: courses taught, number of students served each year and the departments involved ${TC}</p>
 <h2>The School of General Studies</h2>
-<p>The School of General Studies, its mandate within UNN and its relationship to the Unit ${TC}</p>
+<p>The School of General Studies, its mandate within the University of Nigeria, Nsukka (UNN), and its relationship to the Unit ${TC}</p>
 <h2>The Unit and the journal</h2>
 <p>JHTCS strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and UNN, and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
 <p>The Editor-in-Chief serves a five-year term that is separate from the office of the Coordinator of the Use of English Unit.</p>
@@ -93,9 +93,9 @@ export const pages: Page[] = [
 <p>Theoretical papers and critical reviews may depart from this structure where the argument requires it.</p>
 <h2>Length</h2>
 <ul>
-<li>Research articles and theoretical papers: word limit ${TC}</li>
-<li>Critical reviews: word limit ${TC}</li>
-<li>Book reviews: word limit ${TC}</li>
+<li>Research articles and theoretical papers: up to 6,000 words, including references</li>
+<li>Critical reviews: up to 4,000 words, including references</li>
+<li>Book reviews: up to 2,000 words</li>
 </ul>
 <h2>Double-blind review</h2>
 <p>Review at JHTCS is double-blind: reviewers do not know who the authors are, and authors do not know who reviewed their work. Remove all author names, affiliations, acknowledgements and other identifying details from the manuscript file, including from the document properties. Author details go in the submission form and on the separate title page only.</p>
@@ -115,7 +115,7 @@ export const pages: Page[] = [
 <h2>Payment methods</h2>
 <p>Fees are paid by bank transfer into the journal’s account: <strong>Journal of Humanities and Transcultural Studies</strong>, Zenith Bank PLC, account number <strong>1313504238</strong>. Write your submission ID (for example JHTCS-2027-0042) in the transfer description, then upload the transfer receipt or bank teller on your dashboard. Once the Finance Officer has confirmed the payment, your manuscript moves on and you receive an official receipt by email, which you can also download from your dashboard at any time.</p>
 <h2>Refunds</h2>
-<p>Refund policy ${TC}</p>
+<p>Fees are non-refundable. The review and plagiarism-check fee covers the cost of review and administration, and the publication fee covers production, so neither is refunded once paid.</p>
 <h2>Waivers</h2>
 <p>Waivers may be granted at the editors’ discretion.</p>
 `,
@@ -356,7 +356,7 @@ export const policies: Page[] = [
 <p>The fees cover review administration, similarity checking, copy-editing, formatting, production and website maintenance.</p>
 <p><strong>Payment of fees does not guarantee acceptance. All editorial decisions are based solely on scholarly merit.</strong></p>
 <h2>Refunds</h2>
-<p>Refund policy ${TC}</p>
+<p>Fees are non-refundable. The review and plagiarism-check fee covers the cost of review and administration, and the publication fee covers production, so neither is refunded once paid.</p>
 <h2>Waivers</h2>
 <p>Waivers may be granted at the editors’ discretion.</p>
 `,
