@@ -4,10 +4,10 @@ All notable changes to the JHTS website. Versions follow [Semantic Versioning](h
 
 ## [1.3.3] - The Unit's corrections
 
-- The publisher's name is now written as the Unit asked: "The Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN)". "The" is no longer placed before School of General Studies, and UNN is written in full on the home page, in the footer, emails and PDFs.
+- The publisher's name is now written as the Unit asked: "The Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN)". "The" is no longer placed before School of General Studies, and UNN is written in full on the home page, the About and Unit pages, in the footer, emails and PDFs.
 - Author guidelines: word limits of 6,000 words for research articles and theoretical papers and 4,000 for critical reviews (both including references), and 2,000 for book reviews.
 - Fees and Payment, and Fees and Refunds: fees are non-refundable.
-- Migration `20261120000100_unit_name_limits_refunds` updates the stored pages and settings (with a rollback).
+- Migrations `20261120000100_unit_name_limits_refunds` and `20261120000200_unn_in_full` update the stored pages and settings (with a rollback).
 
 ## [1.3.2] - Forms survive a new deployment
 

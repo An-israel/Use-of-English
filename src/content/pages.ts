@@ -24,7 +24,7 @@ export const pages: Page[] = [
 <p>The <em>Journal of Humanities and Transcultural Studies</em> (JHTCS) gives scholars a platform for original research across the humanities. It was established in 2026 by the Use of English Unit of the School of General Studies, University of Nigeria, Nsukka (UNN).</p>
 <p>“Transcultural” names the journal’s central interest: ideas crossing borders and being woven together. JHTCS publishes work across nine areas of interest, from language, literature and linguistics to culture and identity, communication and media, education, technology and digital cultures, politics and governance, and philosophy, ethics and religion, and it especially welcomes scholarship that moves between languages, cultures and disciplines.</p>
 <h2>Purpose</h2>
-<p>The journal strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and UNN, and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
+<p>The journal strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and the University of Nigeria, Nsukka (UNN), and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
 <h2>Publisher</h2>
 <p>JHTCS is published by the Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN).</p>
 <h2>Frequency and format</h2>
@@ -59,7 +59,7 @@ export const pages: Page[] = [
 <h2>The School of General Studies</h2>
 <p>The School of General Studies, its mandate within the University of Nigeria, Nsukka (UNN), and its relationship to the Unit ${TC}</p>
 <h2>The Unit and the journal</h2>
-<p>JHTCS strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and UNN, and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
+<p>JHTCS strengthens the research culture of the Use of English Unit. It develops editorial and peer-review skills among lecturers, mentors emerging scholars and encourages work across disciplines. It also raises the visibility of the Unit, the School of General Studies and the University of Nigeria, Nsukka (UNN), and opens partnerships with scholars and institutions in Nigeria and abroad.</p>
 <p>The Editor-in-Chief serves a five-year term that is separate from the office of the Coordinator of the Use of English Unit.</p>
 <h2>Coordinator</h2>
 <p>Name and title of the current Coordinator of the Unit ${TC}</p>
