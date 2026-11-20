@@ -46,7 +46,7 @@
     "pino": "^10.4.0",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "react-pdf": "^10.5.0",
+    "react-pdf": "^11.1.0",
     "resend": "^6.39.0",
     "sanitize-html": "^2.18.2",
     "server-only": "^0.0.1",
