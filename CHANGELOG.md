@@ -2,6 +2,10 @@
 
 All notable changes to the JHTS website. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.3.4] - "Transcultural studies"
+
+- The tagline now reads "A quarterly journal of humanities and transcultural studies", matching the journal's name, instead of "transcultural scholarship" (the Unit's correction). Migration `20261123000100_tagline_studies` updates the stored setting (with a rollback).
+
 ## [1.3.3] - The Unit's corrections
 
 - The publisher's name is now written as the Unit asked: "The Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN)". "The" is no longer placed before School of General Studies, and UNN is written in full on the home page, the About and Unit pages, in the footer, emails and PDFs.

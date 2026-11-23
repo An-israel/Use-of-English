@@ -7,7 +7,7 @@ begin;
 -- Site settings
 insert into public.site_settings (key, value, is_public) values ('journalName', '"Journal of Humanities and Transcultural Studies"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('shortName', '"JHTCS"'::jsonb, true) on conflict (key) do nothing;
-insert into public.site_settings (key, value, is_public) values ('tagline', '"A quarterly journal of humanities and transcultural scholarship"'::jsonb, true) on conflict (key) do nothing;
+insert into public.site_settings (key, value, is_public) values ('tagline', '"A quarterly journal of humanities and transcultural studies"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('motto', '"Knowledge · Cultures · Global Voices"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('publisher', '"The Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN)"'::jsonb, true) on conflict (key) do nothing;
 insert into public.site_settings (key, value, is_public) values ('publisherShort', '"The Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN)"'::jsonb, true) on conflict (key) do nothing;

@@ -13,7 +13,7 @@ export const FEE_INTEGRITY_STATEMENT =
 export const settings: SiteSettings = {
   journalName: "Journal of Humanities and Transcultural Studies",
   shortName: "JHTCS",
-  tagline: "A quarterly journal of humanities and transcultural scholarship",
+  tagline: "A quarterly journal of humanities and transcultural studies",
   motto: "Knowledge · Cultures · Global Voices",
   publisher: "The Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN)",
   publisherShort: "The Use of English Unit, School of General Studies, University of Nigeria, Nsukka (UNN)",
